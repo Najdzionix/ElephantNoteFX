@@ -1,0 +1,29 @@
+.test {
+    -fx-background-color: green;
+}
+
+.menuItem {
+    -fx-background-color: #1d1d1d;
+}
+.menuBar{
+    -fx-pref-height: 40;
+}
+
+.menu-bar .label {
+    -fx-font-size: 12pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: black;
+    -fx-opacity: 0.9;
+    -fx-alignment: center;
+}
+
+.menu-item {
+     -fx-padding:10;
+}
+
+
+.testBorder {
+    -fx-border-color: red;
+    -fx-border-width: 2;
+}
+
