@@ -53,11 +53,13 @@ public class Main extends Application {
 
     private void buildUI() {
         mainPane = new BorderPane();
-        mainPane.setTop(new MenuPanel());
         mainPane.setLeft(new ListNotePanel());
+
+        mainPane.setTop(new MenuPanel());
         mainPane.setCenter(new TestNode("Content"));
 //        mainPane.setStyle("-fx-border-color: red; -fx-border-width: 3;");
     }
+
 
 
 }

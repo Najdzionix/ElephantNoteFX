@@ -6,6 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
@@ -23,17 +26,30 @@ public class SearchBox  extends Region {
         setPrefSize(200, 24);
         setMaxSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         textBox = new TextField();
+        textBox.setOnAction(event -> { createPopOverResults().show(textBox);});
         textBox.setPromptText("Search");
         clearButton = new Button("X");
         clearButton.setVisible(false);
         getChildren().addAll(textBox, clearButton);
         clearButton.setOnAction((ActionEvent actionEvent) -> {
             textBox.setText("");
+            createPopOverResults().show(textBox);
             textBox.requestFocus();
         });
         textBox.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             clearButton.setVisible(textBox.getText().length() != 0);
         });
+    }
+
+    private PopOver createPopOverResults() {
+        PopOver popOver = new PopOver();
+        popOver.setDetachable(false);
+        popOver.setContentNode(new TestNode("Search results ..."));
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
+        popOver.setArrowIndent(25);
+        popOver.setArrowSize(20);
+        popOver.setHeaderAlwaysVisible(true);
+        return popOver;
     }
 
     @Override

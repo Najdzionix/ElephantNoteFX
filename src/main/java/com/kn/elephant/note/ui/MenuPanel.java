@@ -4,6 +4,9 @@ import com.kn.elephant.note.Main;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
@@ -14,6 +17,7 @@ public class MenuPanel extends BorderPane {
     public MenuPanel() {
         getStyleClass().add("menuBar");
         setCenter(getSearchPanel());
+
     }
 
     private Node getSearchPanel() {
@@ -28,7 +32,9 @@ public class MenuPanel extends BorderPane {
 
         ToolBar toolBar = new ToolBar();
 
-        toolBar.getItems().add(new Button("Options1"));
+        Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
+
+        toolBar.getItems().add(leftMenuButton);
         toolBar.getItems().add(new Button("Options2"));
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
