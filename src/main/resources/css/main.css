@@ -27,3 +27,20 @@
     -fx-border-width: 2;
 }
 
+.noteItem {
+        -fx-border-color: #C2C2C2;
+        -fx-border-width: 0 0 1 0;
+        -fx-padding: 0 5 5 5 ;
+
+}
+
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-background-color:#E0E0E0;
+    -fx-font-style: italic;
+}
+
+/*.tree-cell:expanded, .tree-cell:sub-tree-item {
+    -fx-background-color: #404040 ;
+}    */
+
