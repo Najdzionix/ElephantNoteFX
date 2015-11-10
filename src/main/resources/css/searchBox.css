@@ -12,7 +12,7 @@
 }
 .search-box .text-field:focused {
     -fx-background-color: -fx-focus-color, white;
-    -fx-background-insets: -1.4, 1;
+    -fx-background-insets: 1;
     -fx-background-radius: 14.4;
 }
 .search-box .button {

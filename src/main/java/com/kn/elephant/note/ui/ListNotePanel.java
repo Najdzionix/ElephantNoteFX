@@ -1,26 +1,20 @@
 package com.kn.elephant.note.ui;
 
-import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.Inject;
 import com.kn.elephant.note.model.Note;
-import com.kn.elephant.note.service.ElephantModule;
 import com.kn.elephant.note.service.NoteService;
-import javafx.collections.FXCollections;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,16 +23,14 @@ import java.util.stream.Collectors;
  * Created by Kamil Nadłonek on 29.10.15.
  * email:kamilnadlonek@gmail.com
  */
-public class ListNotePanel extends BorderPane {
+public class ListNotePanel extends BasePanel {
     private static final Logger LOGGER = LogManager.getLogger(ListNotePanel.class);
     public HiddenSidesPane contentPane;
-    private GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
 
     @Inject
     private NoteService noteService;
 
     public ListNotePanel() {
-        context.init();
         ActionMap.register(this);
         StackPane stackPane = new StackPane();
         stackPane.setStyle("-fx-padding: 30");
