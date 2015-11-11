@@ -45,6 +45,8 @@ public class Main extends Application {
         LOGGER.debug("Start ElephantNoteFX.");
         context.init();
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
+//        testService.insertExampleData();
+//        testService.hello();
         buildUI();
         String mainCss = Main.class.getResource("../../../../css/main.css").toExternalForm();
         Font font = Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);

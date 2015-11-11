@@ -6,4 +6,5 @@ package com.kn.elephant.note.service;
  */
 public interface Test {
     void hello();
+    void insertExampleData();
 }

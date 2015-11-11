@@ -1,6 +1,6 @@
 package com.kn.elephant.note.ui.editor;
 
-import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.Icons;
@@ -34,22 +34,22 @@ import java.util.List;
  * email:kamilnadlonek@gmail.com
  */
 public class DetailsNotePanel extends BasePanel {
-    private Note note;
+    private NoteDto noteDto;
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
 
     private GridPane gridPane;
 //    private Label titleLabel;
 
-    public DetailsNotePanel(Note note) {
+    public DetailsNotePanel(NoteDto noteDto) {
         ActionMap.register(this);
-        loadNote(note);
+        loadNote(noteDto);
 //        todo
         setMaxHeight(200);
     }
 
-    public void loadNote(Note note) {
-        this.note = note;
+    public void loadNote(NoteDto noteDto) {
+        this.noteDto = noteDto;
         setLeft(createLeftPanel());
         setCenter(createTagPanel());
     }

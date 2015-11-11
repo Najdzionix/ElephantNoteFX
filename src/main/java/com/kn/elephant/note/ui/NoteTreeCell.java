@@ -1,6 +1,6 @@
 package com.kn.elephant.note.ui;
 
-import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteDto;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -15,14 +15,14 @@ import javafx.scene.text.TextFlow;
  * Created by Kamil Nadłonek on 06.11.15.
  * email:kamilnadlonek@gmail.com
  */
-public class NoteTreeCell extends TreeCell<Note> {
+public class NoteTreeCell extends TreeCell<NoteDto> {
     private TextFlow textFlow;
     private TextField textField;
 
     public NoteTreeCell() {}
 
     @Override
-    public void updateItem(Note item, boolean empty) {
+    public void updateItem(NoteDto item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
@@ -42,13 +42,13 @@ public class NoteTreeCell extends TreeCell<Note> {
         }
     }
 
-    private Node test(TreeItem<Note> item) {
-        Note currentNote = item.getValue();
+    private Node test(TreeItem<NoteDto> item) {
+        NoteDto currentNoteDto = item.getValue();
         VBox vBox = new VBox();
-        Text textBold = new Text(currentNote.getTitle());
+        Text textBold = new Text(currentNoteDto.getTitle());
         String family = "Helvetica";
         textBold.setFont(Font.font(family, FontWeight.BOLD, 14));
-        Text normal = new Text(currentNote.getShortDescription());
+        Text normal = new Text(currentNoteDto.getShortDescription());
         textFlow = new TextFlow();
         textFlow.getChildren().addAll(textBold, normal);
 

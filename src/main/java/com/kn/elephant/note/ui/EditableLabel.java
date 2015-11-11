@@ -1,5 +1,6 @@
 package com.kn.elephant.note.ui;
 
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -7,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
@@ -26,44 +28,49 @@ public class EditableLabel extends Region {
     private Button editButton;
     private ValidationSupport validationSupport = new ValidationSupport();
 
+
     public EditableLabel(String text) {
         ActionMap.register(this);
-        HBox box = new HBox();
         label = new Label(text);
         label.getStyleClass().add("noteTitle");
         textField = new TextField(text);
         validationSupport.registerValidator(textField, Validator.createEmptyValidator("No empty title"));
-        editButton = ActionUtils.createButton(ActionMap.action("editNoteTitle"));
+        Action editAction = ActionMap.action("editNoteTitle");
+        editAction.setGraphic(Icons.EDIT_TITLE);
+        editButton = ActionUtils.createButton(editAction);
 
-        box.getChildren().addAll(label, editButton);
+        createBox(label, editButton);
+
+    }
+
+    private void createBox(Node... nodes) {
+        getChildren().clear();
+        HBox box = new HBox();
+        box.setSpacing(5);
+        box.getChildren().addAll(nodes);
         getChildren().add(box);
     }
 
     private void editMode() {
-        getChildren().clear();
-        HBox box = new HBox();
         textField.setText(label.getText());
-
-        editButton = ActionUtils.createButton(ActionMap.action("saveNoteTitle"));
-        box.getChildren().addAll(textField, editButton);
-        getChildren().add(box);
+        Action saveAction = ActionMap.action("saveNoteTitle");
+        saveAction.setGraphic(Icons.SAVE_TAG);
+        editButton = ActionUtils.createButton(saveAction);
+        createBox(textField, editButton);
     }
 
     private void normalMode() {
-        getChildren().clear();
-        HBox box = new HBox();
         editButton = ActionUtils.createButton(ActionMap.action("editNoteTitle"));
-        box.getChildren().addAll(label, editButton);
-        getChildren().add(box);
+        createBox(label, editButton);
     }
 
-    @ActionProxy(text = "Edit title ...")
+    @ActionProxy(text = "")
     private void editNoteTitle() {
         LOGGER.info("Execute edit title note action ");
         editMode();
     }
 
-    @ActionProxy(text = "Save")
+    @ActionProxy(text = "")
     private void saveNoteTitle() {
         LOGGER.info("Save note and send info to world ....");
         label.setText(textField.getText());

@@ -1,6 +1,6 @@
 package com.kn.elephant.note.service;
 
-import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteDto;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface NoteService {
 
-    List<Note> getAllNotes();
+    List<NoteDto> getAllNotes();
 }

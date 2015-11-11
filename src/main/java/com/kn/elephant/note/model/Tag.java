@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
  * email:kamilnadlonek@gmail.com
  */
 @Data
-@DatabaseTable(tableName = "note")
-public class Note {
+@DatabaseTable(tableName = "tag")
+public class Tag {
 
     @DatabaseField(generatedId = true)
     private long id;
@@ -23,29 +23,11 @@ public class Note {
     @DatabaseField(columnName = "updateAt", persisterClass = DateTimePersister.class)
     private LocalDateTime updateAt;
 
-    @DatabaseField(columnName = "title")
-    private String title;
-
-    @DatabaseField(columnName = "shortDesc")
-    private String shortDescription;
-
-    @DatabaseField(columnName = "content")
-    private String content;
-
-    @DatabaseField(columnName = "cleanContent")
-    private String cleanContent;
-
-    @DatabaseField(columnName = "deleted")
-    private boolean deleted;
-
-    @DatabaseField(columnName = "type")
-    private NoteType type;
-
-    @DatabaseField(foreign = true, columnName = "parentId")
-    private Note parent;
+    @DatabaseField(columnName = "name")
+    private String name;
 
     @DatabaseField(foreign = true, columnName = "noteId")
     private Note note;
 
-    public Note() {};
+    public Tag(){};
 }
