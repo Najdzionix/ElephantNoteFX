@@ -1,6 +1,6 @@
 package com.kn.elephant.note.ui.editor;
 
-import com.kn.elephant.note.model.NoteDto;
+import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.Icons;
@@ -24,7 +24,6 @@ import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -39,13 +38,11 @@ public class DetailsNotePanel extends BasePanel {
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
 
     private GridPane gridPane;
-//    private Label titleLabel;
 
-    public DetailsNotePanel(NoteDto noteDto) {
+    public DetailsNotePanel() {
         ActionMap.register(this);
-        loadNote(noteDto);
 //        todo
-        setMaxHeight(200);
+        setMaxHeight(150);
     }
 
     public void loadNote(NoteDto noteDto) {
@@ -56,25 +53,24 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createLeftPanel() {
         gridPane = new GridPane();
-
-        Node titleLabel = new EditableLabel("Title editable ...");
-        GridPane.setHalignment(titleLabel, HPos.LEFT);
-        GridPane.setConstraints(titleLabel, 0, 0);
-        GridPane.setColumnSpan(titleLabel, 3);
-
-        Label lastUpdateLabel = new Label("Last update:");
-        lastUpdateLabel.getStyleClass().add("noteLabelTime");
-        GridPane.setHalignment(lastUpdateLabel, HPos.RIGHT);
-        GridPane.setConstraints(lastUpdateLabel, 0, 1);
-
-        Label updateLabel = new Label(LocalDateTime.now().format(FORMATTER));
-        updateLabel.getStyleClass().add("noteDateTime");
-        GridPane.setHalignment(updateLabel, HPos.LEFT);
-        GridPane.setConstraints(updateLabel, 1, 1);
-
-
-        gridPane.getChildren().addAll(titleLabel, lastUpdateLabel, updateLabel);
+        createDates("Created:", 0);
+        createDates("Updated:", 1);
+        setBottom(new EditableLabel(noteDto.getTitle()));
         return gridPane;
+    }
+
+    private void createDates(String labelText, int rowIndex) {
+        Label label = new Label(labelText);
+        label.getStyleClass().add("noteLabelTime");
+        GridPane.setHalignment(label, HPos.RIGHT);
+        GridPane.setConstraints(label, 0, rowIndex);
+
+        Label timeLabel = new Label(noteDto.getCreateAt().format(FORMATTER));
+        timeLabel.getStyleClass().add("noteDateTime");
+        GridPane.setHalignment(timeLabel, HPos.LEFT);
+        GridPane.setConstraints(timeLabel, 1, rowIndex);
+
+        gridPane.getChildren().addAll(label, timeLabel);
     }
 
     private Node createTagPanel() {

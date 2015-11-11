@@ -1,8 +1,9 @@
 package com.kn.elephant.note.ui;
 
 import com.google.inject.Inject;
-import com.kn.elephant.note.model.NoteDto;
+import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
+import javafx.event.ActionEvent;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -10,15 +11,12 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -46,8 +44,6 @@ public class ListNotePanel extends BasePanel {
 
     private Node getContent() {
         ScrollPane pane = new ScrollPane();
-        //todo remove
-        pane.setStyle("-fx-border-color: blue; -fx-border-width: 2;");
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pane.setContent(getListNotes());
@@ -61,11 +57,11 @@ public class ListNotePanel extends BasePanel {
         List<NoteDto> noteDtos = noteService.getAllNotes();
         Collections.reverse(noteDtos);
         TreeItem<NoteDto> root = new TreeItem<>();
-        for(NoteDto noteDto : noteDtos) {
+        for (NoteDto noteDto : noteDtos) {
             TreeItem<NoteDto> item = new TreeItem<>(noteDto);
-            if(!noteDto.getSubNotes().isEmpty()){
-               item.getChildren().addAll(noteDto.getSubNotes().stream().map((Function<NoteDto, TreeItem<NoteDto>>) TreeItem::new
-               ).collect(Collectors.toList()));
+            if (!noteDto.getSubNotes().isEmpty()) {
+                item.getChildren().addAll(noteDto.getSubNotes().stream().map(TreeItem::new
+                ).collect(Collectors.toList()));
             }
 
             root.getChildren().add(item);
@@ -74,7 +70,13 @@ public class ListNotePanel extends BasePanel {
         treeView.setShowRoot(false);
 
         treeView.setCellFactory(param -> new NoteTreeCell());
-
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                log.debug("Change note");
+                ActionMap.action("loadNote").handle(new ActionEvent(newValue.getValue(), null));
+            }
+        });
+        treeView.getSelectionModel().select(0);
         return treeView;
     }
 

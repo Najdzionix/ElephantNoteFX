@@ -1,6 +1,6 @@
 package com.kn.elephant.note.service;
 
-import com.kn.elephant.note.model.NoteDto;
+import com.kn.elephant.note.dto.NoteDto;
 
 import java.util.List;
 

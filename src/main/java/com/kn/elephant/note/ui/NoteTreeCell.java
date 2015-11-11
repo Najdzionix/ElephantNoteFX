@@ -1,6 +1,6 @@
 package com.kn.elephant.note.ui;
 
-import com.kn.elephant.note.model.NoteDto;
+import com.kn.elephant.note.dto.NoteDto;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;

@@ -6,7 +6,6 @@ import com.kn.elephant.note.service.ElephantModule;
 import com.kn.elephant.note.service.Test;
 import com.kn.elephant.note.ui.ListNotePanel;
 import com.kn.elephant.note.ui.MenuPanel;
-import com.kn.elephant.note.ui.editor.DetailsNotePanel;
 import com.kn.elephant.note.ui.editor.NotePanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -46,7 +45,6 @@ public class Main extends Application {
         context.init();
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
 //        testService.insertExampleData();
-//        testService.hello();
         buildUI();
         String mainCss = Main.class.getResource("../../../../css/main.css").toExternalForm();
         Font font = Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);
@@ -68,18 +66,16 @@ public class Main extends Application {
 
     private void buildUI() {
         mainPane = new BorderPane();
-        mainPane.setLeft(new ListNotePanel());
-
-        mainPane.setTop(new MenuPanel());
         mainPane.setCenter(new NotePanel(null));
-
+        mainPane.setLeft(new ListNotePanel());
+        mainPane.setTop(new MenuPanel());
         FontAwesome.Glyph glyph = FontAwesome.Glyph.LAPTOP;
-        Color randomColor = new Color( Math.random(), Math.random(), Math.random(), 1);
-        Glyph graphic = Glyph.create( "FontAwesome|" + glyph.name()).size(1.7).color(randomColor).useGradientEffect();
+        Color randomColor = new Color(Math.random(), Math.random(), Math.random(), 1);
+        Glyph graphic = Glyph.create("FontAwesome|" + glyph.name()).size(1.7).color(randomColor).useGradientEffect();
         Button button = new Button(glyph.name(), graphic);
 
 
-        Button testButton =   new Button("", new Glyph("FontAwesome", "TRASH_ALT"));
+        Button testButton = new Button("", new Glyph("FontAwesome", "TRASH_ALT"));
 
 
 //        testButton.getStyleClass().setAll("exit-button");

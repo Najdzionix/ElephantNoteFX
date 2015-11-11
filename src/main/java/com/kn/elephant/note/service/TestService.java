@@ -83,7 +83,8 @@ public class TestService extends BaseService implements Test {
     private Note createTestNote(int noteNumber, String title) {
         Note note = new Note();
         LocalDateTime nowDate = LocalDateTime.now();
-        note.setCreateAt(nowDate.minusDays(7 * noteNumber));
+        note.setCreateAt(nowDate);
+        note.setUpdateAt(nowDate);
         note.setTitle( title + noteNumber);
         note.setShortDescription("Short descr ... note " + noteNumber);
         note.setContent("Content ..... note" + noteNumber);

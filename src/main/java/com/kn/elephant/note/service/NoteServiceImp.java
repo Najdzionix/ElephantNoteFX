@@ -1,8 +1,8 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
+import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
-import com.kn.elephant.note.model.NoteDto;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.SQLException;
@@ -32,8 +32,11 @@ public class NoteServiceImp extends BaseService implements NoteService {
 
         for (Note note : notes) {
             NoteDto dto = new NoteDto();
-            dto.setId(note.getId()).setTitle(note.getTitle()).setShortDescription(note.getShortDescription())
-                    .setContent(note.getContent()).setSubNotes(new ArrayList<>());
+            dto.setId(note.getId()).setTitle(note.getTitle())
+                    .setShortDescription(note.getShortDescription())
+                    .setContent(note.getContent())
+                    .setCreateAt(note.getCreateAt())
+                    .setUpdateAt(note.getUpdateAt());
             if (note.getParent() != null) {
                 Optional<NoteDto> parent = getParentFromList(notesDto, note.getParent().getId());
                 if (parent.isPresent()) {

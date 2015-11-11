@@ -44,8 +44,5 @@ public class Note {
     @DatabaseField(foreign = true, columnName = "parentId")
     private Note parent;
 
-    @DatabaseField(foreign = true, columnName = "noteId")
-    private Note note;
-
     public Note() {};
 }
