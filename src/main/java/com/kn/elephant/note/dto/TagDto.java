@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kamil Nadłonek on 11.11.15.
@@ -15,7 +17,11 @@ public class TagDto {
 
     private Long id;
     private String name;
-    private NoteDto note;
+    private List<NoteDto> notes;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+
+    public TagDto() {
+        notes = new ArrayList<>();
+    }
 }

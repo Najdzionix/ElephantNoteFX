@@ -6,6 +6,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +28,7 @@ public class DBConnection {
     private static DBConnection instance;
     ConnectionSource connectionSource = null;
     Map<Class, Dao> daoMap;
-    List<Class> listModelClass = Arrays.asList(Note.class, Tag.class);
+    List<Class> listModelClass = Arrays.asList(Note.class, Tag.class, NoteTag.class);
 
     private DBConnection() throws Exception {
         LOGGER.info("Initialize connection to DB {}", NoteConstants.DATA_BASE_URL);

@@ -40,4 +40,16 @@ public class NotePanel extends BasePanel {
         detailsNotePanel.loadNote(currentNoteDto);
         editor.setHtmlText(currentNoteDto.getContent());
     }
+
+    @ActionProxy(text = "")
+    private void saveNote(ActionEvent event) {
+        log.debug("Save note");
+    }
+
+    @ActionProxy(text = "")
+    private void removeNote(ActionEvent event) {
+        log.debug("Remove note");
+    }
+
+
 }

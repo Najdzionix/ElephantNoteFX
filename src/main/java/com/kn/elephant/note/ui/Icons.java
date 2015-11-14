@@ -15,9 +15,10 @@ public class Icons {
     public static final Glyph SAVE_TAG = Glyph.create("FontAwesome|" + FontAwesome.Glyph.CHECK).color(Color.GREEN).size(18);
     public static final Glyph EDIT_TITLE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.PENCIL).color(Color.BLACK).size(18);
     public static final Glyph SAVE_TITLE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.SAVE).color(Color.BLACK).size(18);
-
-
-
+    public static final Glyph SAVE_NOTE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.SAVE).color(Color.BLACK).size
+            (18);
+    public static final Glyph REMOVE_NOTE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.TRASH).color(Color.BLACK)
+            .size(18);
 
 
 }

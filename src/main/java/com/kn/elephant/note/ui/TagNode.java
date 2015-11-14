@@ -1,5 +1,6 @@
 package com.kn.elephant.note.ui;
 
+import com.kn.elephant.note.dto.TagDto;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -14,7 +15,7 @@ import org.controlsfx.control.action.ActionUtils;
  * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
-public class TagNode extends GridCell<String> {
+public class TagNode extends GridCell<TagDto> {
 
     private Text text;
     private Button removeButton;
@@ -26,17 +27,18 @@ public class TagNode extends GridCell<String> {
         removeButton = ActionUtils.createButton(action);
         removeButton.getStyleClass().add("removeButton");
         setGraphic(createContent(actionName));
+
     }
 
     @Override
-    protected void updateItem(String item, boolean empty) {
+    protected void updateItem(TagDto item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
             setGraphic(null);
         } else {
-            text.setText(item);
-            setGraphic(createContent(item));
+            text.setText(item.getName());
+            setGraphic(createContent(item.getName()));
         }
 
     }

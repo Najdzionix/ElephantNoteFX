@@ -1,7 +1,9 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
 import com.kn.elephant.note.ui.TagNode;
@@ -9,6 +11,9 @@ import lombok.extern.log4j.Log4j2;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -18,13 +23,15 @@ import java.util.Random;
 @Log4j2
 public class TestService extends BaseService implements Test {
     private Dao<Note, Long> noteDao;
-    private Dao<TagNode, Long> tagDao;
+    private Dao<Tag, Long> tagDao;
+    private Dao<NoteTag, Long> noteTagDao;
 
     public TestService() {
         super();
         try {
             noteDao = dbConnection.getDao(Note.class);
             tagDao = dbConnection.getDao(Tag.class);
+            noteTagDao = dbConnection.getDao(NoteTag.class);
         } catch (Exception e) {
             log.error("DBConnection exception: {}", e.getMessage());
         }
@@ -53,11 +60,43 @@ public class TestService extends BaseService implements Test {
         log.info("Load example data to DB");
         int noteNumber = 1;
         //create parent notes
+        List<Tag> tags = createTagsList();
         for (int i = 10; i > 0; i--) {
             Note note = createTestNote(noteNumber, "Parent note:");
             saveNote(note);
+            setTagForNote(note, tags);
             createChildrenNotes(note);
             noteNumber++;
+        }
+    }
+
+    private List<Tag> createTagsList(){
+        List<String> tagNames = Arrays.asList("car", "home", "tip", "important", "javaFx");
+        List<Tag> tags = new ArrayList<>();
+        for(String tagName : tagNames) {
+            Tag tag = new Tag();
+            tag.setUpdateAt(LocalDateTime.now());
+            tag.setCreateAt(LocalDateTime.now());
+            tag.setName(tagName);
+            try {
+                tagDao.create(tag);
+                tags.add(tag);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return tags;
+    }
+
+    private void setTagForNote(Note note, List<Tag> tags) {
+        for(Tag tag : tags) {
+            NoteTag noteTag = new NoteTag(note, tag);
+            try {
+                noteTagDao.create(noteTag);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

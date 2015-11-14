@@ -11,5 +11,6 @@ public class ElephantModule extends AbstractModule {
     protected void configure() {
         bind(Test.class).to(TestService.class);
         bind(NoteService.class).to(NoteServiceImp.class);
+        bind(TagService.class).to(TagServiceImp.class);
     }
 }

@@ -26,8 +26,8 @@ public class Tag {
     @DatabaseField(columnName = "name")
     private String name;
 
-    @DatabaseField(foreign = true, columnName = "noteId")
-    private Note note;
+    @DatabaseField(columnName = "deleted")
+    private boolean deleted;
 
     public Tag(){};
 }
