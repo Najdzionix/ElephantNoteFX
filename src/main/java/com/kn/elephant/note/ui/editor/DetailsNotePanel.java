@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,29 +31,27 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
 public class DetailsNotePanel extends BasePanel {
-    private NoteDto noteDto;
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
 
+    private NoteDto noteDto;
     private GridPane gridPane;
-
-    ObservableList<TagDto> tagDtos;
+    private ObservableList<TagDto> tagDtos;
+    private TextField tagTF;
 
     @Inject
     private TagService tagService;
-    private TextField tagTF;
 
     public DetailsNotePanel() {
         ActionMap.register(this);
-//        todo
         setMaxHeight(150);
     }
 
@@ -77,7 +76,9 @@ public class DetailsNotePanel extends BasePanel {
         Action removeAction = ActionMap.action("removeNote");
         removeAction.setGraphic(Icons.REMOVE_NOTE);
         Button removeButton = ActionUtils.createButton(removeAction);
-        ToggleSwitch modeButton = new ToggleSwitch("Edit");
+//        ToggleSwitch modeButton = new ToggleSwitch("Edit");
+        ToggleButton modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
+
         noteBoxButtons.setSpacing(10);
         noteBoxButtons.getChildren().addAll(saveButton, removeButton, modeButton);
 
@@ -101,18 +102,13 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createTagPanel() {
         BorderPane content = new BorderPane();
-//        List<String> tags = Arrays.asList("car", "home", "tip", "important", "javaFx");
-//        List<TagNode> tagNodes = tags.stream().map(tag -> new TagNode(tag, "removeTag")).collect(Collectors.toList());
         List<TagDto> tags = tagService.getTagByNoteId(noteDto.getId());
         tagDtos = FXCollections.observableList(tags);
         GridView<TagDto> gridView = new GridView(tagDtos);
-        gridView.setCellFactory(arg0 ->  new TagNode("removeTag"));
+        gridView.setCellFactory(arg0 -> new TagNode("removeTag"));
         gridView.setCellWidth(100);
         gridView.setCellHeight(25);
         content.setCenter(gridView);
-
-
-
 
         HBox box = new HBox();
         box.setSpacing(5);
@@ -121,6 +117,7 @@ public class DetailsNotePanel extends BasePanel {
         box.getStyleClass().add("textFieldTag");
         ValidationSupport validationSupport = new ValidationSupport();
         validationSupport.registerValidator(tagTF, Validator.createEmptyValidator("Name tag can not be empty!"));
+        //todo prepare list tags for hints
         TextFields.bindAutoCompletion(tagTF, tags);
         Action addTagAction = ActionMap.action("addTag");
         addTagAction.setGraphic(Icons.SAVE_TAG);
@@ -135,24 +132,28 @@ public class DetailsNotePanel extends BasePanel {
     @ActionProxy(text = "")
     protected void removeTag(ActionEvent event) {
         LOGGER.info("remove tag action");
+//        todo find better way get item.
         TagDto item = ((TagNode) ((Button) event.getSource()).getParent().getParent()).getItem();
         LOGGER.debug(item);
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
-        if(isDeleted) {
+        if (isDeleted) {
             tagDtos.remove(item);
         }
 //        todo when failed show notification
     }
 
-
     @ActionProxy(text = "")
-    private void addTag(ActionEvent event) {
+    private void addTag() {
         LOGGER.info(String.format("Add tag of name %s", tagTF.getText()));
         TagDto dto = new TagDto();
         dto.setName(tagTF.getText());
         dto.getNotes().add(noteDto);
-        tagService.saveTag(dto);
-
+        Optional<TagDto> tagDto = tagService.saveTag(dto);
+        if (tagDto.isPresent()) {
+            tagDtos.add(tagDto.get());
+            tagTF.clear();
+        }
+//        todo show notification about failed save ...
 
     }
 

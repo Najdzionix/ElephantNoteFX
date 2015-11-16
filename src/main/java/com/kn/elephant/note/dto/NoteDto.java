@@ -1,5 +1,6 @@
 package com.kn.elephant.note.dto;
 
+import com.kn.elephant.note.model.NoteType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,6 +20,7 @@ public class NoteDto {
     private String title;
     private String shortDescription;
     private String content;
+    private NoteType type;
     private List<NoteDto> subNotes;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
