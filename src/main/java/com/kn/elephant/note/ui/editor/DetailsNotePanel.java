@@ -8,6 +8,7 @@ import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.Icons;
 import com.kn.elephant.note.ui.TagNode;
+import com.kn.elephant.note.utils.ActionFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +22,6 @@ import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.GridView;
-import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
@@ -78,7 +78,7 @@ public class DetailsNotePanel extends BasePanel {
         Button removeButton = ActionUtils.createButton(removeAction);
 //        ToggleSwitch modeButton = new ToggleSwitch("Edit");
         ToggleButton modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
-
+        modeButton.setSelected(true);
         noteBoxButtons.setSpacing(10);
         noteBoxButtons.getChildren().addAll(saveButton, removeButton, modeButton);
 
@@ -119,9 +119,7 @@ public class DetailsNotePanel extends BasePanel {
         validationSupport.registerValidator(tagTF, Validator.createEmptyValidator("Name tag can not be empty!"));
         //todo prepare list tags for hints
         TextFields.bindAutoCompletion(tagTF, tags);
-        Action addTagAction = ActionMap.action("addTag");
-        addTagAction.setGraphic(Icons.SAVE_TAG);
-        Button testButton = ActionUtils.createButton(addTagAction);
+        Button testButton = ActionUtils.createButton(ActionFactory.getAddTag());
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         box.getChildren().addAll(spacer, addTagLabel, tagTF, testButton);

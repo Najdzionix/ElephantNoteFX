@@ -1,11 +1,16 @@
 package com.kn.elephant.note.ui;
 
+import com.kn.elephant.note.utils.ActionFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.action.Action;
@@ -19,6 +24,7 @@ import org.controlsfx.validation.Validator;
  * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class EditableLabel extends Region {
 
     private static final Logger LOGGER = LogManager.getLogger(EditableLabel.class);
@@ -38,6 +44,18 @@ public class EditableLabel extends Region {
         Action editAction = ActionMap.action("editNoteTitle");
         editAction.setGraphic(Icons.EDIT_TITLE);
         editButton = ActionUtils.createButton(editAction);
+
+        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                log.info("Test lose focus ...");
+                if(!newValue)    // check if focus gained or lost
+                {
+                   normalMode();
+                }
+            }
+        });
+
 
         createBox(label, editButton);
 
@@ -72,8 +90,8 @@ public class EditableLabel extends Region {
 
     @ActionProxy(text = "")
     private void saveNoteTitle() {
-        LOGGER.info("Save note and send info to world ....");
         label.setText(textField.getText());
+        ActionFactory.getUpdateNoteTitle().handle(new ActionEvent(textField.getText(), null));
         normalMode();
     }
 }

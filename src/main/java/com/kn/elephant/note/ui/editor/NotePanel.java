@@ -5,9 +5,12 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.action.ActionMap;
@@ -37,19 +40,26 @@ public class NotePanel extends BasePanel {
         setTop(detailsNotePanel);
         //editor
         editor = new HTMLEditor();
-        setCenter(editor);
+        webView = new WebView();
         setPadding(new Insets(15));
-
-
     }
 
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
         log.debug("LOAD NOTE");
-
+        setCenter(null);
+        setCenter(editor);
         currentNoteDto = (NoteDto) event.getSource();
         detailsNotePanel.loadNote(currentNoteDto);
         editor.setHtmlText(currentNoteDto.getContent());
+    }
+
+
+    @ActionProxy(text = "")
+    private void updateTitle(ActionEvent event) {
+        log.debug("update note title" + event.getSource());
+        currentNoteDto.setTitle((String) event.getSource());
+        log.info(currentNoteDto);
     }
 
     @ActionProxy(text = "")
@@ -68,20 +78,33 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void removeNote(ActionEvent event) {
         log.debug("Remove note");
+        if (noteService.removeNote(currentNoteDto.getId())) {
+            log.info("note was removed");
+//            todo show notification
+        }
     }
 
     @ActionProxy(text = "Edit mode")
     private void switchDisplayMode(ActionEvent event) {
-        log.info("Switch event !!!!!");
+        log.debug("Switch mode display note");
         if (((ToggleButton) event.getSource()).isSelected()) {
-            webView = new WebView();
-            webView.getEngine().loadContent(currentNoteDto.getContent());
-            setCenter(webView);
-        } else {
             editor.setHtmlText(currentNoteDto.getContent());
             setCenter(editor);
-        }
+        } else {
+            webView.getEngine().loadContent(currentNoteDto.getContent());
+            webView.setContextMenuEnabled(false);
+            webView.getEngine().setOnStatusChanged(new EventHandler<WebEvent<String>>() {
+                @Override
+                public void handle(WebEvent<String> event) {
+                    log.info("aaaaaaaaaaaaaaaaaaaaaa");
 
+                }
+            });
+
+            webView.setDisable(true);
+            webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+            setCenter(webView);
+        }
     }
 
 

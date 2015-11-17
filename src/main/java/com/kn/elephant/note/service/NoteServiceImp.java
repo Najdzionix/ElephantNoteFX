@@ -93,6 +93,18 @@ public class NoteServiceImp extends BaseService implements NoteService {
         return Optional.empty();
     }
 
+    @Override
+    public boolean removeNote(Long noteId) {
+        try {
+            Note note = noteDao.queryForId(noteId);
+            note.setDeleted(true);
+            return noteDao.update(note) == 1;
+        } catch (SQLException e) {
+            log.error("Error database: ", e);
+            return false;
+        }
+    }
+
     private Optional<NoteDto> getParentFromList(List<NoteDto> dtos, Long id) {
         return dtos.stream().filter(note -> note.getId() == id).findFirst();
     }

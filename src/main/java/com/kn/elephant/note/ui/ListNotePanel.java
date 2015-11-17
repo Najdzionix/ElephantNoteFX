@@ -29,7 +29,7 @@ public class ListNotePanel extends BasePanel {
 
     @Inject
     private NoteService noteService;
-
+    private  TreeView<NoteDto> treeView;
     public ListNotePanel() {
         ActionMap.register(this);
         StackPane stackPane = new StackPane();
@@ -66,7 +66,7 @@ public class ListNotePanel extends BasePanel {
 
             root.getChildren().add(item);
         }
-        TreeView<NoteDto> treeView = new TreeView<>(root);
+        treeView = new TreeView<>(root);
         treeView.setShowRoot(false);
 
         treeView.setCellFactory(param -> new NoteTreeCell());
@@ -88,6 +88,12 @@ public class ListNotePanel extends BasePanel {
         } else {
             contentPane.setPinnedSide(Side.LEFT);
         }
+    }
 
+    @ActionProxy(text = "")
+    private void removeNote(ActionEvent event) {
+       log.info("Remove note from list ...");
+        TreeItem<NoteDto> selectedItem = treeView.getSelectionModel().getSelectedItem();
+        selectedItem.getParent().getChildren().remove(selectedItem);
     }
 }
