@@ -1,9 +1,13 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
+import com.kn.elephant.note.model.Tag;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Jsoup;
 
@@ -22,9 +26,12 @@ import java.util.Optional;
 public class NoteServiceImp extends BaseService implements NoteService {
 
     private Dao<Note, Long> noteDao;
+    private Dao<Tag, Long> tagDao;
+    private Dao<NoteTag, Long> noteTagDao;
 
     public NoteServiceImp() {
         noteDao = dbConnection.getDao(Note.class);
+        noteTagDao = dbConnection.getDao(NoteTag.class);
     }
 
     @Override
@@ -97,16 +104,38 @@ public class NoteServiceImp extends BaseService implements NoteService {
     public boolean removeNote(Long noteId) {
         try {
             Note note = noteDao.queryForId(noteId);
-            note.setDeleted(true);
-            return noteDao.update(note) == 1;
+            if (note != null) {
+                note.setDeleted(true);
+                removeTagRelations(noteId);
+                removeChildNoteRelations(noteId);
+                return noteDao.update(note) == 1;
+            } else {
+                log.warn(String.format("No found note (id %s)", noteId));
+//                todo throw custom exception ...
+                return false;
+            }
         } catch (SQLException e) {
             log.error("Error database: ", e);
             return false;
         }
     }
 
+    private void removeTagRelations(Long noteId) throws SQLException {
+        DeleteBuilder<NoteTag, Long> deleteBuilder = noteTagDao.deleteBuilder();
+        deleteBuilder.where().eq(NoteTag.NOTE_ID_FIELD_NAME, noteId);
+        noteTagDao.delete(deleteBuilder.prepare());
+    }
+
+    private void removeChildNoteRelations(Long parentNoteId) throws SQLException {
+        UpdateBuilder<Note, Long> updateBuilder = noteDao.updateBuilder();
+        updateBuilder.updateColumnValue(Note.COLUMN_NAME_PARENT_ID, null);
+        updateBuilder.where().eq(Note.COLUMN_NAME_PARENT_ID, parentNoteId);
+
+        noteDao.update(updateBuilder.prepare());
+    }
+
     private Optional<NoteDto> getParentFromList(List<NoteDto> dtos, Long id) {
-        return dtos.stream().filter(note -> note.getId() == id).findFirst();
+        return dtos.stream().filter(note -> note.getId().equals(id)).findFirst();
     }
 
     private List<Note> getNotes() {

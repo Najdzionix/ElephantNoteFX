@@ -3,6 +3,7 @@ package com.kn.elephant.note.ui;
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -29,7 +30,8 @@ public class ListNotePanel extends BasePanel {
 
     @Inject
     private NoteService noteService;
-    private  TreeView<NoteDto> treeView;
+    private TreeView<NoteDto> treeView;
+
     public ListNotePanel() {
         ActionMap.register(this);
         StackPane stackPane = new StackPane();
@@ -91,9 +93,13 @@ public class ListNotePanel extends BasePanel {
     }
 
     @ActionProxy(text = "")
-    private void removeNote(ActionEvent event) {
-       log.info("Remove note from list ...");
+    private void removeNoteFromList(ActionEvent event) {
         TreeItem<NoteDto> selectedItem = treeView.getSelectionModel().getSelectedItem();
+        log.debug("Remove note from list:" + selectedItem.getValue());
+        ObservableList<TreeItem<NoteDto>> children = selectedItem.getChildren();
+        if (!children.isEmpty()) {
+            selectedItem.getParent().getChildren().addAll(children);
+        }
         selectedItem.getParent().getChildren().remove(selectedItem);
     }
 }

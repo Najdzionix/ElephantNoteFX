@@ -5,12 +5,10 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
-import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.action.ActionMap;
@@ -46,10 +44,10 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
-        log.debug("LOAD NOTE");
         setCenter(null);
         setCenter(editor);
         currentNoteDto = (NoteDto) event.getSource();
+        log.debug("Load note: " + currentNoteDto);
         detailsNotePanel.loadNote(currentNoteDto);
         editor.setHtmlText(currentNoteDto.getContent());
     }
@@ -57,16 +55,16 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void updateTitle(ActionEvent event) {
-        log.debug("update note title" + event.getSource());
+        log.debug("Update note title" + event.getSource());
         currentNoteDto.setTitle((String) event.getSource());
         log.info(currentNoteDto);
     }
 
     @ActionProxy(text = "")
     private void saveNote(ActionEvent event) {
-        log.debug("Save note");
 //        todo load title
         currentNoteDto.setContent(editor.getHtmlText());
+        log.debug("Save note:" + currentNoteDto);
         Optional<NoteDto> updatedNote = noteService.saveNote(currentNoteDto);
         if (updatedNote.isPresent()) {
             currentNoteDto = updatedNote.get();
@@ -77,9 +75,10 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void removeNote(ActionEvent event) {
-        log.debug("Remove note");
+        log.debug("Remove note:" + currentNoteDto);
         if (noteService.removeNote(currentNoteDto.getId())) {
             log.info("note was removed");
+            ActionMap.action("removeNoteFromList").handle(null);
 //            todo show notification
         }
     }
@@ -93,14 +92,6 @@ public class NotePanel extends BasePanel {
         } else {
             webView.getEngine().loadContent(currentNoteDto.getContent());
             webView.setContextMenuEnabled(false);
-            webView.getEngine().setOnStatusChanged(new EventHandler<WebEvent<String>>() {
-                @Override
-                public void handle(WebEvent<String> event) {
-                    log.info("aaaaaaaaaaaaaaaaaaaaaa");
-
-                }
-            });
-
             webView.setDisable(true);
             webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
             setCenter(webView);

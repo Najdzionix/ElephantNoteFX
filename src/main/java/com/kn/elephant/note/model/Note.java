@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @DatabaseTable(tableName = "note")
 public class Note {
 
+    public static final String COLUMN_NAME_PARENT_ID = "parentId";
+
     @DatabaseField(generatedId = true)
     private long id;
 
@@ -41,8 +43,11 @@ public class Note {
     @DatabaseField(columnName = "type")
     private NoteType type;
 
-    @DatabaseField(foreign = true, columnName = "parentId")
+    @DatabaseField(foreign = true, columnName = COLUMN_NAME_PARENT_ID)
     private Note parent;
 
-    public Note() {};
+    public Note() {
+    }
+
+    ;
 }
