@@ -2,6 +2,7 @@ package com.kn.elephant.note.ui.editor;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.dto.TagDto;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
@@ -136,8 +137,10 @@ public class DetailsNotePanel extends BasePanel {
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
         if (isDeleted) {
             tagDtos.remove(item);
+        } else {
+            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation remove tag failed", Icons
+                    .ERROR));
         }
-//        todo when failed show notification
     }
 
     @ActionProxy(text = "")
@@ -150,9 +153,10 @@ public class DetailsNotePanel extends BasePanel {
         if (tagDto.isPresent()) {
             tagDtos.add(tagDto.get());
             tagTF.clear();
-        }
-//        todo show notification about failed save ...
+        } else {
+            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation add tag failed", Icons.ERROR));
 
+        }
     }
 
 }

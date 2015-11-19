@@ -20,5 +20,11 @@ public class Icons {
     public static final Glyph REMOVE_NOTE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.TRASH).color(Color.BLACK)
             .size(18);
 
+    public static final Glyph INFORM = Glyph.create("FontAwesome|" + FontAwesome.Glyph.INFO).color(Color.YELLOW)
+            .size(30);
+
+    public static final Glyph ERROR = Glyph.create("FontAwesome|" + FontAwesome.Glyph.EXCLAMATION_TRIANGLE).color(Color
+            .RED).size(30);
+
 
 }

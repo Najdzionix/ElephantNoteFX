@@ -2,8 +2,11 @@ package com.kn.elephant.note.ui.editor;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.ui.Icons;
+import com.kn.elephant.note.utils.ActionFactory;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.ToggleButton;
@@ -11,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
@@ -30,6 +34,7 @@ public class NotePanel extends BasePanel {
 
     @Inject
     private NoteService noteService;
+    private NotificationPane notificationPane;
 
     public NotePanel(NoteDto noteDto) {
         ActionMap.register(this);
@@ -40,12 +45,21 @@ public class NotePanel extends BasePanel {
         editor = new HTMLEditor();
         webView = new WebView();
         setPadding(new Insets(15));
+        notificationPanel();
     }
+
+    private void notificationPanel() {
+        notificationPane = new NotificationPane();
+        notificationPane.showFromTopProperty().setValue(false);
+        notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
+        setCenter(notificationPane);
+    }
+
 
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
-        setCenter(null);
-        setCenter(editor);
+//        setCenter(null);
+        notificationPane.setContent(editor);
         currentNoteDto = (NoteDto) event.getSource();
         log.debug("Load note: " + currentNoteDto);
         detailsNotePanel.loadNote(currentNoteDto);
@@ -69,8 +83,10 @@ public class NotePanel extends BasePanel {
         if (updatedNote.isPresent()) {
             currentNoteDto = updatedNote.get();
             loadNote(new ActionEvent(currentNoteDto, null));
+            ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
+        } else {
+            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation saving failed", Icons.ERROR));
         }
-//         todo else inform user save failed ..
     }
 
     @ActionProxy(text = "")
@@ -78,8 +94,8 @@ public class NotePanel extends BasePanel {
         log.debug("Remove note:" + currentNoteDto);
         if (noteService.removeNote(currentNoteDto.getId())) {
             log.info("note was removed");
-            ActionMap.action("removeNoteFromList").handle(null);
-//            todo show notification
+            ActionFactory.callAction("removeNoteFromList");
+            ActionFactory.callAction("showNotificationPanel", new NoticeData("Note has been removed."));
         }
     }
 
@@ -88,15 +104,34 @@ public class NotePanel extends BasePanel {
         log.debug("Switch mode display note");
         if (((ToggleButton) event.getSource()).isSelected()) {
             editor.setHtmlText(currentNoteDto.getContent());
-            setCenter(editor);
+            notificationPane.setContent(editor);
         } else {
             webView.getEngine().loadContent(currentNoteDto.getContent());
             webView.setContextMenuEnabled(false);
             webView.setDisable(true);
             webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-            setCenter(webView);
+            notificationPane.setContent(webView);
         }
     }
 
+    @ActionProxy(text = "")
+    private void showNotificationPanel(ActionEvent event) throws InterruptedException {
+        NoticeData noticeData = (NoticeData) event.getSource();
+        notificationPane.show(noticeData.getMessage());
+        notificationPane.setGraphic(noticeData.getIcon());
+        hideNotifications(3000);
+    }
+
+    private void hideNotifications(int time) {
+        Runnable task = () -> {
+            try {
+                Thread.sleep(time);
+                notificationPane.hide();
+            } catch (InterruptedException e) {
+                log.error("Hide notification thread error", e);
+            }
+        };
+        new Thread(task).start();
+    }
 
 }

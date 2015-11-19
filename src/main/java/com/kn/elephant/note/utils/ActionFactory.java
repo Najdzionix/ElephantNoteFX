@@ -1,6 +1,7 @@
 package com.kn.elephant.note.utils;
 
 import com.kn.elephant.note.ui.Icons;
+import javafx.event.ActionEvent;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.glyphfont.Glyph;
@@ -23,6 +24,14 @@ public class ActionFactory {
 
     public static Action getAddTag() {
         return getAction("addTag", Icons.SAVE_TAG);
+    }
+
+    public static void callAction(String actionName) {
+        callAction(actionName, null);
+    }
+
+    public static void callAction(String actionName, Object value) {
+        getAction(actionName).handle(new ActionEvent(value, null));
     }
 
     private static Action getAction(String actionName) {
