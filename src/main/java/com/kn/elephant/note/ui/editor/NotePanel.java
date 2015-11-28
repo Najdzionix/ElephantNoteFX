@@ -63,6 +63,7 @@ public class NotePanel extends BasePanel {
         currentNoteDto = (NoteDto) event.getSource();
         log.debug("Load note: " + currentNoteDto);
         detailsNotePanel.loadNote(currentNoteDto);
+        editor.setHtmlText("");
         editor.setHtmlText(currentNoteDto.getContent());
     }
 

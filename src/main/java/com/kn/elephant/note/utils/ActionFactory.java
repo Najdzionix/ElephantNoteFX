@@ -1,5 +1,6 @@
 package com.kn.elephant.note.utils;
 
+import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.Icons;
 import javafx.event.ActionEvent;
 import org.controlsfx.control.action.Action;
@@ -34,11 +35,11 @@ public class ActionFactory {
         getAction(actionName).handle(new ActionEvent(value, null));
     }
 
-    private static Action getAction(String actionName) {
+    public static Action getAction(String actionName) {
         return getAction(actionName, null);
     }
 
-    private static Action getAction(String actionName, Glyph icon) {
+    public static Action getAction(String actionName, Glyph icon) {
         if (actions.containsKey(actionName)) {
             return actions.get(actionName);
         } else {
@@ -50,5 +51,6 @@ public class ActionFactory {
             return action;
         }
     }
+
 
 }

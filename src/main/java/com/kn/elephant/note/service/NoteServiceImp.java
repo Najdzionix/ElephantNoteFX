@@ -9,6 +9,7 @@ import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -45,6 +47,7 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (note.getParent() != null) {
                 Optional<NoteDto> parent = getParentFromList(notesDto, note.getParent().getId());
                 if (parent.isPresent()) {
+//                    dto.setParentNote(parent.get());
                     parent.get().getSubNotes().add(dto);
                 }
 
@@ -81,6 +84,9 @@ public class NoteServiceImp extends BaseService implements NoteService {
                 note = new Note();
                 note.setCreateAt(LocalDateTime.now());
                 note.setType(NoteType.HTML);
+                if (noteDto.getParentNote() != null) {
+                    note.setParent(noteDao.queryForId(noteDto.getParentNote().getId()));
+                }
             } else {
                 note = noteDao.queryForId(noteDto.getId());
             }
@@ -88,7 +94,11 @@ public class NoteServiceImp extends BaseService implements NoteService {
             note.setType(noteDto.getType());
             note.setUpdateAt(LocalDateTime.now());
             note.setContent(noteDto.getContent());
-            note.setCleanContent(Jsoup.parse(noteDto.getContent()).text());
+            note.setShortDescription(noteDto.getShortDescription());
+            if (StringUtils.isNotEmpty(note.getContent())) {
+                note.setCleanContent(Jsoup.parse(noteDto.getContent()).text());
+            }
+
             noteDao.createOrUpdate(note);
 
             return Optional.of(convertToNoteDto(note));
@@ -120,6 +130,19 @@ public class NoteServiceImp extends BaseService implements NoteService {
         }
     }
 
+    @Override
+    public List<NoteDto> getAllParentNotes() {
+        try {
+            List<Note> noteList = noteDao.queryBuilder().orderBy("id", false).where().eq("deleted",
+                    false).and().ne("parentId", null).query();
+            return noteList.stream().map(this::convertToNoteDto).collect(Collectors.toList());
+        } catch (SQLException e) {
+            log.error("Data base error. ", e);
+            return Collections.emptyList();
+        }
+
+    }
+
     private void removeTagRelations(Long noteId) throws SQLException {
         DeleteBuilder<NoteTag, Long> deleteBuilder = noteTagDao.deleteBuilder();
         deleteBuilder.where().eq(NoteTag.NOTE_ID_FIELD_NAME, noteId);
@@ -146,5 +169,6 @@ public class NoteServiceImp extends BaseService implements NoteService {
             return Collections.emptyList();
         }
     }
+
 
 }

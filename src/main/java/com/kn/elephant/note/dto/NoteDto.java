@@ -22,6 +22,7 @@ public class NoteDto {
     private String content;
     private NoteType type;
     private List<NoteDto> subNotes;
+    private NoteDto parentNote;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 

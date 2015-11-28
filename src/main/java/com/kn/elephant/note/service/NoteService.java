@@ -22,4 +22,10 @@ public interface NoteService {
      * @return Return true when note marked as deleted, otherwise false
      */
     boolean removeNote(Long noteId);
+
+    /**
+     *
+     * @return only notes which can be parents
+     */
+    List<NoteDto> getAllParentNotes();
 }

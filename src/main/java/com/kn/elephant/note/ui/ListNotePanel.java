@@ -102,4 +102,11 @@ public class ListNotePanel extends BasePanel {
         }
         selectedItem.getParent().getChildren().remove(selectedItem);
     }
+
+    @ActionProxy(text = "")
+    private void addNoteToList(ActionEvent event){
+        TreeItem<NoteDto> item = new TreeItem<>((NoteDto) event.getSource() );
+        treeView.getRoot().getChildren().add(item);
+        treeView.getSelectionModel().select(treeView.getRoot().getChildren().indexOf(item));
+    }
 }
