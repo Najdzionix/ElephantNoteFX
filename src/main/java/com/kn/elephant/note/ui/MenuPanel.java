@@ -63,7 +63,7 @@ public class MenuPanel extends BasePanel {
         Optional<NoteDto> noteDto = dialogNote.getDialog().showAndWait();
         if (noteDto.isPresent()) {
             Optional<NoteDto> dto = noteService.saveNote(noteDto.get());
-            ActionFactory.callAction("addNoteToList", dto);
+            ActionFactory.callAction("addNoteToList", dto.get());
         }
     }
 }

@@ -18,6 +18,7 @@ import org.controlsfx.control.action.ActionProxy;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -104,9 +105,28 @@ public class ListNotePanel extends BasePanel {
     }
 
     @ActionProxy(text = "")
-    private void addNoteToList(ActionEvent event){
-        TreeItem<NoteDto> item = new TreeItem<>((NoteDto) event.getSource() );
-        treeView.getRoot().getChildren().add(item);
-        treeView.getSelectionModel().select(treeView.getRoot().getChildren().indexOf(item));
+    private void addNoteToList(ActionEvent event) {
+        log.debug("Add item to tree");
+        NoteDto noteDto = (NoteDto) event.getSource();
+        TreeItem<NoteDto> item = new TreeItem<>(noteDto);
+        if (noteDto.getParentNote() == null) {
+            treeView.getRoot().getChildren().add(item);
+        } else {
+            Optional<TreeItem<NoteDto>> parent = searchParent(noteDto.getParentNote());
+            if (parent.isPresent()) {
+                TreeItem<NoteDto> parentTreeItem = parent.get();
+                log.debug("Found parent :" + parentTreeItem.getValue());
+                parentTreeItem.getChildren().add(item);
+            } else {
+                log.warn("No found parent! It should be:" + noteDto.getParentNote());
+            }
+        }
+        treeView.getSelectionModel().select(item);
+        treeView.refresh();
     }
+
+    private Optional<TreeItem<NoteDto>> searchParent(NoteDto noteDto) {
+        return treeView.getRoot().getChildren().stream().filter(tr -> tr.getValue().getId() == noteDto.getId()).findFirst();
+    }
+
 }

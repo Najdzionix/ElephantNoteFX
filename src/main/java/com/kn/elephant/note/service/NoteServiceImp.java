@@ -47,7 +47,6 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (note.getParent() != null) {
                 Optional<NoteDto> parent = getParentFromList(notesDto, note.getParent().getId());
                 if (parent.isPresent()) {
-//                    dto.setParentNote(parent.get());
                     parent.get().getSubNotes().add(dto);
                 }
 
@@ -101,7 +100,11 @@ public class NoteServiceImp extends BaseService implements NoteService {
 
             noteDao.createOrUpdate(note);
 
-            return Optional.of(convertToNoteDto(note));
+            NoteDto value = convertToNoteDto(note);
+            if (note.getParent() != null) {
+                value.setParentNote(convertToNoteDto(note.getParent()));
+            }
+            return Optional.of(value);
 
         } catch (SQLException e) {
             log.error("Data base error: ", e);
