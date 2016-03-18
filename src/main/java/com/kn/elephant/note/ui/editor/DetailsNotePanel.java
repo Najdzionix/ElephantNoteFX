@@ -10,6 +10,7 @@ import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.Icons;
 import com.kn.elephant.note.ui.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.TagStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,13 +26,16 @@ import org.controlsfx.control.GridView;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -45,6 +49,8 @@ public class DetailsNotePanel extends BasePanel {
     private GridPane gridPane;
     private ObservableList<TagDto> tagDtos;
     private TextField tagTF;
+
+    private TagDto autoCompelteTag = null;
 
     @Inject
     private TagService tagService;
@@ -87,8 +93,8 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createTagPanel() {
         BorderPane content = new BorderPane();
-        List<TagDto> tags = tagService.getTagByNoteId(noteDto.getId());
-        tagDtos = FXCollections.observableList(tags);
+        List<TagDto> noteTags = tagService.getTagByNoteId(noteDto.getId());
+        tagDtos = FXCollections.observableList(noteTags);
         GridView<TagDto> gridView = new GridView(tagDtos);
         gridView.setCellFactory(arg0 -> new TagNode("removeTag"));
         gridView.setCellWidth(100);
@@ -102,14 +108,27 @@ public class DetailsNotePanel extends BasePanel {
         box.getStyleClass().add("textFieldTag");
         ValidationSupport validationSupport = new ValidationSupport();
         validationSupport.registerValidator(tagTF, Validator.createEmptyValidator("Name tag can not be empty!"));
-        //todo prepare list tags for hints
-        TextFields.bindAutoCompletion(tagTF, tags);
+
+        initAutoCompleteForTags(noteTags);
+
         Button testButton = ActionUtils.createButton(ActionFactory.getAddTag());
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         box.getChildren().addAll(spacer, addTagLabel, tagTF, testButton);
         content.setBottom(box);
         return content;
+    }
+
+    private void initAutoCompleteForTags(List<TagDto> tags) {
+        List<TagDto> freeTags = tagService.getAll().stream().filter(tag -> !tags.contains(tag)).collect(Collectors.toList());
+
+        AutoCompletionBinding<TagDto> bind = TextFields.bindAutoCompletion(tagTF,
+                param -> freeTags.stream().filter(tagDto -> tagDto.getName().toLowerCase(Locale.getDefault()).contains(param.getUserText().toLowerCase(Locale.getDefault()))).collect(Collectors.toList()),
+                new TagStringConverter());
+
+        bind.setOnAutoCompleted(event -> {
+            autoCompelteTag = event.getCompletion();
+        });
     }
 
     @ActionProxy(text = "")
@@ -130,8 +149,13 @@ public class DetailsNotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void addTag() {
         LOGGER.info(String.format("Add tag of name %s", tagTF.getText()));
-        TagDto dto = new TagDto();
-        dto.setName(tagTF.getText());
+        TagDto dto;
+        if (autoCompelteTag != null && autoCompelteTag.getName().equalsIgnoreCase(tagTF.getText().trim())) {
+            dto = autoCompelteTag;
+        } else {
+            dto = new TagDto();
+            dto.setName(tagTF.getText());
+        }
         dto.getNotes().add(noteDto);
         Optional<TagDto> tagDto = tagService.saveTag(dto);
         if (tagDto.isPresent()) {
@@ -142,5 +166,4 @@ public class DetailsNotePanel extends BasePanel {
 
         }
     }
-
 }
