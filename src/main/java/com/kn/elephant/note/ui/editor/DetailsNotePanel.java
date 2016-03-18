@@ -18,12 +18,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.GridView;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
@@ -70,20 +68,6 @@ public class DetailsNotePanel extends BasePanel {
         box.setTop(gridPane);
         box.setCenter(new EditableLabel(noteDto.getTitle()));
 
-        HBox noteBoxButtons = new HBox();
-        Action saveAction = ActionMap.action("saveNote");
-        saveAction.setGraphic(Icons.SAVE_NOTE);
-        Button saveButton = ActionUtils.createButton(saveAction);
-        Action removeAction = ActionMap.action("removeNote");
-        removeAction.setGraphic(Icons.REMOVE_NOTE);
-        Button removeButton = ActionUtils.createButton(removeAction);
-//        ToggleSwitch modeButton = new ToggleSwitch("Edit");
-        ToggleButton modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
-        modeButton.setSelected(true);
-        noteBoxButtons.setSpacing(10);
-        noteBoxButtons.getChildren().addAll(saveButton, removeButton, modeButton);
-
-        box.setBottom(noteBoxButtons);
         return box;
     }
 

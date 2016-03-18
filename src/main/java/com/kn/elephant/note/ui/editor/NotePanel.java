@@ -7,18 +7,28 @@ import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.Icons;
 import com.kn.elephant.note.utils.ActionFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToolBar;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Kamil Nadłonek on 10.11.15.
@@ -43,6 +53,7 @@ public class NotePanel extends BasePanel {
         setTop(detailsNotePanel);
         //editor
         editor = new HTMLEditor();
+        additionalToolbar();
         webView = new WebView();
         setPadding(new Insets(15));
         notificationPanel();
@@ -67,6 +78,71 @@ public class NotePanel extends BasePanel {
         editor.setHtmlText(currentNoteDto.getContent());
     }
 
+    private void additionalToolbar() {
+        Node node = editor.lookup(".top-toolbar");
+        if (node instanceof ToolBar) {
+            createButtons((ToolBar) node);
+        }
+    }
+
+    private void createButtons(ToolBar toolBar) {
+        Action saveAction = ActionMap.action("saveNote");
+        saveAction.setGraphic(Icons.SAVE_NOTE);
+        Button saveButton = ActionUtils.createButton(saveAction);
+
+        Action removeAction = ActionMap.action("removeNote");
+        removeAction.setGraphic(Icons.REMOVE_NOTE);
+        Button removeButton = ActionUtils.createButton(removeAction);
+
+        Action insertAction = ActionMap.action("insertLink");
+        Icons.addIcon(MaterialDesignIcon.LINK, insertAction, "1.5em");
+        Button insertLinkButton = ActionUtils.createButton(insertAction);
+
+        toolBar.getItems().addAll(saveButton, removeButton, insertLinkButton);
+    }
+
+
+    private void httpLisener() {
+        editor.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<InputEvent>() {
+            Pattern urlPattern = Pattern.compile("http://[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]");
+
+            @Override
+            public void handle(InputEvent event) {
+                log.info("event ");
+                log.info(editor.getHtmlText());
+                String text = editor.getHtmlText();
+                Matcher matcher = urlPattern.matcher(text);
+                // check all occurance
+                boolean foundUrl = false;
+                while (matcher.find()) {
+                    System.out.print("Start index: " + matcher.start());
+                    System.out.print(" End index: " + matcher.end() + " ");
+                    System.out.println(matcher.group());
+                    text.replace(matcher.group(), "<url>" + matcher.group() + "</url>");
+                    foundUrl = true;
+                }
+//                if(foundUrl) {
+//                    editor.setHtmlText(text);
+//                }
+            }
+        });
+
+    }
+
+    @ActionProxy(text = "")
+    private void insertLink(ActionEvent event) {
+        log.debug("Insert link");
+        WebView webView = (WebView) editor.lookup("WebView");
+        String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
+        log.info("Selected tekst" + selected);
+        String currentText = editor.getHtmlText();
+        String hyperlinkHtml = "<a href=\"" + selected.trim() + "\" title=\"" + selected + "\" target=\"_blank\">" + selected + "</a>";
+
+        if (selected != null & !selected.isEmpty()) {
+
+            editor.setHtmlText(currentText.replace(selected, hyperlinkHtml));
+        }
+    }
 
     @ActionProxy(text = "")
     private void updateTitle(ActionEvent event) {

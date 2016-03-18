@@ -3,6 +3,7 @@ package com.kn.elephant.note.ui;
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
+import com.kn.elephant.note.utils.ActionFactory;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
@@ -76,7 +77,8 @@ public class ListNotePanel extends BasePanel {
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 log.debug("Change note");
-                ActionMap.action("loadNote").handle(new ActionEvent(newValue.getValue(), null));
+                ActionFactory.callAction("loadNote", newValue.getValue());
+                ActionFactory.callAction("setEditMode", true);
             }
         });
         treeView.getSelectionModel().select(0);

@@ -5,9 +5,11 @@ import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -27,6 +29,7 @@ public class MenuPanel extends BasePanel {
 
     @Inject
     private NoteService noteService;
+    private ToggleButton modeButton;
 
     public MenuPanel() {
         ActionMap.register(this);
@@ -47,9 +50,13 @@ public class MenuPanel extends BasePanel {
         ToolBar toolBar = new ToolBar();
 
         Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
+        //        ToggleSwitch modeButton = new ToggleSwitch("Edit");
+        modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
+        modeButton.setSelected(true);
 
-        toolBar.getItems().add(leftMenuButton);
-        toolBar.getItems().add(ActionUtils.createButton(ActionMap.action("addNoteDialog")));
+        Button addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
+
+        toolBar.getItems().addAll(leftMenuButton, addNoteButton, modeButton);
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         toolBar.getItems().add(spacer);
@@ -65,5 +72,10 @@ public class MenuPanel extends BasePanel {
             Optional<NoteDto> dto = noteService.saveNote(noteDto.get());
             ActionFactory.callAction("addNoteToList", dto.get());
         }
+    }
+
+    @ActionProxy(text = "")
+    private void setEditMode(ActionEvent event) {
+        modeButton.setSelected((Boolean) event.getSource());
     }
 }
