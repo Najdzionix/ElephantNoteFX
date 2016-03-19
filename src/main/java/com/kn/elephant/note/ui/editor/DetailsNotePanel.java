@@ -30,6 +30,8 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
+import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
+import org.controlsfx.validation.decoration.ValidationDecoration;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -54,6 +56,7 @@ public class DetailsNotePanel extends BasePanel {
 
     @Inject
     private TagService tagService;
+    private ValidationSupport validationSupport;
 
     public DetailsNotePanel() {
         ActionMap.register(this);
@@ -106,15 +109,17 @@ public class DetailsNotePanel extends BasePanel {
         Label addTagLabel = new Label("Add tag:");
         tagTF = new TextField();
         box.getStyleClass().add("textFieldTag");
-        ValidationSupport validationSupport = new ValidationSupport();
+        validationSupport = new ValidationSupport();
+        ValidationDecoration cssDecorator = new StyleClassValidationDecoration();
+        validationSupport.setValidationDecorator(cssDecorator);
         validationSupport.registerValidator(tagTF, Validator.createEmptyValidator("Name tag can not be empty!"));
 
         initAutoCompleteForTags(noteTags);
 
-        Button testButton = ActionUtils.createButton(ActionFactory.getAddTag());
+        Button addTagButton = ActionUtils.createButton(ActionFactory.getAddTag());
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        box.getChildren().addAll(spacer, addTagLabel, tagTF, testButton);
+        box.getChildren().addAll(spacer, addTagLabel, tagTF, addTagButton);
         content.setBottom(box);
         return content;
     }
@@ -149,6 +154,9 @@ public class DetailsNotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void addTag() {
         LOGGER.info(String.format("Add tag of name %s", tagTF.getText()));
+        if(validationSupport.isInvalid()) {
+            return;
+        }
         TagDto dto;
         if (autoCompelteTag != null && autoCompelteTag.getName().equalsIgnoreCase(tagTF.getText().trim())) {
             dto = autoCompelteTag;

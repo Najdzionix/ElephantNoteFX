@@ -1,8 +1,11 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.leftMenu;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
+import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.ui.LeftMenuPanel;
+import com.kn.elephant.note.ui.leftMenu.NoteTreeCell;
 import com.kn.elephant.note.utils.ActionFactory;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -82,6 +85,7 @@ public class ListNotePanel extends BasePanel {
             }
         });
         treeView.getSelectionModel().select(0);
+        treeView.getStyleClass().add("list-view");
         return treeView;
     }
 

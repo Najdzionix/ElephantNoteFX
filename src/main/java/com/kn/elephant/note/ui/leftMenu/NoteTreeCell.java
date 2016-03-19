@@ -1,4 +1,4 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.leftMenu;
 
 import com.kn.elephant.note.dto.NoteDto;
 import javafx.scene.Node;

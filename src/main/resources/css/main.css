@@ -92,9 +92,11 @@
 .textFieldTag > .button {
  -fx-background-radius: 50;
 }
-
-
-
+.tooltipError {
+    -fx-background-color: #F05656;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+}
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
 }    */

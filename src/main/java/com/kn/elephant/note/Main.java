@@ -4,9 +4,9 @@ import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.Inject;
 import com.kn.elephant.note.service.ElephantModule;
 import com.kn.elephant.note.service.Test;
-import com.kn.elephant.note.ui.ListNotePanel;
 import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.editor.NotePanel;
+import com.kn.elephant.note.ui.leftMenu.ListNotePanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
@@ -44,12 +46,11 @@ public class Main extends Application {
             testService.insertExampleData();
         }
         buildUI();
-        String mainCss = Main.class.getResource("../../../../css/main.css").toExternalForm();
         Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);
 
         Scene scene = new Scene(mainPane);
 
-        scene.getStylesheets().add(mainCss);
+        scene.getStylesheets().addAll(loadCssFiles());
 //        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato:700italic&subset=latin,latin-ext");
 
         primaryStage.setScene(scene);
@@ -57,6 +58,16 @@ public class Main extends Application {
         primaryStage.show();
 
         testService.hello();
+    }
+
+    public static List<String> loadCssFiles() {
+        String[] cssNames = {"materialfx-toggleswitch.css", "material-fx-v0_3.css", "main.css"};
+        List<String> cssFiles = new ArrayList<>();
+        for (String cssName : cssNames) {
+            cssFiles.add(Main.class.getResource("../../../../css/" + cssName).toExternalForm());
+        }
+
+        return cssFiles;
     }
 
     private void buildUI() {
