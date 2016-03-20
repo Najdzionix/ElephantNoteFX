@@ -5,6 +5,7 @@ import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.validator.Validator;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,6 +54,7 @@ public class DialogNote extends BasePanel {
         Label parentLabel = createLabel("Choose parent");
         titleText = new TextField();
         validatorHelper.registerEmptyValidator(titleText, "Title can not empty.");
+        uniqueTagTitleValidator();
         shortDescText = new TextField();
         validatorHelper.registerEmptyValidator(shortDescText, " Short description can not be empty.");
 
@@ -78,6 +80,11 @@ public class DialogNote extends BasePanel {
         });
 
         dialog.getDialogPane().getStylesheets().addAll(Main.loadCssFiles());
+    }
+
+    private void uniqueTagTitleValidator() {
+        validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.",
+                node -> noteService.isTitleNoteUnique(((TextField)node).getText()));
     }
 
     private Label createLabel(String text) {

@@ -27,7 +27,6 @@ public class ValidatorHelper {
 //                    loses focus
                 if (!newValue) {
                     setValidationResult(tf, message, StringUtils.isNotEmpty(tf.getText()));
-                    setValidationResult(tf, message, StringUtils.isNotEmpty(tf.getText()));
                 }
             });
         }
@@ -35,9 +34,20 @@ public class ValidatorHelper {
         fields.put(node, true);
     }
 
+    /**
+     * Register provide by user validator and it is fire after lose focus on node.
+     *
+     * @param node Node to validation
+     * @param message Error message
+     * @param validator Object which validate node
+     */
     public void registerCustomValidator(Node node, String message, Validator validator) {
-        boolean isValid = validator.validate(node);
-        setValidationResult(node, message, isValid);
+        node.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                boolean isValid = validator.validate(node);
+                setValidationResult(node, message, isValid);
+            }
+        });
     }
 
     private void setValidationResult(Node node, String message, boolean isValid) {

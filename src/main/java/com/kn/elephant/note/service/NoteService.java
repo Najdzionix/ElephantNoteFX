@@ -28,4 +28,11 @@ public interface NoteService {
      * @return only notes which can be parents
      */
     List<NoteDto> getAllParentNotes();
+
+    /**
+     *  Check if provide title is unique, if not return false, otherwise return true
+     * @param title
+     * @return
+     */
+    boolean isTitleNoteUnique(String title);
 }
