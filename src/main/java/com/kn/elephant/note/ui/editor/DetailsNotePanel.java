@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.GridView;
@@ -35,7 +36,6 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,9 +49,8 @@ public class DetailsNotePanel extends BasePanel {
 
     private NoteDto noteDto;
     private GridPane gridPane;
-    private ObservableList<TagDto> tagDtos;
+    private ObservableList<TagDto> tagsDto;
     private TextField tagTF;
-
     private TagDto autoCompelteTag = null;
 
     @Inject
@@ -61,6 +60,7 @@ public class DetailsNotePanel extends BasePanel {
     public DetailsNotePanel() {
         ActionMap.register(this);
         setMaxHeight(150);
+
     }
 
     public void loadNote(NoteDto noteDto) {
@@ -71,6 +71,7 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createLeftPanel() {
         BorderPane box = new BorderPane();
+        box.getStyleClass().add("custom-pane");
         gridPane = new GridPane();
         createDates("Created:", 0);
         createDates("Updated:", 2);
@@ -82,23 +83,22 @@ public class DetailsNotePanel extends BasePanel {
 
     private void createDates(String labelText, int colIndex) {
         Label label = new Label(labelText);
-        label.getStyleClass().add("noteLabelTime");
+        label.getStyleClass().addAll("noteLabelTime", "control-label");
         GridPane.setHalignment(label, HPos.RIGHT);
         GridPane.setConstraints(label, colIndex, 0);
 
         Label timeLabel = new Label(noteDto.getCreateAt().format(FORMATTER));
-        timeLabel.getStyleClass().add("noteDateTime");
+        timeLabel.getStyleClass().addAll("noteDateTime", "control-label-two");
         GridPane.setHalignment(timeLabel, HPos.LEFT);
         GridPane.setConstraints(timeLabel, colIndex + 1, 0);
-
         gridPane.getChildren().addAll(label, timeLabel);
     }
 
     private Node createTagPanel() {
         BorderPane content = new BorderPane();
         List<TagDto> noteTags = tagService.getTagByNoteId(noteDto.getId());
-        tagDtos = FXCollections.observableList(noteTags);
-        GridView<TagDto> gridView = new GridView(tagDtos);
+        tagsDto = FXCollections.observableList(noteTags);
+        GridView<TagDto> gridView = new GridView(tagsDto);
         gridView.setCellFactory(arg0 -> new TagNode("removeTag"));
         gridView.setCellWidth(100);
         gridView.setCellHeight(25);
@@ -128,7 +128,7 @@ public class DetailsNotePanel extends BasePanel {
         List<TagDto> freeTags = tagService.getAll().stream().filter(tag -> !tags.contains(tag)).collect(Collectors.toList());
 
         AutoCompletionBinding<TagDto> bind = TextFields.bindAutoCompletion(tagTF,
-                param -> freeTags.stream().filter(tagDto -> tagDto.getName().toLowerCase(Locale.getDefault()).contains(param.getUserText().toLowerCase(Locale.getDefault()))).collect(Collectors.toList()),
+                param -> freeTags.stream().filter(tagDto -> StringUtils.lowerCase(tagDto.getName()).contains(StringUtils.lowerCase(param.getUserText()))).collect(Collectors.toList()),
                 new TagStringConverter());
 
         bind.setOnAutoCompleted(event -> {
@@ -144,7 +144,7 @@ public class DetailsNotePanel extends BasePanel {
         LOGGER.debug(item);
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
         if (isDeleted) {
-            tagDtos.remove(item);
+            tagsDto.remove(item);
         } else {
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation remove tag failed", Icons
                     .ERROR));
@@ -167,7 +167,7 @@ public class DetailsNotePanel extends BasePanel {
         dto.getNotes().add(noteDto);
         Optional<TagDto> tagDto = tagService.saveTag(dto);
         if (tagDto.isPresent()) {
-            tagDtos.add(tagDto.get());
+            tagsDto.add(tagDto.get());
             tagTF.clear();
         } else {
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation add tag failed", Icons.ERROR));

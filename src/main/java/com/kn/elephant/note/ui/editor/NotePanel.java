@@ -87,11 +87,11 @@ public class NotePanel extends BasePanel {
 
     private void createButtons(ToolBar toolBar) {
         Action saveAction = ActionMap.action("saveNote");
-        saveAction.setGraphic(Icons.SAVE_NOTE);
+        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveAction, "1.5em");
         Button saveButton = ActionUtils.createButton(saveAction);
 
         Action removeAction = ActionMap.action("removeNote");
-        removeAction.setGraphic(Icons.REMOVE_NOTE);
+        Icons.addIcon(MaterialDesignIcon.BOOKMARK_REMOVE, removeAction, "1.5em");
         Button removeButton = ActionUtils.createButton(removeAction);
 
         Action insertAction = ActionMap.action("insertLink");

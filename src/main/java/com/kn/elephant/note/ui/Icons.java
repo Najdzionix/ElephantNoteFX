@@ -41,7 +41,6 @@ public class Icons {
 
     public static Glyph REMOVE_TAG = Glyph.create("FontAwesome|" + FontAwesome.Glyph.CLOSE).size(20).color(Color.RED).useGradientEffect();
     public static final Glyph SAVE_TAG = Glyph.create("FontAwesome|" + FontAwesome.Glyph.CHECK).color(Color.GREEN).size(18);
-    public static final Glyph EDIT_TITLE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.PENCIL).color(Color.BLACK).size(18);
     public static final Glyph SAVE_TITLE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.SAVE).color(Color.BLACK).size(18);
     public static final Glyph SAVE_NOTE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.SAVE).color(Color.BLACK).size
             (18);
@@ -53,6 +52,8 @@ public class Icons {
 
     public static final Glyph ERROR = Glyph.create("FontAwesome|" + FontAwesome.Glyph.EXCLAMATION_TRIANGLE).color(Color
             .RED).size(30);
+    public static final Glyph EDIT_TITLE = Glyph.create("FontAwesome|" + FontAwesome.Glyph.PENCIL).color(Color.BLACK).size(16);
+
 
     public static void addIcon(GlyphIcons icon, Action action, String size) {
         action.setText(icon.characterToString());

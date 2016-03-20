@@ -1,3 +1,30 @@
+.root {
+   -color-secondary: #FF9800;
+   -color-blue-gray: #455A64;
+   -color-primary: #607D8B;
+   -color-light-gray: #CFD8DC;
+   -color-text-white: #FFFFFF;
+   -color-text-black: #212121;
+   -color-text-secondary: #727272;
+   -color-divider-gray: #B6B6B6;
+}
+
+.control-label .text {
+    -fx-font-size: 1.2em;
+	-fx-fill: -color-text-black;
+}
+
+.control-label-two .text {
+    -fx-font-size: 1.2em;
+	-fx-fill: -color-text-secondary;
+}
+
+.custom-pane {
+	-fx-background-color:  -color-light-gray;
+	-fx-background-radius: 2.0;
+	-fx-padding: 16 16 16 16;
+	}
+
 .test {
     -fx-background-color: green;
 }
@@ -61,8 +88,6 @@
 
 .noteDateTime {
     -fx-padding: 0 10 10 0;
-    -fx-font-family: Lato;
-     -fx-font-style: italic;
 }
 
 .grid-cell {
@@ -97,6 +122,14 @@
     -fx-text-fill: white;
     -fx-font-size: 14;
 }
+.tool-bar-menu .button, .tool-bar-menu .toggle-button {
+    -fx-pref-width: 150;
+}
+.tool-bar-menu .button:hover, .tool-bar-menu .toggle-button:hover {
+   -fx-border-color:  -color-secondary;
+     -fx-border-width: 0 0 3 0;
+}
+
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
 }    */

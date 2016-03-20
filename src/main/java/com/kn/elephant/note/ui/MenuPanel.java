@@ -48,7 +48,7 @@ public class MenuPanel extends BasePanel {
         vbox.getChildren().add(new SearchBox());
 
         ToolBar toolBar = new ToolBar();
-
+        toolBar.getStyleClass().add("tool-bar-menu");
         Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
         //        ToggleSwitch modeButton = new ToggleSwitch("Edit");
         modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));

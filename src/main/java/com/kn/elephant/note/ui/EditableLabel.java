@@ -1,6 +1,7 @@
 package com.kn.elephant.note.ui;
 
 import com.kn.elephant.note.utils.ActionFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -42,7 +43,7 @@ public class EditableLabel extends Region {
         textField = new TextField(text);
         validationSupport.registerValidator(textField, Validator.createEmptyValidator("No empty title"));
         Action editAction = ActionMap.action("editNoteTitle");
-        editAction.setGraphic(Icons.EDIT_TITLE);
+        Icons.addIcon(MaterialDesignIcon.PENCIL, editAction, "1.5em");
         editButton = ActionUtils.createButton(editAction);
 
         textField.focusedProperty().addListener(new ChangeListener<Boolean>() {

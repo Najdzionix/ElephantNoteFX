@@ -61,7 +61,8 @@ public class Main extends Application {
     }
 
     public static List<String> loadCssFiles() {
-        String[] cssNames = {"materialfx-toggleswitch.css", "material-fx-v0_3.css", "main.css"};
+//        "materialfx-toggleswitch.css"
+        String[] cssNames = { "material-fx-v0_3.css", "main.css"};
         List<String> cssFiles = new ArrayList<>();
         for (String cssName : cssNames) {
             cssFiles.add(Main.class.getResource("../../../../css/" + cssName).toExternalForm());
@@ -72,6 +73,7 @@ public class Main extends Application {
 
     private void buildUI() {
         mainPane = new BorderPane();
+        mainPane.getStyleClass().add("root");
         mainPane.setCenter(new NotePanel(null));
         mainPane.setLeft(new ListNotePanel());
         mainPane.setTop(new MenuPanel());
