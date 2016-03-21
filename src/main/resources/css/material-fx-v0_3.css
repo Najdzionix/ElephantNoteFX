@@ -131,7 +131,6 @@
 .button-raised {
 	-fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.30), 6.0, 0.3, 0,
 		1);
-	-fx-background-color: rgb(250, 250, 250);
 }
 
 .button-flat {
@@ -158,10 +157,6 @@
 	-fx-text-fill: -fx-text-button-colored;
 }
 
-.toggle-button:focused, .button:focused, .button:default:focused {
-	-fx-background-color: -swatch-light-grey;
-}
-
 .toggle-button:focused:selected {
 	-fx-background-color: derive(-swatch-500, 50.0%),
 		derive(-swatch-500, -20.0%);
@@ -171,17 +166,16 @@
 
 .toggle-button:armed, .toggle-button:selected, .button:armed, .button:default:armed
 	{
-	-fx-background-color: -swatch-grey;
 	-fx-text-fill: -fx-text-button-colored;
 }
 
 .icon-button {
-	-fx-background-color: transparent;
+	/*-fx-background-color: transparent;*/
 	-fx-pref-height: 42;
 	-fx-pref-width: 42;
 	-fx-min-height: 42;
 	-fx-min-width: 42;
-	-fx-padding: 0;
+	-fx-padding: 0;  
 }
 
 .icon-button .text {

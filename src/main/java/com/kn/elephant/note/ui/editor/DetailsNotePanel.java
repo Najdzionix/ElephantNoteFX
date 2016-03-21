@@ -11,6 +11,7 @@ import com.kn.elephant.note.ui.Icons;
 import com.kn.elephant.note.ui.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.TagStringConverter;
+import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -56,12 +57,11 @@ public class DetailsNotePanel extends BasePanel {
 
     @Inject
     private TagService tagService;
-    private ValidationSupport validationSupport;
+    private ValidatorHelper validatorHelper = new ValidatorHelper();
 
     public DetailsNotePanel() {
         ActionMap.register(this);
         setMaxHeight(150);
-
     }
 
     public void loadNote(NoteDto noteDto) {
@@ -104,7 +104,7 @@ public class DetailsNotePanel extends BasePanel {
         tagsDto = FXCollections.observableList(noteTags);
         GridView<TagDto> gridView = new GridView(tagsDto);
         gridView.setCellFactory(arg0 -> new TagNode("removeTag"));
-        gridView.setCellWidth(100);
+        gridView.setCellWidth(120);
         gridView.setCellHeight(25);
         content.setCenter(gridView);
 
@@ -113,10 +113,7 @@ public class DetailsNotePanel extends BasePanel {
         Label addTagLabel = new Label("Add tag:");
         tagTF = new TextField();
         box.getStyleClass().add("textFieldTag");
-        validationSupport = new ValidationSupport();
-        ValidationDecoration cssDecorator = new StyleClassValidationDecoration();
-        validationSupport.setValidationDecorator(cssDecorator);
-        validationSupport.registerValidator(tagTF, Validator.createEmptyValidator("Name tag can not be empty!"));
+        validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
 
         initAutoCompleteForTags(noteTags);
 
@@ -158,7 +155,7 @@ public class DetailsNotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void addTag() {
         LOGGER.info(String.format("Add tag of name %s", tagTF.getText()));
-        if(validationSupport.isInvalid()) {
+        if(!validatorHelper.isValid()) {
             return;
         }
         TagDto dto;

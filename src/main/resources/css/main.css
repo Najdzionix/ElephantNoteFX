@@ -7,9 +7,53 @@
     -color-text-black: #212121;
     -color-text-secondary: #727272;
     -color-divider-gray: #B6B6B6;
+    -color-blue:#42A5F5
+}
+
+@font-face {
+    font-family: Lato;
+    src: url('../fonts/Lato-Regular.ttf');
+}
+
+.button {
+    -fx-background-color: -color-light-gray;
+    -fx-text-fill: -color-text-secondary;
+}
+.button:hover {
+    -fx-text-fill:-color-secondary;
+}
+
+.tooltipError {
+    -fx-background-color: #F05656;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+}
+
+/************************************************
+                    Details panel 
+*************************************************/
+.noteTitle {
+    -fx-text-fill: black;
+    -fx-font-size: 22;
+    -fx-font-family: Lato;
+    -fx-opacity: 0.9;
+    -fx-font-weight:bold;
+    -fx-padding: 10 10 10 15;
+}
+
+.noteLabelTime {
+    -fx-padding: 8 10 10 15;
+}
+
+.noteDateTime {
+    -fx-padding: 8 10 10 0;
 }
 .detailPanel {
     -fx-padding: 0 0 15 0;  
+}
+
+.detailPanel .button {
+    -fx-padding: 6;
 }
 
 .control-label .text {
@@ -28,9 +72,42 @@
     -fx-padding: 15 15 15 15;
 }
 
-.test {
-    -fx-background-color: green;
+
+
+/************************************************
+            Details panel -> Tag Panel 
+*************************************************/
+.removeButton {
+    -fx-background-color: -color-blue;
+    -fx-padding: 0 5 5 0;
+    -fx-font-weight: 900;
 }
+.tag {
+    -fx-background-color: -color-blue;
+    -fx-padding: 0 5 5 0;
+
+    -fx-background-radius: 4;
+}
+.tag .text { 
+    -fx-fill:white; 
+    -fx-text-alignment:center;
+}
+.tag .text:hover { -fx-fill:orange;}
+/***************
+    Add tag 
+***************/
+.textFieldTag .text-field {
+    -fx-pref-width:250;
+}
+
+.textFieldTag > .label {
+    -fx-padding: 7 0 0 0;
+}
+
+
+
+
+
 
 .menuItem {
     -fx-background-color: #1d1d1d;
@@ -51,17 +128,10 @@
     -fx-padding:10;
 }
 
-
-.testBorder {
-    -fx-border-color: red;
-    -fx-border-width: 2;
-}
-
 .noteItem {
     -fx-border-color: #C2C2C2;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 0 5 5 5 ;
-
 }
 
 .tree-cell:selected {
@@ -70,61 +140,9 @@
     -fx-font-style: italic;
 }
 
-@font-face {
-    font-family: Lato;
-    src: url('../fonts/Lato-Regular.ttf');
-}
-
-
-/* Details panel */
-.noteTitle {
-    -fx-text-fill: black;
-    -fx-font-size: 22;
-    -fx-font-family: Lato;
-    -fx-opacity: 0.9;
-    -fx-font-weight:bold;
-    -fx-padding: 10 10 10 15;
-}
-.noteLabelTime {
-    -fx-padding: 0 10 10 15;
-}
-
-.noteDateTime {
-    -fx-padding: 0 10 10 0;
-}
-
-.grid-cell {
-    -fx-background-color: #A3A3A3;
-    -fx-background-radius: 14.4;
-    -fx-background-insets: -1.4, 1;
-}
-.removeButton {
-    -fx-background-color: transparent;
-    -fx-padding: 0 5 3 0;
-}
-.tagText {
-    -fx-padding: 5 0 0 5;
-    -fx-border-color: red;
-}
-.textFieldTag > .text-field {
-    -fx-pref-width:250;
-}
-
-.textFieldTag > .label {
-    -fx-padding: 5 0 0 0;
-}
-.textFieldTag > .button:hover {
-    -fx-border-color: red;
-}
-
-.textFieldTag > .button {
-    -fx-background-radius: 50;
-}
-.tooltipError {
-    -fx-background-color: #F05656;
-    -fx-text-fill: white;
-    -fx-font-size: 14;
-}
+/************************************************
+                Top Menu Panel
+*************************************************/
 .tool-bar-menu .button, .tool-bar-menu .toggle-button {
     -fx-pref-width: 150;
 }
@@ -137,3 +155,8 @@
     -fx-background-color: #404040 ;
 }    */
 
+/*
+.testBorder {
+    -fx-border-color: red;
+    -fx-border-width: 2;
+}*/

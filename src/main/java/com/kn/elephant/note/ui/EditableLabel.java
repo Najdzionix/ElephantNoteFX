@@ -1,8 +1,8 @@
 package com.kn.elephant.note.ui;
 
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -18,8 +18,6 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15. 
@@ -33,21 +31,20 @@ public class EditableLabel extends Region {
     private Label label;
     private TextField textField;
     private Button editButton;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private ValidatorHelper validatorHelper = new ValidatorHelper();
 
     public EditableLabel(String text) {
         ActionMap.register(this);
         label = new Label(text);
         label.getStyleClass().add("noteTitle");
         textField = new TextField(text);
-        validationSupport.registerValidator(textField, Validator.createEmptyValidator("No empty title"));
-        Action editAction = ActionMap.action("editNoteTitle");
-        Icons.addIcon(MaterialDesignIcon.PENCIL, editAction, "1.5em");
-        editButton = ActionUtils.createButton(editAction);
+        validatorHelper.registerEmptyValidator(textField, "Title can not be empty.");
+
+        normalMode();
 
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             // check if focus gained or lost
-            if (!newValue) {
+            if (!newValue && validatorHelper.isValid()) {
                 normalMode();
             }
         });
@@ -67,27 +64,31 @@ public class EditableLabel extends Region {
     private void editMode() {
         textField.setText(label.getText());
         Action saveAction = ActionMap.action("saveNoteTitle");
-//        saveAction.setGraphic(Icons.SAVE_TAG);
         Icons.addIcon(MaterialDesignIcon.CHECK, saveAction, "1.5em");
         editButton = ActionUtils.createButton(saveAction);
         createBox(textField, editButton);
     }
 
     private void normalMode() {
-        editButton = ActionUtils.createButton(ActionMap.action("editNoteTitle"));
+        Action editAction = ActionMap.action("editNoteTitle");
+        Icons.addIcon(MaterialDesignIcon.PENCIL, editAction, "1.5em");
+        editButton = ActionUtils.createButton(editAction);
+        editButton.getStyleClass().add("button");
         createBox(label, editButton);
     }
 
     @ActionProxy(text = "")
     private void editNoteTitle() {
-        LOGGER.info("Execute edit title note action ");
+        LOGGER.debug("Execute edit title note action ");
         editMode();
     }
 
     @ActionProxy(text = "")
     private void saveNoteTitle() {
-        label.setText(textField.getText());
-        ActionFactory.getUpdateNoteTitle().handle(new ActionEvent(textField.getText(), null));
-        normalMode();
+        if (validatorHelper.isValid()) {
+            label.setText(textField.getText());
+            ActionFactory.getUpdateNoteTitle().handle(new ActionEvent(textField.getText(), null));
+            normalMode();
+        }
     }
 }
