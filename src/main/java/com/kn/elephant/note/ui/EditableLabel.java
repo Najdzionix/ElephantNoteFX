@@ -22,7 +22,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 /**
- * Created by Kamil Nadłonek on 09.11.15.
+ * Created by Kamil Nadłonek on 09.11.15. 
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
@@ -35,7 +35,6 @@ public class EditableLabel extends Region {
     private Button editButton;
     private ValidationSupport validationSupport = new ValidationSupport();
 
-
     public EditableLabel(String text) {
         ActionMap.register(this);
         label = new Label(text);
@@ -46,17 +45,12 @@ public class EditableLabel extends Region {
         Icons.addIcon(MaterialDesignIcon.PENCIL, editAction, "1.5em");
         editButton = ActionUtils.createButton(editAction);
 
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                log.info("Test lose focus ...");
-                if(!newValue)    // check if focus gained or lost
-                {
-                   normalMode();
-                }
+        textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            // check if focus gained or lost
+            if (!newValue) {
+                normalMode();
             }
         });
-
 
         createBox(label, editButton);
 
@@ -73,7 +67,8 @@ public class EditableLabel extends Region {
     private void editMode() {
         textField.setText(label.getText());
         Action saveAction = ActionMap.action("saveNoteTitle");
-        saveAction.setGraphic(Icons.SAVE_TAG);
+//        saveAction.setGraphic(Icons.SAVE_TAG);
+        Icons.addIcon(MaterialDesignIcon.CHECK, saveAction, "1.5em");
         editButton = ActionUtils.createButton(saveAction);
         createBox(textField, editButton);
     }

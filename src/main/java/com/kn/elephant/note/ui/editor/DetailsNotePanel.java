@@ -38,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javafx.geometry.Insets;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -65,7 +66,9 @@ public class DetailsNotePanel extends BasePanel {
 
     public void loadNote(NoteDto noteDto) {
         this.noteDto = noteDto;
-        setLeft(createLeftPanel());
+        Node node = createLeftPanel();
+        getStyleClass().add("detailPanel");
+        setLeft(node);
         setCenter(createTagPanel());
     }
 
@@ -73,7 +76,7 @@ public class DetailsNotePanel extends BasePanel {
         BorderPane box = new BorderPane();
         box.getStyleClass().add("custom-pane");
         gridPane = new GridPane();
-        createDates("Created:", 0);
+        createDates("Created:1", 0);
         createDates("Updated:", 2);
         box.setTop(gridPane);
         box.setCenter(new EditableLabel(noteDto.getTitle()));
@@ -96,6 +99,7 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createTagPanel() {
         BorderPane content = new BorderPane();
+        content.getStyleClass().add("custom-pane");
         List<TagDto> noteTags = tagService.getTagByNoteId(noteDto.getId());
         tagsDto = FXCollections.observableList(noteTags);
         GridView<TagDto> gridView = new GridView(tagsDto);
