@@ -50,7 +50,6 @@ public class EditableLabel extends Region {
         });
 
         createBox(label, editButton);
-
     }
 
     private void createBox(Node... nodes) {

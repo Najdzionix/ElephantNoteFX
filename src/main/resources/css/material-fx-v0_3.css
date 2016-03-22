@@ -433,18 +433,19 @@
  * List, Tree, Table COMMON                                                    *
  *                                                                             *
  ******************************************************************************/
+.list-view .list-cell {
+    -fx-padding:7;
+}
 .list-view:focused .list-cell:filled:focused:selected {
 	-fx-background-color: -swatch-light-grey;
 	-fx-text-fill: -swatch-500;
+        -fx-padding: 7;
 }
 
 .list-view:hover .list-cell:hover {
 	-fx-background-color: -swatch-light-grey;
 	-fx-text-fill: -fx-text-base-color;
-}
-
-.list-cell {
-	-fx-cell-size: 40;
+        -fx-padding: 7;
 }
 
 /*******************************************************************************

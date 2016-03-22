@@ -7,7 +7,6 @@ import com.kn.elephant.note.dto.TagDto;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
-import com.kn.elephant.note.ui.Icons;
 import com.kn.elephant.note.ui.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.TagStringConverter;
@@ -30,16 +29,11 @@ import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
-import org.controlsfx.validation.decoration.ValidationDecoration;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javafx.geometry.Insets;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -147,8 +141,7 @@ public class DetailsNotePanel extends BasePanel {
         if (isDeleted) {
             tagsDto.remove(item);
         } else {
-            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation remove tag failed", Icons
-                    .ERROR));
+            ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation remove tag failed"));
         }
     }
 
@@ -171,7 +164,7 @@ public class DetailsNotePanel extends BasePanel {
             tagsDto.add(tagDto.get());
             tagTF.clear();
         } else {
-            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation add tag failed", Icons.ERROR));
+            ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation add tag failed"));
 
         }
     }

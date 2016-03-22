@@ -28,7 +28,9 @@
     -fx-text-fill: white;
     -fx-font-size: 14;
 }
-
+.notification-bar .text {
+    -fx-fill: -color-secondary;
+}
 /************************************************
                     Details panel 
 *************************************************/
@@ -72,8 +74,6 @@
     -fx-padding: 15 15 15 15;
 }
 
-
-
 /************************************************
             Details panel -> Tag Panel 
 *************************************************/
@@ -93,6 +93,7 @@
     -fx-text-alignment:center;
 }
 .tag .text:hover { -fx-fill:orange;}
+
 /***************
     Add tag 
 ***************/
@@ -104,6 +105,17 @@
     -fx-padding: 7 0 0 0;
 }
 
+
+/************************************************
+            Note Editor panel -> HtmlEditor 
+*************************************************/
+.html-editor >.text {
+    /*-fx-fill: red;*/
+       /*-fx-text-fill: #404040;*/
+}
+.disableButton .text {
+      -fx-fill:  -color-light-gray;
+}
 
 
 

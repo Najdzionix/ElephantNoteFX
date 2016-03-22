@@ -29,6 +29,8 @@ import org.controlsfx.control.action.ActionUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.control.Separator;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Created by Kamil Nadłonek on 10.11.15.
@@ -41,6 +43,7 @@ public class NotePanel extends BasePanel {
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
     private WebView webView;
+    private Button insertLinkButton;
 
     @Inject
     private NoteService noteService;
@@ -51,12 +54,11 @@ public class NotePanel extends BasePanel {
         this.currentNoteDto = noteDto;
         detailsNotePanel = new DetailsNotePanel();
         setTop(detailsNotePanel);
-        //editor
         editor = new HTMLEditor();
-        additionalToolbar();
         webView = new WebView();
         setPadding(new Insets(15));
         notificationPanel();
+        addButtonsToToolbar();
     }
 
     private void notificationPanel() {
@@ -66,10 +68,8 @@ public class NotePanel extends BasePanel {
         setCenter(notificationPane);
     }
 
-
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
-//        setCenter(null);
         notificationPane.setContent(editor);
         currentNoteDto = (NoteDto) event.getSource();
         log.debug("Load note: " + currentNoteDto);
@@ -78,7 +78,7 @@ public class NotePanel extends BasePanel {
         editor.setHtmlText(currentNoteDto.getContent());
     }
 
-    private void additionalToolbar() {
+    private void addButtonsToToolbar() {
         Node node = editor.lookup(".top-toolbar");
         if (node instanceof ToolBar) {
             createButtons((ToolBar) node);
@@ -87,18 +87,27 @@ public class NotePanel extends BasePanel {
 
     private void createButtons(ToolBar toolBar) {
         Action saveAction = ActionMap.action("saveNote");
-        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveAction, "1.5em");
+        final String sizeIcon = "1.4em";
+        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveAction, sizeIcon);
         Button saveButton = ActionUtils.createButton(saveAction);
 
         Action removeAction = ActionMap.action("removeNote");
-        Icons.addIcon(MaterialDesignIcon.BOOKMARK_REMOVE, removeAction, "1.5em");
+        Icons.addIcon(MaterialDesignIcon.DELETE, removeAction, sizeIcon);
         Button removeButton = ActionUtils.createButton(removeAction);
 
         Action insertAction = ActionMap.action("insertLink");
-        Icons.addIcon(MaterialDesignIcon.LINK, insertAction, "1.5em");
-        Button insertLinkButton = ActionUtils.createButton(insertAction);
+        Icons.addIcon(MaterialDesignIcon.LINK, insertAction, sizeIcon);
+        insertLinkButton =  new Button();
+        ActionUtils.configureButton(insertAction, insertLinkButton);
+        
+        editor.setOnMouseClicked((MouseEvent event) -> {
+            final int clickCount = event.getClickCount();
+            if (clickCount == 2) {
+                insertLinkButton.getStyleClass().remove("disableButton");
+            }
+        });
 
-        toolBar.getItems().addAll(saveButton, removeButton, insertLinkButton);
+        toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton);
     }
 
 
@@ -134,21 +143,19 @@ public class NotePanel extends BasePanel {
         log.debug("Insert link");
         WebView webView = (WebView) editor.lookup("WebView");
         String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
-        log.info("Selected tekst" + selected);
         String currentText = editor.getHtmlText();
         String hyperlinkHtml = "<a href=\"" + selected.trim() + "\" title=\"" + selected + "\" target=\"_blank\">" + selected + "</a>";
 
         if (selected != null & !selected.isEmpty()) {
-
             editor.setHtmlText(currentText.replace(selected, hyperlinkHtml));
         }
+        insertLinkButton.getStyleClass().add("disableButton");
     }
 
     @ActionProxy(text = "")
     private void updateTitle(ActionEvent event) {
         log.debug("Update note title" + event.getSource());
         currentNoteDto.setTitle((String) event.getSource());
-        log.info(currentNoteDto);
     }
 
     @ActionProxy(text = "")
@@ -162,7 +169,7 @@ public class NotePanel extends BasePanel {
             loadNote(new ActionEvent(currentNoteDto, null));
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
         } else {
-            ActionFactory.callAction("showNotificationPanel", new NoticeData("Operation saving failed", Icons.ERROR));
+            ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation saving failed"));
         }
     }
 
@@ -196,7 +203,7 @@ public class NotePanel extends BasePanel {
         NoticeData noticeData = (NoticeData) event.getSource();
         notificationPane.show(noticeData.getMessage());
         notificationPane.setGraphic(noticeData.getIcon());
-        hideNotifications(3000);
+        hideNotifications(4000);
     }
 
     private void hideNotifications(int time) {
