@@ -5,7 +5,7 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
-import com.kn.elephant.note.ui.Icons;
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.ActionFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.event.ActionEvent;
@@ -64,7 +64,7 @@ public class NotePanel extends BasePanel {
     private void notificationPanel() {
         notificationPane = new NotificationPane();
         notificationPane.showFromTopProperty().setValue(false);
-        notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
+        notificationPane.getStyleClass().add("notification");
         setCenter(notificationPane);
     }
 

@@ -1,5 +1,6 @@
 package com.kn.elephant.note.ui;
 
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;

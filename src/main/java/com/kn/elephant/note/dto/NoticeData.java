@@ -4,6 +4,7 @@ import com.kn.elephant.note.NoteConstants;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.octicons.OctIcon;
 import javafx.scene.Node;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -20,17 +21,18 @@ public class NoticeData {
     private Node icon;
 
     public NoticeData(String message) {
-        this(message, MaterialDesignIcon.INFORMATION_OUTLINE, NoteConstants.YELLOW_COLOR);
+        this(message, OctIcon.INFO, NoteConstants.YELLOW_COLOR);
     }
 
     public static NoticeData createErrorNotice(String message) {
-        return new NoticeData(message, MaterialDesignIcon.EXCLAMATION, NoteConstants.RED_COLOR);
+        return new NoticeData(message, OctIcon.ALERT, NoteConstants.RED_COLOR);
     }
 
     public NoticeData(String message, GlyphIcons icon, String color) {
         this.message = message;
         this.icon = GlyphsDude.createIcon(icon);;
-        this.icon.getStyleClass().add("icon-notification");
-        this.icon.setStyle(String.format("-fx-fill: %s; -fx-font-size: %s;", color, "2.5em"));
+        this.icon.getStyleClass().addAll("glyph-icon","icon-notification");
+        String temp =this.icon.getStyle();
+        this.icon.setStyle(temp + String.format("-fx-fill: %s; -fx-font-size: %s;", color, "2em"));
     }
 }

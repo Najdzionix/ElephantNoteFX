@@ -1,6 +1,5 @@
 package com.kn.elephant.note.utils;
 
-import com.kn.elephant.note.ui.Icons;
 import javafx.event.ActionEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

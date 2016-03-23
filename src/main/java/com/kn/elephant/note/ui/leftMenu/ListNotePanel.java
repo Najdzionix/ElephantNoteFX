@@ -82,6 +82,7 @@ public class ListNotePanel extends BasePanel {
                 log.debug("Change note");
                 ActionFactory.callAction("loadNote", newValue.getValue());
                 ActionFactory.callAction("setEditMode", true);
+                newValue.setExpanded(true);
             }
         });
         treeView.getSelectionModel().select(0);

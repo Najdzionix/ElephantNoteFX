@@ -1,8 +1,9 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.utils;
 
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import de.jensd.fx.glyphs.octicons.OctIconView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.controlsfx.control.action.Action;
@@ -23,6 +24,7 @@ public class Icons {
         try {
 //            Font.loadFont(GlyphsDude.class.getResource(FontAwesomeIconView.TTF_PATH).openStream(), 10.0);
             Font.loadFont(GlyphsDude.class.getResource(MaterialDesignIconView.TTF_PATH).openStream(), 10.0);
+            Font.loadFont(GlyphsDude.class.getResource(OctIconView.TTF_PATH).openStream(), 10.0);
 //            Font.loadFont(GlyphsDude.class.getResource(MaterialIconView.TTF_PATH).openStream(), 10.0);
         } catch (IOException ex) {
             Logger.getLogger(MaterialDesignIconView.class.getName()).log(Level.SEVERE, null, ex);
