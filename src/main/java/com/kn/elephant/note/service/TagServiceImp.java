@@ -165,4 +165,15 @@ public class TagServiceImp extends BaseService implements TagService {
 
         noteTagDao.updateRaw(sql.toString());
     }
+
+    @Override
+    public boolean isUnique(String tagName) {
+        try {
+            List<Tag> tags = tagDao.queryBuilder().where().eq("name", tagName).query();
+            return tags.isEmpty();
+        } catch (SQLException e) {
+            log.error("Sql exception: " + e.getMessage(), e);
+            return true;
+        }
+    }
 }

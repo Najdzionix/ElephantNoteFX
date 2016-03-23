@@ -5,7 +5,6 @@ import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
-import com.kn.elephant.note.utils.validator.Validator;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
-import org.controlsfx.validation.ValidationSupport;
 
 /**
  * Created by Kamil Nadłonek on 27.11.15.

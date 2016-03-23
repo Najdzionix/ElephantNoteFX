@@ -16,5 +16,5 @@ public interface TagService {
     boolean removeTag(Long id);
     boolean removeTagFromNote(Long tagId, Long noteId);
     Optional<TagDto> saveTag(TagDto tagDto);
-
+    boolean isUnique(String tagName);
 }

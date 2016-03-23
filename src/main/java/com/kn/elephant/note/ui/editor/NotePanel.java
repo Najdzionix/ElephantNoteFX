@@ -5,18 +5,20 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
-import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.Icons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
@@ -29,8 +31,6 @@ import org.controlsfx.control.action.ActionUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.scene.control.Separator;
-import javafx.scene.input.MouseEvent;
 
 /**
  * Created by Kamil Nadłonek on 10.11.15.

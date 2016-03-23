@@ -2,7 +2,6 @@ package com.kn.elephant.note.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.kn.elephant.note.DBConnection;
 import lombok.Data;
 
 /**

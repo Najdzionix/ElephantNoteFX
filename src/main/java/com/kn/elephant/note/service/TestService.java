@@ -1,12 +1,10 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
-import com.kn.elephant.note.ui.TagNode;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.SQLException;

@@ -7,8 +7,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
