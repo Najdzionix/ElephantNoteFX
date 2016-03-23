@@ -3,7 +3,6 @@ package com.kn.elephant.note.dto;
 import com.kn.elephant.note.NoteConstants;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.GlyphsDude;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.octicons.OctIcon;
 import javafx.scene.Node;
 import lombok.Data;
@@ -32,7 +31,7 @@ public class NoticeData {
         this.message = message;
         this.icon = GlyphsDude.createIcon(icon);;
         this.icon.getStyleClass().addAll("glyph-icon","icon-notification");
-        String temp =this.icon.getStyle();
-        this.icon.setStyle(temp + String.format("-fx-fill: %s; -fx-font-size: %s;", color, "2em"));
+        String currentStyle = this.icon.getStyle();
+        this.icon.setStyle(currentStyle + String.format("-fx-fill: %s; -fx-font-size: %s;", color, "2em"));
     }
 }

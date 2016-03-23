@@ -217,5 +217,4 @@ public class NotePanel extends BasePanel {
         };
         new Thread(task).start();
     }
-
 }

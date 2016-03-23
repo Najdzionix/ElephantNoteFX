@@ -4,8 +4,6 @@ import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
-import com.kn.elephant.note.ui.LeftMenuPanel;
-import com.kn.elephant.note.ui.leftMenu.NoteTreeCell;
 import com.kn.elephant.note.utils.ActionFactory;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.StackPane;
 import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.action.ActionMap;
@@ -39,18 +36,17 @@ public class ListNotePanel extends BasePanel {
 
     public ListNotePanel() {
         ActionMap.register(this);
-        StackPane stackPane = new StackPane();
-        stackPane.setStyle("-fx-padding: 30");
+        getStyleClass().addAll("menu-left");
         contentPane = new HiddenSidesPane();
-
         contentPane.setContent(getContent());
         contentPane.setTriggerDistance(10.0);
-        contentPane.setLeft(new LeftMenuPanel());
+//        contentPane.setLeft(new LeftMenuPanel());
         setCenter(contentPane);
     }
 
     private Node getContent() {
         ScrollPane pane = new ScrollPane();
+        pane.setStyle("-fx-background-color:transparent;");
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pane.setContent(getListNotes());
@@ -58,7 +54,6 @@ public class ListNotePanel extends BasePanel {
         pane.setFitToWidth(true);
         return pane;
     }
-
 
     private Node getListNotes() {
         List<NoteDto> noteDtos = noteService.getAllNotes();
@@ -86,7 +81,7 @@ public class ListNotePanel extends BasePanel {
             }
         });
         treeView.getSelectionModel().select(0);
-        treeView.getStyleClass().add("list-view");
+        treeView.setStyle(" -fx-background-color: -color-light-gray;");
         return treeView;
     }
 
@@ -135,5 +130,4 @@ public class ListNotePanel extends BasePanel {
     private Optional<TreeItem<NoteDto>> searchParent(NoteDto noteDto) {
         return treeView.getRoot().getChildren().stream().filter(tr -> tr.getValue().getId() == noteDto.getId()).findFirst();
     }
-
 }

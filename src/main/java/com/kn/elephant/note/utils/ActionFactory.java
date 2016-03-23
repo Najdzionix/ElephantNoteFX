@@ -24,10 +24,6 @@ public class ActionFactory {
         return getAction(UPDATE_TITLE_ACTION_NAME);
     }
 
-    public static Action getAddTag() {
-        return getAction("addTag", Icons.SAVE_TAG);
-    }
-
     public static void callAction(String actionName) {
         callAction(actionName, null);
     }

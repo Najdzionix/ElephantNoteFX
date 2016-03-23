@@ -10,4 +10,9 @@ public class NoteConstants {
     public static final boolean CREATE_DATA_BASE = false;
     public static final String RED_COLOR = "#E32B2B";
     public static final String YELLOW_COLOR = "#E0E632";
+    
+    public static final String ORANGE_COLOR = " -color-secondary;";
+    public static final String GRAY_DIVIDER = " -color-divider-gray;";
+    public static final String BLUE_COLOR = " -color-blue;";
+    public static final String WHITE = " white;";
 }

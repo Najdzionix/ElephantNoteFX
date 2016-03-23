@@ -118,39 +118,31 @@
 .notification-bar .text {
     -fx-fill: -color-text-black;
 }
-
-
-/* -color-text-black: #212121;
-    -color-text-secondary: #727272;*/
-.menuItem {
-    -fx-background-color: #1d1d1d;
+/************************************************
+               Left Menu Panel
+*************************************************/
+.menu-left {
+    -fx-padding: 15 0 15 10;
+    -fx-focus-color: transparent;
 }
-.menuBar{
-    -fx-pref-height: 40;
+.menu-left > * {
+     -fx-focus-color: transparent;
 }
-
-.menu-bar .label {
-    -fx-font-size: 12pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: black;
-    -fx-opacity: 0.9;
-    -fx-alignment: center;
-}
-
 .menu-item {
     -fx-padding:10;
 }
 
 .noteItem {
-    -fx-border-color: #C2C2C2;
-    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -color-divider-gray;
+    -fx-border-width: 0 0 2 0;
     -fx-padding: 0 5 5 5 ;
 }
 
 .tree-cell:selected {
     -fx-font-weight: bold ;
-    -fx-background-color:#E0E0E0;
+    -fx-background-color:-color-blue;
     -fx-font-style: italic;
+    -fx-fill: -color-blue;
 }
 
 /************************************************
@@ -163,13 +155,26 @@
     -fx-border-color:  -color-secondary;
     -fx-border-width: 0 0 3 0;
 }
+.menuBar{
+    -fx-pref-height: 40;
+}
+
+.menu-bar .label {
+    -fx-font-size: 12pt;
+    -fx-text-fill: -color-text-black;
+    -fx-opacity: 0.9;
+    -fx-alignment: center;
+}
 
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
 }    */
 
-/*
+
 .testBorder {
     -fx-border-color: red;
-    -fx-border-width: 2;
-}*/
+    -fx-border-width: 1;
+     /*-fx-focus-color: transparent;*/
+     /*-fx-border-width:0;*/
+    /*-fx-padding:5;*/
+}

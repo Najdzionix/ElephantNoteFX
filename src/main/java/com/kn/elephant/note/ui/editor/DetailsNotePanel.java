@@ -9,8 +9,10 @@ import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.TagStringConverter;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.controlsfx.control.action.Action;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -70,7 +73,7 @@ public class DetailsNotePanel extends BasePanel {
         BorderPane box = new BorderPane();
         box.getStyleClass().add("custom-pane");
         gridPane = new GridPane();
-        createDates("Created:1", 0);
+        createDates("Created:", 0);
         createDates("Updated:", 2);
         box.setTop(gridPane);
         box.setCenter(new EditableLabel(noteDto.getTitle()));
@@ -110,8 +113,10 @@ public class DetailsNotePanel extends BasePanel {
         validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
 
         initAutoCompleteForTags(noteTags);
+        final Action addTagAction = ActionFactory.getAction("addTag");
 
-        Button addTagButton = ActionUtils.createButton(ActionFactory.getAddTag());
+        Button addTagButton = ActionUtils.createButton(addTagAction);
+        Icons.addIcon(MaterialDesignIcon.CHECK, addTagAction, "1.5em");
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         box.getChildren().addAll(spacer, addTagLabel, tagTF, addTagButton);

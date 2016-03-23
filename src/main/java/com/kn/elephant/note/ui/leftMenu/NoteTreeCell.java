@@ -1,15 +1,16 @@
 package com.kn.elephant.note.ui.leftMenu;
 
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Kamil Nadłonek on 06.11.15.
@@ -18,6 +19,7 @@ import javafx.scene.text.TextFlow;
 public class NoteTreeCell extends TreeCell<NoteDto> {
     private TextFlow textFlow;
     private TextField textField;
+    private VBox vBox;
 
     public NoteTreeCell() {}
 
@@ -37,25 +39,39 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
                 setGraphic(textField);
             } else {
 //                setText(getString());
-                setGraphic(test(getTreeItem()));
+                setGraphic(createNoteCell(getTreeItem()));
             }
         }
     }
 
-    private Node test(TreeItem<NoteDto> item) {
+    private Node createNoteCell(TreeItem<NoteDto> item) {
         NoteDto currentNoteDto = item.getValue();
-        VBox vBox = new VBox();
-        Text textBold = new Text(currentNoteDto.getTitle());
-        String family = "Helvetica";
-        textBold.setFont(Font.font(family, FontWeight.BOLD, 14));
-        Text normal = new Text(currentNoteDto.getShortDescription());
+        vBox = new VBox();
+        vBox.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (!vBox.getStyle().contains(NoteConstants.WHITE)) {
+                if (newValue) {
+                    vBox.setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR);
+                } else {
+                    vBox.setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
+                }
+            }
+        });
+        
+        this.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if(newValue) {
+                vBox.setStyle("-fx-border-color: " + NoteConstants.WHITE);
+            } else {
+                vBox.setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
+            }
+        });
+        Text title = new Text(currentNoteDto.getTitle());
+        Text desc = new Text( StringUtils.abbreviate(currentNoteDto.getShortDescription(),30));
         textFlow = new TextFlow();
-        textFlow.getChildren().addAll(textBold, normal);
+        textFlow.getChildren().addAll(title, desc);
 
-        vBox.getChildren().addAll(textBold, normal);
+        vBox.getChildren().addAll(title, desc);
         vBox.getStyleClass().add("noteItem");
         return vBox;
-
     }
 
     private String getString() {

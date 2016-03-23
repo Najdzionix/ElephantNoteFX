@@ -36,6 +36,6 @@ public class Icons {
     public static void addIcon(GlyphIcons icon, Action action, String size) {
         action.setText(icon.characterToString());
         action.getStyleClass().add("glyph-icon");
-        action.setStyle(String.format("-fx-font-family: %s; -fx-font-size: %s;", icon.getFontFamily(), size));
+        action.setStyle(String.format("-fx-font-family: %s; -fx-font-size: %s; -fx-font-weight:900;", icon.getFontFamily(), size));
     }
 }
