@@ -1,4 +1,4 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.control;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

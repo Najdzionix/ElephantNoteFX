@@ -166,6 +166,23 @@
     -fx-alignment: center;
 }
 
+.content-search {
+ -fx-focus-color: transparent;
+ -fx-padding:15;
+}
+
+.list-search-notes {
+   -fx-pref-width:450;
+   -fx-max-height:800;
+    -fx-padding: 2;
+}
+
+.note-node {
+     -fx-border-color: -color-divider-gray;
+     -fx-border-width: 0 0 2 0;
+     -fx-padding: 0 5 5 5 ;
+}
+
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
 }    */

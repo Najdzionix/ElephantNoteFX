@@ -1,5 +1,6 @@
 package com.kn.elephant.note.ui;
 
+import com.kn.elephant.note.ui.control.TestNode;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -8,7 +9,7 @@ import javafx.scene.layout.BorderPane;
  */
 public class LeftMenuPanel extends BorderPane {
 
-    public LeftMenuPanel(){
+    public LeftMenuPanel() {
 
         this.setCenter(new TestNode("Left menu ..."));
         setStyle("-fx-background-color: rgba(255,0,0,.25);");

@@ -7,7 +7,7 @@ import com.kn.elephant.note.dto.TagDto;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
-import com.kn.elephant.note.ui.TagNode;
+import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import javafx.collections.FXCollections;

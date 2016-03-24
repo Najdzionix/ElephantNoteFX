@@ -2,6 +2,7 @@ package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
@@ -183,5 +184,19 @@ public class NoteServiceImp extends BaseService implements NoteService {
         }
     }
 
-
+    @Override
+    public List<NoteDto> findNotes(String pattern) {
+        //TODO Maybe it should check Tags
+        pattern = pattern.replace('*', '%');
+        SelectArg contentArg = new SelectArg("%" + pattern + "%");
+        SelectArg titleArg = new SelectArg("%" + pattern + "%");
+        try {
+            List<Note> notes = noteDao.queryBuilder().where().like("cleanContent", contentArg).or().like("title", titleArg).query();
+            log.debug(String.format("Found %d notes by pattern %s", notes.size(), pattern));
+            return notes.parallelStream().map(this::convertToNoteDto).collect(Collectors.toList());
+        } catch (SQLException e) {
+            log.error("Data base error.", e);
+            return Collections.emptyList();
+        }
+    }
 }

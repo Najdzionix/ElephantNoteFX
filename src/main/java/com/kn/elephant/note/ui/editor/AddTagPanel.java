@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 public class AddTagPanel extends BasePanel {
-    private final ValidatorHelper validatorHelper = new ValidatorHelper();
+    private ValidatorHelper validatorHelper = new ValidatorHelper();
     private TextField tagTF;
-    private TagDto autoCompleteTag = null;
+    private TagDto autoCompleteTag;
     private NoteDto noteDto;
     private ObservableList<TagDto> tagsDto;
 
@@ -56,9 +56,10 @@ public class AddTagPanel extends BasePanel {
         Label addTagLabel = new Label("Add tag:");
         tagTF = new TextField();
         box.getStyleClass().add("textFieldTag");
-        validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
         initAutoCompleteForTags(noteTags);
-        final Action addTagAction = ActionFactory.getAction("addTag");
+        validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
+//        Action removeAction = ActionMap.action("removeNote");
+        Action addTagAction = ActionMap.action("addTag");
 
         Button addTagButton = ActionUtils.createButton(addTagAction);
         Icons.addIcon(MaterialDesignIcon.CHECK, addTagAction, "1.5em");
@@ -76,7 +77,9 @@ public class AddTagPanel extends BasePanel {
                 new TagStringConverter());
 
         bind.setOnAutoCompleted(event -> {
+            log.info("auto:" + event.getCompletion());
             autoCompleteTag = event.getCompletion();
+            tagTF.setText(autoCompleteTag.getName());
         });
     }
 
@@ -84,6 +87,7 @@ public class AddTagPanel extends BasePanel {
     private void addTag() {
         log.info(String.format("Add tag of name %s", tagTF.getText()));
         if (!validatorHelper.isValid() || StringUtils.isEmpty(tagTF.getText())) {
+            log.debug("Tag is not valid.");
             return;
         }
         TagDto dto;

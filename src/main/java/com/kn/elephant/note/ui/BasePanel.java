@@ -11,10 +11,10 @@ import java.util.Collections;
  * email:kamilnadlonek@gmail.com
  */
 public class BasePanel extends BorderPane {
-    private GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
 
     public BasePanel() {
         super();
+        GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
         context.init();
     }
 }

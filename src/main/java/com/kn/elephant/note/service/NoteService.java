@@ -34,4 +34,11 @@ public interface NoteService {
      * @return
      */
     boolean isTitleNoteUnique(String title);
+
+    /**
+     * Looking for notes which contains sequence given by user
+     * @param pattern
+     * @return List of notes which matched to pattern
+     */
+    List<NoteDto> findNotes(String pattern);
 }

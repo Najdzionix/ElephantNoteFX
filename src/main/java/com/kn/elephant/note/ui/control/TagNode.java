@@ -1,4 +1,4 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.control;
 
 import com.kn.elephant.note.dto.TagDto;
 import com.kn.elephant.note.utils.Icons;
@@ -14,7 +14,7 @@ import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionUtils;
 
 /**
- * Created by Kamil Nadłonek on 09.11.15. 
+ * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
 public class TagNode extends GridCell<TagDto> {
