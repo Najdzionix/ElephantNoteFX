@@ -22,6 +22,9 @@
 .button:hover {
     -fx-text-fill:-color-secondary;
 }
+.scroll-pane {
+    -fx-background-color:transparent;
+}
 
 .tooltipError {
     -fx-background-color: #F05656;
@@ -165,22 +168,39 @@
     -fx-opacity: 0.9;
     -fx-alignment: center;
 }
-
+  /************************************************
+                  Search Result Panel
+  *************************************************/
+.popoverM >* {
+    -fx-background-color: -color-light-gray;
+}
 .content-search {
- -fx-focus-color: transparent;
- -fx-padding:15;
+    -fx-focus-color: transparent;
+    -fx-padding:15;
 }
 
 .list-search-notes {
+   -fx-background-color: white;
    -fx-pref-width:450;
    -fx-max-height:800;
-    -fx-padding: 2;
+   -fx-padding:10 25 10 10;
 }
 
 .note-node {
+     -fx-background-color: white;
      -fx-border-color: -color-divider-gray;
      -fx-border-width: 0 0 2 0;
-     -fx-padding: 0 5 5 5 ;
+     -fx-padding: 10 5 5 5 ;
+}
+.not-found-text {
+    -fx-font-size: 18px;
+    -fx-font-weight:900;
+    -fx-padding:25;
+}
+
+.search-box .button:hover {
+    -fx-text-fill:orange;
+    -fx-border-color: tr
 }
 
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {

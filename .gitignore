@@ -8,3 +8,4 @@ build
 *.ipr
 *.iws
 *.log
+/.nb-gradle/

@@ -46,7 +46,6 @@ public class ListNotePanel extends BasePanel {
 
     private Node getContent() {
         ScrollPane pane = new ScrollPane();
-        pane.setStyle("-fx-background-color:transparent;");
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pane.setContent(getListNotes());

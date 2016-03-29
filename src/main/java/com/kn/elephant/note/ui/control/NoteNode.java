@@ -51,7 +51,7 @@ public class NoteNode extends BasePanel {
         this.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (!getStyle().contains(NoteConstants.WHITE)) {
                 if (newValue) {
-                    setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR);
+                    setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR + "  -fx-font-weight: bold;");
                 } else {
                     setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
                 }
@@ -60,7 +60,7 @@ public class NoteNode extends BasePanel {
 
         this.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
-                setStyle("-fx-border-color: " + NoteConstants.WHITE);
+                setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR + "  -fx-font-weight: bold;");
             } else {
                 setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
             }
