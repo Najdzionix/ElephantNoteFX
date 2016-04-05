@@ -49,14 +49,14 @@ public class MenuPanel extends BasePanel {
 
         ToolBar toolBar = new ToolBar();
         toolBar.getStyleClass().add("tool-bar-menu");
-        Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
+//        Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
         //        ToggleSwitch modeButton = new ToggleSwitch("Edit");
         modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
         modeButton.setSelected(true);
 
         Button addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
 
-        toolBar.getItems().addAll(leftMenuButton, addNoteButton, modeButton);
+        toolBar.getItems().addAll(addNoteButton, modeButton);
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         toolBar.getItems().add(spacer);

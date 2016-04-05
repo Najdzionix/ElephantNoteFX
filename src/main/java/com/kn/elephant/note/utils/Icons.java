@@ -4,6 +4,7 @@ import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import de.jensd.fx.glyphs.octicons.OctIconView;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.controlsfx.control.action.Action;
@@ -37,5 +38,11 @@ public class Icons {
         action.setText(icon.characterToString());
         action.getStyleClass().add("glyph-icon");
         action.setStyle(String.format("-fx-font-family: %s; -fx-font-size: %s; -fx-font-weight:900;", icon.getFontFamily(), size));
+    }
+
+    public static void addIcon(GlyphIcons icon, Button node, String size) {
+        node.setText(icon.characterToString());
+        node.getStyleClass().add("glyph-icon");
+        node.setStyle(String.format("-fx-font-family: %s; -fx-font-size: %s; -fx-font-weight:900;", icon.getFontFamily(), size));
     }
 }

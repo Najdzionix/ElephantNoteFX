@@ -75,7 +75,7 @@ public class ListNotePanel extends BasePanel {
             if (newValue != null) {
                 log.debug("Change note");
                 ActionFactory.callAction("loadNote", newValue.getValue());
-                ActionFactory.callAction("setEditMode", true);
+                ActionFactory.callAction("setEditButton", true);
                 newValue.setExpanded(true);
             }
         });

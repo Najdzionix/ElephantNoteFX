@@ -31,17 +31,30 @@
     -fx-text-fill: white;
     -fx-font-size: 14;
 }
+.selected-node {
+    -fx-border-color: white !important;
+    -fx-font-weight: bold;
+    -fx-background-color: -color-blue !important;
+}
+
+.editable-label > * > .label{
+      -fx-font-size: 16;
+      -fx-padding: 5 10 5 15;
+}
+.editable-label > * > .button {
+
+}
+
 
 /************************************************
                     Details panel 
 *************************************************/
-.noteTitle {
+.noteTitle > * > .label {
     -fx-text-fill: black;
     -fx-font-size: 22;
     -fx-font-family: Lato;
     -fx-opacity: 0.9;
     -fx-font-weight:bold;
-    -fx-padding: 10 10 10 15;
 }
 
 .noteLabelTime {

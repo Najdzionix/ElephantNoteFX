@@ -8,7 +8,7 @@ import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
 import de.jensd.fx.glyphs.octicons.OctIcon;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -59,10 +59,7 @@ public class SearchBox extends BasePanel {
         initPopOverResults();
 
         getChildren().addAll(textBox, clearButton);
-        clearButton.setOnAction((ActionEvent actionEvent) -> {
-            textBox.setText("");
-            textBox.requestFocus();
-        });
+
         textBox.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             clearButton.setVisible(StringUtils.isNotEmpty(newValue));
             if (StringUtils.isNotEmpty(newValue)) {
@@ -99,7 +96,6 @@ public class SearchBox extends BasePanel {
     }
 
     private Node createListOfNotes(List<NoteDto> notes) {
-
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.getStyleClass().add("content-search");
@@ -121,6 +117,14 @@ public class SearchBox extends BasePanel {
 
     @ActionProxy(text = "")
     private void clearAction() {
+        textBox.setText("");
+        textBox.requestFocus();
+    }
 
+    @ActionProxy(text = "")
+    private void clearSelectedNoteNodes() {
+        ScrollPane scroll = (ScrollPane) popOver.getContentNode();
+        ObservableList<Node> children = ((VBox) scroll.getContent()).getChildren();
+        children.stream().forEach(node ->   node.getStyleClass().remove("selected-node"));
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.GridView;
@@ -32,6 +33,7 @@ import java.util.List;
  * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class DetailsNotePanel extends BasePanel {
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
@@ -64,19 +66,25 @@ public class DetailsNotePanel extends BasePanel {
         createDates("Created:", 0);
         createDates("Updated:", 2);
         box.setTop(gridPane);
-        box.setCenter(new EditableLabel(noteDto.getTitle()));
-
+        EditableLabel title = new EditableLabel(noteDto.getTitle(), (oldText, newText) -> {
+            log.info("Change Title: " + oldText + "\t"+newText);
+        });
+        title.addCssClass("noteTitle");
+        box.setCenter(title);
+        box.setBottom(new EditableLabel(noteDto.getShortDescription(),(oldText, newText) -> {
+            log.info("Change desc: " + oldText + "\t"+newText);
+        } ));
         return box;
     }
 
     private void createDates(String labelText, int colIndex) {
         Label label = new Label(labelText);
-        label.getStyleClass().addAll("noteLabelTime", "control-label");
+        label.getStyleClass().addAll("noteLabelTime", "control-labelText");
         GridPane.setHalignment(label, HPos.RIGHT);
         GridPane.setConstraints(label, colIndex, 0);
 
         Label timeLabel = new Label(noteDto.getCreateAt().format(FORMATTER));
-        timeLabel.getStyleClass().addAll("noteDateTime", "control-label-two");
+        timeLabel.getStyleClass().addAll("noteDateTime", "control-labelText-two");
         GridPane.setHalignment(timeLabel, HPos.LEFT);
         GridPane.setConstraints(timeLabel, colIndex + 1, 0);
         gridPane.getChildren().addAll(label, timeLabel);

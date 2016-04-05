@@ -87,7 +87,7 @@ public class DialogNote extends BasePanel {
 
     private Label createLabel(String text) {
         Label label = new Label(text);
-        label.getStyleClass().add("control-label");
+        label.getStyleClass().add("control-labelText");
         return label;
     }
 

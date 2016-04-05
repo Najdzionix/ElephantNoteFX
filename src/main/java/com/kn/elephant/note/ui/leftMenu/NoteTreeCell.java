@@ -1,8 +1,7 @@
 package com.kn.elephant.note.ui.leftMenu;
 
-import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
-import javafx.beans.value.ObservableValue;
+import com.kn.elephant.note.utils.ListenerFactory;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -47,23 +46,10 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
     private Node createNoteCell(TreeItem<NoteDto> item) {
         NoteDto currentNoteDto = item.getValue();
         vBox = new VBox();
-        vBox.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (!vBox.getStyle().contains(NoteConstants.WHITE)) {
-                if (newValue) {
-                    vBox.setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR);
-                } else {
-                    vBox.setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
-                }
-            }
-        });
-        
-        this.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if(newValue) {
-                vBox.setStyle("-fx-border-color: " + NoteConstants.WHITE);
-            } else {
-                vBox.setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
-            }
-        });
+
+        vBox.hoverProperty().addListener(ListenerFactory.getListenerHover(vBox));
+        this.focusedProperty().addListener(ListenerFactory.getListenerFocused(vBox));
+
         Text title = new Text(currentNoteDto.getTitle());
         Text desc = new Text( StringUtils.abbreviate(currentNoteDto.getShortDescription(),30));
         textFlow = new TextFlow();

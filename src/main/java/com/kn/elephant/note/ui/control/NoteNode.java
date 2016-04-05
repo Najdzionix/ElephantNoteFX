@@ -1,10 +1,9 @@
 package com.kn.elephant.note.ui.control;
 
-import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
-import javafx.beans.value.ObservableValue;
+import com.kn.elephant.note.utils.ListenerFactory;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -44,28 +43,11 @@ public class NoteNode extends BasePanel {
 
     private void registerListeners() {
         setOnMouseClicked(event -> {
-//            todo hide popover results;
             ActionFactory.callAction("loadNote", noteDto);
+            ActionFactory.callAction("clearSelectedNoteNodes");
+            getStyleClass().add("selected-node");
         });
 
-        this.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (!getStyle().contains(NoteConstants.WHITE)) {
-                if (newValue) {
-                    setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR + "  -fx-font-weight: bold;");
-                } else {
-                    setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
-                }
-            }
-        });
-
-        this.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue) {
-                setStyle("-fx-border-color: " + NoteConstants.ORANGE_COLOR + "  -fx-font-weight: bold;");
-            } else {
-                setStyle("-fx-border-color: " + NoteConstants.GRAY_DIVIDER);
-            }
-        });
+        this.hoverProperty().addListener(ListenerFactory.getListenerHover(this));
     }
-
-
 }
