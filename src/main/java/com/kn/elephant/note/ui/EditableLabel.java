@@ -34,30 +34,30 @@ public class EditableLabel extends Region {
     private Button saveChangeButton;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
-     public EditableLabel(String text, ChangeValue saveAction) {
-         labelText = new Label(text);
-         editTextField = new TextField(text);
-         addCssClass("editable-label");
-         createEditButton();
-         createSaveButton(saveAction);
-         activeNormalMode();
+    public EditableLabel(String text, ChangeValue saveAction) {
+        labelText = new Label(text);
+        editTextField = new TextField(text);
+        addCssClass("editable-label");
+        createEditButton();
+        createSaveButton(saveAction);
+        activeNormalMode();
 
-         validatorHelper.registerEmptyValidator(editTextField, "Field can not be empty.");
+        validatorHelper.registerEmptyValidator(editTextField, "Field can not be empty.");
 
-         editTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-             // check if focus gained or lost
-             if (!newValue && validatorHelper.isValid()) {
+        editTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            // check if focus gained or lost
+            if (!newValue && validatorHelper.isValid()) {
                 log.debug("lose focused save changes ????:" + editTextField.getText());
-                 activeNormalMode();
-             }
-         });
+                activeNormalMode();
+            }
+        });
 
-     }
+    }
 
-     private void activeEditMode() {
-         createContent(editTextField, saveChangeButton);
-         editTextField.requestFocus();
-     }
+    private void activeEditMode() {
+        createContent(editTextField, saveChangeButton);
+        editTextField.requestFocus();
+    }
 
     private void activeNormalMode() {
         createContent(labelText, editButton);
@@ -71,9 +71,9 @@ public class EditableLabel extends Region {
         getChildren().add(box);
     }
 
-     public void addCssClass(String cssClass) {
-         this.getStyleClass().add(cssClass);
-     }
+    public void addCssClass(String cssClass) {
+        this.getStyleClass().add(cssClass);
+    }
 
     private void createEditButton() {
         editButton = new Button();

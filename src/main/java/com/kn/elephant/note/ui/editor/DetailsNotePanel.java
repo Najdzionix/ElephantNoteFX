@@ -74,6 +74,7 @@ public class DetailsNotePanel extends BasePanel {
         box.setBottom(new EditableLabel(noteDto.getShortDescription(),(oldText, newText) -> {
             log.info("Change desc: " + oldText + "\t"+newText);
         } ));
+
         return box;
     }
 
