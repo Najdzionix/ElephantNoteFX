@@ -54,7 +54,7 @@ public class DialogNote extends BasePanel {
         validatorHelper.registerEmptyValidator(titleText, "Title can not empty.");
         uniqueTagTitleValidator();
         shortDescText = new TextField();
-        validatorHelper.registerEmptyValidator(shortDescText, " Short description can not be empty.");
+        validatorHelper.registerEmptyValidator(shortDescText, "Short description can not be empty.");
 
         VBox box = new VBox();
         box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, parentLabel, createSelectionPaneParent());

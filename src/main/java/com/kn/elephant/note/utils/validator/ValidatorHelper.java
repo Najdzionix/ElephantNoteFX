@@ -26,7 +26,7 @@ public class ValidatorHelper {
             tf.focusedProperty().addListener((observable, oldValue, newValue) -> {
 //                    loses focus
                 if (!newValue) {
-                    setValidationResult(tf, message, StringUtils.isNotEmpty(tf.getText()));
+                    setValidationResult(tf, message, StringUtils.isNotBlank(tf.getText()));
                 }
             });
         }

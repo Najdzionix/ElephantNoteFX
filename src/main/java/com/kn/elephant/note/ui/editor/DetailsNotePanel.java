@@ -4,12 +4,12 @@ import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.dto.TagDto;
+import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.EditableLabel;
 import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
-import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +17,7 @@ import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import lombok.extern.log4j.Log4j2;
@@ -44,7 +45,10 @@ public class DetailsNotePanel extends BasePanel {
 
     @Inject
     private TagService tagService;
-    private ValidatorHelper validatorHelper = new ValidatorHelper();
+
+    @Inject
+    private NoteService noteService;
+
 
     public DetailsNotePanel() {
         ActionMap.register(this);
@@ -66,16 +70,29 @@ public class DetailsNotePanel extends BasePanel {
         createDates("Created:", 0);
         createDates("Updated:", 2);
         box.setTop(gridPane);
-        EditableLabel title = new EditableLabel(noteDto.getTitle(), (oldText, newText) -> {
-            log.info("Change Title: " + oldText + "\t"+newText);
-        });
-        title.addCssClass("noteTitle");
-        box.setCenter(title);
-        box.setBottom(new EditableLabel(noteDto.getShortDescription(),(oldText, newText) -> {
-            log.info("Change desc: " + oldText + "\t"+newText);
-        } ));
+        box.setCenter(createTitleLabel());
+
+        box.setBottom(new EditableLabel(noteDto.getShortDescription(), (oldText, newText) -> {
+            log.info("Change desc: " + oldText + "\t" + newText);
+            if(!oldText.equals(newText)) {
+                ActionFactory.callAction("updateDesc", newText);
+            }
+        }));
 
         return box;
+    }
+
+    private Node createTitleLabel() {
+        EditableLabel title = new EditableLabel(noteDto.getTitle(), (oldText, newText) -> {
+            log.info("Change Title: " + oldText + "\t" + newText);
+            if(!oldText.equals(newText)) {
+                ActionFactory.callAction("updateTitle", newText);
+            }
+        });
+        title.addCssClass("noteTitle");
+        title.registerCustomValidator("Provide unique title of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText()));
+
+        return title;
     }
 
     private void createDates(String labelText, int colIndex) {

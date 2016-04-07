@@ -156,11 +156,18 @@ public class NotePanel extends BasePanel {
     private void updateTitle(ActionEvent event) {
         log.debug("Update note title" + event.getSource());
         currentNoteDto.setTitle((String) event.getSource());
+        saveNote();
     }
 
     @ActionProxy(text = "")
-    private void saveNote(ActionEvent event) {
-//        todo load title
+    private void updateDesc(ActionEvent event) {
+        log.debug("Update note desc" + event.getSource());
+        currentNoteDto.setShortDescription((String) event.getSource());
+        saveNote();
+    }
+
+    @ActionProxy(text = "")
+    private void saveNote() {
         currentNoteDto.setContent(editor.getHtmlText());
         log.debug("Save note:" + currentNoteDto);
         Optional<NoteDto> updatedNote = noteService.saveNote(currentNoteDto);
@@ -171,6 +178,8 @@ public class NotePanel extends BasePanel {
         } else {
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation saving failed"));
         }
+
+        //refresh list panel
     }
 
     @ActionProxy(text = "")

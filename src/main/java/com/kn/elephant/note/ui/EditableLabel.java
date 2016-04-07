@@ -1,6 +1,7 @@
 package com.kn.elephant.note.ui;
 
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.validator.Validator;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.beans.value.ObservableValue;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by Kamil Nadłonek on 09.11.15. 
+ * Created by Kamil Nadłonek on 09.11.15.
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
@@ -34,24 +35,22 @@ public class EditableLabel extends Region {
     private Button saveChangeButton;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
-    public EditableLabel(String text, ChangeValue saveAction) {
+    public EditableLabel(String text, ChangeValue saveActionFun) {
         labelText = new Label(text);
         editTextField = new TextField(text);
         addCssClass("editable-label");
         createEditButton();
-        createSaveButton(saveAction);
+        createSaveButton(saveActionFun);
         activeNormalMode();
 
         validatorHelper.registerEmptyValidator(editTextField, "Field can not be empty.");
-
+        editTextField.setOnAction(event -> saveAction(saveActionFun));
         editTextField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             // check if focus gained or lost
             if (!newValue && validatorHelper.isValid()) {
-                log.debug("lose focused save changes ????:" + editTextField.getText());
                 activeNormalMode();
             }
         });
-
     }
 
     private void activeEditMode() {
@@ -63,7 +62,7 @@ public class EditableLabel extends Region {
         createContent(labelText, editButton);
     }
 
-    private void createContent(Node ... nodes) {
+    private void createContent(Node... nodes) {
         getChildren().clear();
         HBox box = new HBox();
         box.setSpacing(5);
@@ -85,10 +84,18 @@ public class EditableLabel extends Region {
     private void createSaveButton(ChangeValue saveAction) {
         saveChangeButton = new Button();
         Icons.addIcon(MaterialDesignIcon.CHECK, saveChangeButton, SIZE_BUTTON);
-        saveChangeButton.setOnAction(event -> {
-            saveAction.changeText(labelText.getText(), editTextField.getText());
+        saveChangeButton.setOnAction(event -> saveAction(saveAction));
+    }
+
+    private void saveAction(ChangeValue saveActionFun) {
+        if (validatorHelper.isValid()) {
+            saveActionFun.changeText(labelText.getText(), editTextField.getText());
             labelText.setText(editTextField.getText());
             activeNormalMode();
-        });
+        }
+    }
+
+    public void registerCustomValidator(String errorMessage, Validator validator) {
+        validatorHelper.registerCustomValidator(editTextField, errorMessage, validator);
     }
 }
