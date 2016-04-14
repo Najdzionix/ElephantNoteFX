@@ -175,6 +175,7 @@ public class NotePanel extends BasePanel {
             currentNoteDto = updatedNote.get();
             loadNote(new ActionEvent(currentNoteDto, null));
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
+            ActionFactory.callAction("refreshNote", currentNoteDto);
         } else {
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation saving failed"));
         }

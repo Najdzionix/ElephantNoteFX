@@ -73,7 +73,6 @@ public class DetailsNotePanel extends BasePanel {
         box.setCenter(createTitleLabel());
 
         box.setBottom(new EditableLabel(noteDto.getShortDescription(), (oldText, newText) -> {
-            log.info("Change desc: " + oldText + "\t" + newText);
             if(!oldText.equals(newText)) {
                 ActionFactory.callAction("updateDesc", newText);
             }
@@ -84,7 +83,6 @@ public class DetailsNotePanel extends BasePanel {
 
     private Node createTitleLabel() {
         EditableLabel title = new EditableLabel(noteDto.getTitle(), (oldText, newText) -> {
-            log.info("Change Title: " + oldText + "\t" + newText);
             if(!oldText.equals(newText)) {
                 ActionFactory.callAction("updateTitle", newText);
             }

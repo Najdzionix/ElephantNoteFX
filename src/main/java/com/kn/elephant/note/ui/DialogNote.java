@@ -6,6 +6,7 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,7 +25,7 @@ import org.controlsfx.control.action.ActionUtils;
  */
 public class DialogNote extends BasePanel {
 
-    public static final int MAX_WIDTH_PARENT_NAME = 100;
+    private static final int MAX_WIDTH_PARENT_NAME = 100;
     private Dialog<NoteDto> dialog;
     private TextField titleText;
     private TextField shortDescText;
@@ -39,23 +40,28 @@ public class DialogNote extends BasePanel {
         createContent();
     }
 
+    public TextField getTitleText() {
+        return titleText;
+    }
     public void createContent() {
         dialog = new Dialog<>();
         validatorHelper = new ValidatorHelper();
         dialog.setTitle("New note");
-        dialog.setHeaderText("Create new note \n" +
-                "press Okay (or click title bar 'X' for cancel).");
+        dialog.setHeaderText("Welcome in wizard notes.");
         dialog.setResizable(false);
 
         Label titleLabel = createLabel("Title: ");
         Label shortDescriptionL = createLabel("Short description: ");
         Label parentLabel = createLabel("Choose parent");
         titleText = new TextField();
+
+        Platform.runLater(() -> titleText.requestFocus());
+
         validatorHelper.registerEmptyValidator(titleText, "Title can not empty.");
         uniqueTagTitleValidator();
         shortDescText = new TextField();
         validatorHelper.registerEmptyValidator(shortDescText, "Short description can not be empty.");
-
+        titleText.requestFocus();
         VBox box = new VBox();
         box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, parentLabel, createSelectionPaneParent());
         dialog.getDialogPane().getStyleClass().add("card");

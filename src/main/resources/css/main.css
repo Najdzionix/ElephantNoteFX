@@ -41,7 +41,9 @@
       -fx-font-size: 16;
       -fx-padding: 5 10 5 15;
 }
-
+.control-labelText {
+    -fx-padding: 20 0 0 0;
+}
 
 
 /************************************************

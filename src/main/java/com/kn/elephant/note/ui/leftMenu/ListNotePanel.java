@@ -126,6 +126,22 @@ public class ListNotePanel extends BasePanel {
         treeView.refresh();
     }
 
+    @ActionProxy(text = "")
+    private void refreshNote(ActionEvent event) {
+        log.debug("Refresh item to tree");
+        NoteDto noteDto = (NoteDto) event.getSource();
+        if(noteDto.getParentNote() == null) {
+            Optional<TreeItem<NoteDto>> noteItem = searchParent(noteDto);
+            if(noteItem.isPresent()) {
+                log.info("FOund " + noteItem.get().getValue());
+                noteItem.get().setValue(noteDto);
+            }
+
+        }
+
+        treeView.refresh();
+    }
+
     private Optional<TreeItem<NoteDto>> searchParent(NoteDto noteDto) {
         return treeView.getRoot().getChildren().stream().filter(tr -> tr.getValue().getId() == noteDto.getId()).findFirst();
     }
