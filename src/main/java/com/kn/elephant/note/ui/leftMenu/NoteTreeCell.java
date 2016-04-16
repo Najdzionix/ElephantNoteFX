@@ -37,7 +37,6 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
                 setText(null);
                 setGraphic(textField);
             } else {
-//                setText(getString());
                 setGraphic(createNoteCell(getTreeItem()));
             }
         }

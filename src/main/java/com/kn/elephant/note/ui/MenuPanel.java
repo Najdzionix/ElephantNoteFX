@@ -55,8 +55,10 @@ public class MenuPanel extends BasePanel {
         modeButton.setSelected(true);
 
         Button addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
+        Button settingsButton  = new Button("Settings");
+        settingsButton.setOnAction(event -> ActionFactory.callAction("changeMainView", View.SETTINGS));
 
-        toolBar.getItems().addAll(addNoteButton, modeButton);
+        toolBar.getItems().addAll(addNoteButton, modeButton, settingsButton);
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         toolBar.getItems().add(spacer);

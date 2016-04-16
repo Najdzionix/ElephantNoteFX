@@ -49,9 +49,9 @@ public class NotePanel extends BasePanel {
     private NoteService noteService;
     private NotificationPane notificationPane;
 
-    public NotePanel(NoteDto noteDto) {
+    public NotePanel() {
+        super();
         ActionMap.register(this);
-        this.currentNoteDto = noteDto;
         detailsNotePanel = new DetailsNotePanel();
         setTop(detailsNotePanel);
         editor = new HTMLEditor();

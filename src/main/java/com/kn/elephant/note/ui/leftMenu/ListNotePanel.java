@@ -75,7 +75,7 @@ public class ListNotePanel extends BasePanel {
             if (newValue != null) {
                 log.debug("Change note");
                 ActionFactory.callAction("loadNote", newValue.getValue());
-                ActionFactory.callAction("setEditButton", true);
+//                ActionFactory.callAction("setEditButton", true);
                 newValue.setExpanded(true);
             }
         });
@@ -133,7 +133,7 @@ public class ListNotePanel extends BasePanel {
         if(noteDto.getParentNote() == null) {
             Optional<TreeItem<NoteDto>> noteItem = searchParent(noteDto);
             if(noteItem.isPresent()) {
-                log.info("FOund " + noteItem.get().getValue());
+                log.debug("Refresh note:" + noteItem.get().getValue());
                 noteItem.get().setValue(noteDto);
             }
 

@@ -45,6 +45,12 @@
     -fx-padding: 20 0 0 0;
 }
 
+.custom-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 2.0;
+    -fx-padding: 15 15 15 15;
+}
+
 
 /************************************************
                     Details panel 
@@ -82,11 +88,7 @@
     -fx-fill: -color-text-secondary;
 }
 
-.custom-pane {
-    -fx-background-color: white;
-    -fx-background-radius: 2.0;
-    -fx-padding: 15 15 15 15;
-}
+
 
 /************************************************
             Details panel -> Tag Panel 
@@ -215,6 +217,33 @@
     -fx-text-fill:orange;
     -fx-border-color: tr
 }
+
+/****************************************************************
+                Left Menu & Settings Panel
+****************************************************************/
+.menu-panel{
+    -fx-padding: 15;
+    -fx-background-color:white;
+    -fx-pref-width:250;
+
+}
+.menu-cell {
+    -fx-background-color:white;
+    -fx-border-color: -color-divider-gray;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 30 5 10 5 ;
+
+}
+.menu-cell > * { -fx-font-size: 18;}
+.menu-cell:hover {
+    -fx-border-color: -color-secondary;
+    -fx-font-weight: bold;
+}
+.menu-cell-active {
+    -fx-border-color: -color-blue !important;
+    -fx-font-weight: bold;
+}
+
 
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
