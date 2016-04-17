@@ -10,7 +10,6 @@ import com.kn.elephant.note.utils.Icons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -56,7 +55,7 @@ public class NotePanel extends BasePanel {
         setTop(detailsNotePanel);
         editor = new HTMLEditor();
         webView = new WebView();
-        setPadding(new Insets(15));
+        getStyleClass().add("content-pane");
         notificationPanel();
         addButtonsToToolbar();
     }

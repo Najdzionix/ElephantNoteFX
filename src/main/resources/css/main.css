@@ -22,6 +22,10 @@
 .button:hover {
     -fx-text-fill:-color-secondary;
 }
+.button-blue {
+    -fx-background-color: -color-blue;
+    -fx-text-fill: -color-text-white;
+}
 .scroll-pane {
     -fx-background-color:transparent;
 }
@@ -43,6 +47,10 @@
 }
 .control-labelText {
     -fx-padding: 20 0 0 0;
+}
+
+.content-pane {
+     -fx-padding: 15;
 }
 
 .custom-pane {
@@ -242,6 +250,26 @@
 .menu-cell-active {
     -fx-border-color: -color-blue !important;
     -fx-font-weight: bold;
+}
+.settings-panel .control-labelText {
+     -fx-font-size: 16;
+}
+.title {
+    -fx-font-size: 32;
+    -fx-font-weight: bold;
+    -fx-font-family: Lato;
+}
+
+.db-row {
+    -fx-padding: 10 5 15 5;
+}
+
+.db-text {
+    -fx-font-size: 18;
+    -fx-padding: 7 10 5 0;
+    -fx-text-fill: -color-text-black;
+    -fx-border-color: -color-divider-gray;
+    -fx-border-width: 0 0 2 0;
 }
 
 
