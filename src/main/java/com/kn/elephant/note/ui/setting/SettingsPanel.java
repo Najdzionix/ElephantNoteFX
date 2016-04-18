@@ -1,8 +1,9 @@
 package com.kn.elephant.note.ui.setting;
 
-import com.kn.elephant.note.Main;
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.Utils;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +19,9 @@ import javafx.stage.DirectoryChooser;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -27,11 +30,8 @@ import java.util.Properties;
  */
 @Log4j2
 public class SettingsPanel extends BasePanel {
-    private static final String DB_KEY_PROPERTY="db.location";
-    private static final String FIRST_RUN_KEY_PROPERTY= "first.run";
-    private Properties prop;
+    private Properties properties;
     private Label location;
-
 
     public SettingsPanel() {
         loadPropertiesFile();
@@ -49,7 +49,7 @@ public class SettingsPanel extends BasePanel {
         saveButton.getStyleClass().addAll("button-blue");
         content.setAlignment(Pos.TOP_CENTER);
         saveButton.setOnAction(event -> {
-            String pathDB = prop.getProperty(DB_KEY_PROPERTY);
+            String pathDB = properties.getProperty(NoteConstants.DB_KEY_PROPERTY);
             if(!pathDB.equals(location.getText())) {
                 //TODO restart application ??
                 try {
@@ -58,10 +58,8 @@ public class SettingsPanel extends BasePanel {
                     e.printStackTrace();
                 }
 
-                prop.setProperty(DB_KEY_PROPERTY, location.getText());
+                properties.setProperty(NoteConstants.DB_KEY_PROPERTY, location.getText());
             }
-
-
         });
 
         content.getChildren().addAll(saveButton);
@@ -91,7 +89,7 @@ public class SettingsPanel extends BasePanel {
         HBox content = new HBox();
         content.setSpacing(5.0);
         content.getStyleClass().addAll("db-row");
-        location = new Label(prop.getProperty(DB_KEY_PROPERTY));
+        location = new Label(properties.getProperty(NoteConstants.DB_KEY_PROPERTY));
         location.getStyleClass().add("db-text");
         Button dicButton = new Button();
         Icons.addIcon(MaterialDesignIcon.FOLDER, dicButton, "1.1em");
@@ -123,11 +121,12 @@ public class SettingsPanel extends BasePanel {
     }
 
     private void loadPropertiesFile() {
+        File property = Utils.createFile(NoteConstants.APP_DIC + NoteConstants.PROPERTY_FILE_NAME);
+        properties = new Properties();
         try {
-            prop = new Properties();
-            prop.load(Main.class.getResourceAsStream("../../../../" + "settings.properties"));
+            properties.load(new FileInputStream(property));
         } catch (IOException e) {
-            log.error("Not found properties file.", e);
+            log.error("Can not find property file", e);
         }
     }
 }

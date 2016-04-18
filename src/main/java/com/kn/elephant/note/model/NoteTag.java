@@ -9,11 +9,11 @@ import lombok.Data;
  * email:kamilnadlonek@gmail.com
  */
 @Data
-@DatabaseTable(tableName = "notetag")
+@DatabaseTable(tableName = "note_tag")
 public class NoteTag {
     public final static String NOTE_ID_FIELD_NAME = "noteId";
     public final static String TAG_ID_FIELD_NAME = "tagId";
-    public final static String TAG_NOTE_TABLE_NAME = "notetag";
+    public final static String TAG_NOTE_TABLE_NAME = "note_tag";
 
     @DatabaseField(generatedId = true)
     private int id;

@@ -9,7 +9,6 @@ import com.google.inject.AbstractModule;
 public class ElephantModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(Test.class).to(TestService.class);
         bind(NoteService.class).to(NoteServiceImp.class);
         bind(TagService.class).to(TagServiceImp.class);
     }

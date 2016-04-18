@@ -1,6 +1,7 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
+import com.kn.elephant.note.DBConnection;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
@@ -19,41 +20,18 @@ import java.util.Random;
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
-public class TestService extends BaseService implements Test {
+public class InsertDataService {
     private Dao<Note, Long> noteDao;
     private Dao<Tag, Long> tagDao;
     private Dao<NoteTag, Long> noteTagDao;
 
-    public TestService() {
-        super();
-        try {
-            noteDao = dbConnection.getDao(Note.class);
-            tagDao = dbConnection.getDao(Tag.class);
-            noteTagDao = dbConnection.getDao(NoteTag.class);
-        } catch (Exception e) {
-            log.error("DBConnection exception: {}", e.getMessage());
-        }
+    public InsertDataService(DBConnection dbConnection) {
+        noteDao = dbConnection.getDao(Note.class);
+        tagDao = dbConnection.getDao(Tag.class);
+        noteTagDao = dbConnection.getDao(NoteTag.class);
     }
 
-    @Override
-    public void hello() {
-        try {
-            log.info("Hello test service.:)" + getNote(1L));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public Note getNote(Long noteId) throws SQLException{
-        if (noteDao.idExists(noteId)) {
-            return noteDao.queryForId(noteId);
-        } else {
-            log.warn("Day does exist, by id {}", noteId);
-            return null;
-        }
-    }
-
-    @Override
     public void insertExampleData() {
         log.info("Load example data to DB");
         int noteNumber = 1;
@@ -68,10 +46,10 @@ public class TestService extends BaseService implements Test {
         }
     }
 
-    private List<Tag> createTagsList(){
+    private List<Tag> createTagsList() {
         List<String> tagNames = Arrays.asList("car", "home", "tip", "important", "javaFx");
         List<Tag> tags = new ArrayList<>();
-        for(String tagName : tagNames) {
+        for (String tagName : tagNames) {
             Tag tag = new Tag();
             tag.setUpdateAt(LocalDateTime.now());
             tag.setCreateAt(LocalDateTime.now());
@@ -88,7 +66,7 @@ public class TestService extends BaseService implements Test {
     }
 
     private void setTagForNote(Note note, List<Tag> tags) {
-        for(Tag tag : tags) {
+        for (Tag tag : tags) {
             NoteTag noteTag = new NoteTag(note, tag);
             try {
                 noteTagDao.create(noteTag);
@@ -122,7 +100,7 @@ public class TestService extends BaseService implements Test {
         LocalDateTime nowDate = LocalDateTime.now();
         note.setCreateAt(nowDate);
         note.setUpdateAt(nowDate);
-        note.setTitle( title + noteNumber);
+        note.setTitle(title + noteNumber);
         note.setShortDescription("Short descr ... note " + noteNumber);
         note.setContent("Content ..... note" + noteNumber);
         note.setType(NoteType.HTML);

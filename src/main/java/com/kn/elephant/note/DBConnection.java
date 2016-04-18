@@ -8,8 +8,9 @@ import com.j256.ormlite.table.TableUtils;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.kn.elephant.note.service.InsertDataService;
+import com.kn.elephant.note.utils.Utils;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -21,22 +22,24 @@ import java.util.Map;
  * Created by Kamil Nadłonek on 11.11.15.
  * email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class DBConnection {
 
-    private static Logger LOGGER = LogManager.getLogger(DBConnection.class);
-
+    private static final String SQL_VERIFY_STRUCTURE_DB = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('note', 'tag', 'note_tag')";
+    private static final long EXPECTED_AMOUNT_TABLE = 3L;
     private static DBConnection instance;
-    ConnectionSource connectionSource = null;
-    Map<Class, Dao> daoMap;
-    List<Class> listModelClass = Arrays.asList(Note.class, Tag.class, NoteTag.class);
+    private ConnectionSource connectionSource = null;
+    private Map<Class, Dao> daoMap;
+    private List<Class> listModelClass = Arrays.asList(Note.class, Tag.class, NoteTag.class);
 
     private DBConnection() throws Exception {
-        LOGGER.info("Initialize connection to DB {}", NoteConstants.DATA_BASE_URL);
+        String urlDB = NoteConstants.DATA_BASE_URL + Utils.getProperty(NoteConstants.DB_KEY_PROPERTY);
+        log.info("Initialize connection to DB {}", urlDB);
         // create our data-source for the database
-        connectionSource = new JdbcConnectionSource(NoteConstants.DATA_BASE_URL);
+        connectionSource = new JdbcConnectionSource(urlDB);
         // setup our database and DAOs
-        setupDatabase(NoteConstants.CREATE_DATA_BASE);
-        loadDao();
+        verifyDatabase();
+
     }
 
     public static DBConnection getInstance() throws Exception {
@@ -47,35 +50,40 @@ public class DBConnection {
     }
 
     public void closeConnection() {
-        LOGGER.info("Close connection for data base.");
+        log.info("Close connection for data base.");
         if (connectionSource != null) {
             try {
                 connectionSource.close();
             } catch (SQLException e) {
-                LOGGER.warn("Error during close conneciton to DB, {}", e);
+                log.warn("Error during close connection to DB, {}", e);
             }
         }
     }
 
     /**
-     * Setup our database
+     * If table not exists than create table.
      */
-    private void setupDatabase(boolean createNewDB) throws Exception {
-        if (createNewDB) {
-            dropTables(connectionSource);
-            createTables(connectionSource);
+    private void verifyDatabase() throws Exception {
+        long amountTable = connectionSource.getReadOnlyConnection().queryForLong(SQL_VERIFY_STRUCTURE_DB);
+        if (EXPECTED_AMOUNT_TABLE != amountTable) {
+            createTableIfNotExists(connectionSource);
+            loadDao();
+            InsertDataService insertDataService = new InsertDataService(this);
+            insertDataService.insertExampleData();
+        } else {
+            loadDao();
         }
     }
 
     private void loadDao() {
-        LOGGER.debug("Load Dao");
+        log.debug("Load Dao");
         daoMap = new HashMap<>();
         listModelClass.stream().forEach(clazz -> {
             Dao dao = null;
             try {
                 dao = DaoManager.createDao(connectionSource, clazz);
             } catch (SQLException e) {
-                LOGGER.warn("Failed create Dao class for {}", clazz);
+                log.warn("Failed create Dao class for {}", clazz);
             }
             if (dao != null) {
                 daoMap.put(clazz, dao);
@@ -87,25 +95,13 @@ public class DBConnection {
         return daoMap.get(clazz);
     }
 
-
-    private void dropTables(ConnectionSource source) throws Exception {
-        LOGGER.debug("Drop tables");
+    private void createTableIfNotExists(ConnectionSource source) throws Exception {
+        log.debug("Create tables");
         listModelClass.stream().forEach(cl -> {
             try {
-                TableUtils.dropTable(source, cl, true);
+                TableUtils.createTableIfNotExists(source, cl);
             } catch (SQLException e) {
-                LOGGER.warn("Failed drop table for class {}", cl);
-            }
-        });
-    }
-
-    private void createTables(ConnectionSource source) throws Exception {
-        LOGGER.debug("Create tables");
-        listModelClass.stream().forEach(cl -> {
-            try {
-                TableUtils.createTable(source, cl);
-            } catch (SQLException e) {
-                LOGGER.error("Can not create table for class {}", cl);
+                log.error("Can not create table for class {}", cl);
             }
         });
     }

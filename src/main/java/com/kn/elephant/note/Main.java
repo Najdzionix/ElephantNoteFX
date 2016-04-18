@@ -1,16 +1,16 @@
 package com.kn.elephant.note;
 
 import com.gluonhq.ignite.guice.GuiceContext;
-import com.google.inject.Inject;
 import com.kn.elephant.note.service.ElephantModule;
-import com.kn.elephant.note.service.Test;
 import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.ui.editor.NotePanel;
 import com.kn.elephant.note.ui.leftMenu.ListNotePanel;
+import com.kn.elephant.note.ui.setting.DialogDB;
 import com.kn.elephant.note.ui.setting.LeftMenuPanel;
 import com.kn.elephant.note.ui.setting.SettingsPanel;
 import com.kn.elephant.note.ui.setting.TagPanel;
+import com.kn.elephant.note.utils.Utils;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,9 +37,6 @@ public class Main extends Application {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
     private GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
-
-    @Inject
-    private Test testService;
 
     private BorderPane mainPane;
     private NotePanel notePanel;
@@ -54,16 +52,13 @@ public class Main extends Application {
         context.init();
         ActionMap.register(this);
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
-        if (NoteConstants.CREATE_DATA_BASE) {
-            testService.insertExampleData();
-        }
+
         buildUI();
         Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);
 
         Scene scene = new Scene(mainPane);
         scene.getStylesheets().addAll(loadCssFiles());
 //        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato:700italic&subset=latin,latin-ext");
-
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
@@ -81,12 +76,21 @@ public class Main extends Application {
     }
 
     private void buildUI() {
+        checkConfiguration();
         mainPane = new BorderPane();
         mainPane.getStyleClass().add("root");
         notePanel = new NotePanel();
         leftMenuPanel = new LeftMenuPanel();
         changeMainView(new ActionEvent(View.MAIN, null));
         mainPane.setTop(new MenuPanel());
+    }
+
+    private void checkConfiguration() {
+        if (!Utils.existsFile(NoteConstants.APP_DIC + File.separator + NoteConstants.PROPERTY_FILE_NAME)
+                || !Utils.existsFile(Utils.getProperty(NoteConstants.DB_KEY_PROPERTY))) {
+            new DialogDB();
+        }
+        //todo what do when path to DB is incorrect ?
     }
 
     @ActionProxy(text = "Settings")

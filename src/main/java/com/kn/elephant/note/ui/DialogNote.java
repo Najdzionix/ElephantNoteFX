@@ -35,7 +35,7 @@ public class DialogNote extends BasePanel {
     private NoteService noteService;
     private ValidatorHelper validatorHelper;
 
-    public DialogNote() {
+    DialogNote() {
         ActionMap.register(this);
         createContent();
     }
@@ -43,7 +43,7 @@ public class DialogNote extends BasePanel {
     public TextField getTitleText() {
         return titleText;
     }
-    public void createContent() {
+    private void createContent() {
         dialog = new Dialog<>();
         validatorHelper = new ValidatorHelper();
         dialog.setTitle("New note");
