@@ -1,23 +1,19 @@
 package com.kn.elephant.note.ui.setting;
 
 import com.kn.elephant.note.NoteConstants;
-import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.Utils;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,17 +25,14 @@ import java.util.Properties;
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
-public class SettingsPanel extends BasePanel {
+public class SettingsPanel extends TitlePanel {
     private Properties properties;
     private Label location;
 
     public SettingsPanel() {
         loadPropertiesFile();
-        getStyleClass().addAll("content-panel");
-        setTop(createTitle("Settings"));
-        setCenter(createContent());
-        setPadding(new Insets(15)); //WTF ???
-        setBottom(createSaveButton());
+        setTitle("Settings");
+        setContent(createContent());
     }
 
     private Node createSaveButton() {
@@ -50,14 +43,13 @@ public class SettingsPanel extends BasePanel {
         content.setAlignment(Pos.TOP_CENTER);
         saveButton.setOnAction(event -> {
             String pathDB = properties.getProperty(NoteConstants.DB_KEY_PROPERTY);
-            if(!pathDB.equals(location.getText())) {
+            if (!pathDB.equals(location.getText())) {
                 //TODO restart application ??
                 try {
                     moveDBFile(pathDB, location.getText());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Error during move DB(notes) file.", e);
                 }
-
                 properties.setProperty(NoteConstants.DB_KEY_PROPERTY, location.getText());
             }
         });
@@ -66,22 +58,11 @@ public class SettingsPanel extends BasePanel {
         return content;
     }
 
-    private Node createTitle(String text) {
-        BorderPane content = new BorderPane();
-        content.getStyleClass().addAll("custom-pane");
-        Text title = new Text(text);
-        title.setTextAlignment(TextAlignment.CENTER);
-        title.getStyleClass().add("title");
-        content.setCenter(title);
-        return content;
-    }
-
     private Node createContent() {
         VBox content = new VBox();
-        content.getStyleClass().addAll("custom-pane", "settings-panel");
+        content.getStyleClass().addAll("settings-panel");
         Label dbLabel = createLabel("Chose notes location:");
-
-        content.getChildren().addAll(dbLabel, crateDBrow());
+        content.getChildren().addAll(dbLabel, crateDBrow(), createSaveButton());
         return content;
     }
 
@@ -96,7 +77,7 @@ public class SettingsPanel extends BasePanel {
         dicButton.setOnAction(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setTitle("Chose new location for notes.");
-            File defaultDirectory = new File(location.getText());
+            File defaultDirectory = new File(StringUtils.substringBeforeLast(location.getText(), File.separator));
             chooser.setInitialDirectory(defaultDirectory);
             File selectedDirectory = chooser.showDialog(null);
             if (!location.getText().equals(selectedDirectory.getAbsolutePath())) {

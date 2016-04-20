@@ -27,7 +27,8 @@ public class LeftMenuPanel extends BasePanel {
         MenuCell mainButton = new MenuCell("Main", View.MAIN);
         MenuCell settingsButton = new MenuCell("Settings", View.SETTINGS);
         MenuCell tags = new MenuCell("Tags", View.TAG);
-        menuBox.getChildren().addAll(mainButton, settingsButton, tags);
+        MenuCell about = new MenuCell("About", View.ABOUT);
+        menuBox.getChildren().addAll(mainButton, settingsButton, tags, about);
         AnchorPane borderPane = new AnchorPane();
         borderPane.getChildren().add(menuBox);
         AnchorPane.setTopAnchor(menuBox, 0.0);

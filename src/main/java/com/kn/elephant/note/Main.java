@@ -6,10 +6,7 @@ import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.ui.editor.NotePanel;
 import com.kn.elephant.note.ui.leftMenu.ListNotePanel;
-import com.kn.elephant.note.ui.setting.DialogDB;
-import com.kn.elephant.note.ui.setting.LeftMenuPanel;
-import com.kn.elephant.note.ui.setting.SettingsPanel;
-import com.kn.elephant.note.ui.setting.TagPanel;
+import com.kn.elephant.note.ui.setting.*;
 import com.kn.elephant.note.utils.Utils;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -106,7 +103,7 @@ public class Main extends Application {
             mainPane.setCenter(notePanel);
             mainPane.setLeft(new ListNotePanel());
         } else if (View.ABOUT.equals(view)) {
-            mainPane.setCenter(new TagPanel());
+            mainPane.setCenter(new AboutPanel());
             mainPane.setLeft(leftMenuPanel);
         } else {
             log.warn("Not recognize type of view:" + view);
