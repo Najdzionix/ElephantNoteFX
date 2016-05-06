@@ -78,7 +78,7 @@ public class Main extends Application {
         mainPane.getStyleClass().add("root");
         notePanel = new NotePanel();
         leftMenuPanel = new LeftMenuPanel();
-        changeMainView(new ActionEvent(View.MAIN, null));
+        changeMainView(new ActionEvent(View.TAG, null));
         mainPane.setTop(new MenuPanel());
     }
 
