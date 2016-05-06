@@ -1,5 +1,6 @@
 package com.kn.elephant.note.service;
 
+import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -34,6 +35,9 @@ public class TagServiceImp extends BaseService implements TagService {
     private Dao<NoteTag, Long> noteTagDao;
 
     private PreparedQuery<Tag> tagByNoteIdQuery = null;
+
+    @Inject
+    private NoteService noteService;
 
     public TagServiceImp() {
         noteDao = dbConnection.getDao(Note.class);
@@ -74,7 +78,7 @@ public class TagServiceImp extends BaseService implements TagService {
         TagDto dto = new TagDto();
         dto.setCreateAt(tag.getCreateAt()).setUpdateAt(tag.getCreateAt()).setId(tag.getId())
                 .setName(tag.getName());
-//            dto.setNotes() get notes from note service ....
+            dto.setNotes(noteService.getNotesByTagId(tag.getId())); //get notes from note service ....
         return dto;
     }
 

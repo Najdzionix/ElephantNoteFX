@@ -41,4 +41,11 @@ public interface NoteService {
      * @return List of notes which matched to pattern
      */
     List<NoteDto> findNotes(String pattern);
+
+    /**
+     * Return all notes assign to tagId
+     * @param tagId
+     * @return List of notes belongs to given tagId
+     */
+    List<NoteDto> getNotesByTagId(Long tagId);
 }

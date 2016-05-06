@@ -1,9 +1,7 @@
 package com.kn.elephant.note.service;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.SelectArg;
-import com.j256.ormlite.stmt.UpdateBuilder;
+import com.j256.ormlite.stmt.*;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
@@ -31,8 +29,10 @@ public class NoteServiceImp extends BaseService implements NoteService {
     private Dao<Note, Long> noteDao;
     private Dao<Tag, Long> tagDao;
     private Dao<NoteTag, Long> noteTagDao;
+    private PreparedQuery<Note> notesByTagIdQuery = null;
 
     public NoteServiceImp() {
+        tagDao = dbConnection.getDao(Tag.class);
         noteDao = dbConnection.getDao(Note.class);
         noteTagDao = dbConnection.getDao(NoteTag.class);
     }
@@ -147,6 +147,7 @@ public class NoteServiceImp extends BaseService implements NoteService {
 
     }
 
+    @Override
     public boolean isTitleNoteUnique(String title) {
         try {
             List<Note> notes = noteDao.queryBuilder().where().eq("title", title).query();
@@ -198,5 +199,30 @@ public class NoteServiceImp extends BaseService implements NoteService {
             log.error("Data base error.", e);
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public List<NoteDto> getNotesByTagId(Long tagId) {
+        try {
+            if (notesByTagIdQuery == null) {
+                notesByTagIdQuery = makeQueryForNoteTags();
+            }
+            notesByTagIdQuery.setArgumentHolderValue(0, tagDao.queryForId(tagId));
+            List<Note> notes = noteDao.query(notesByTagIdQuery);
+
+            return notes.parallelStream().map(this::convertToNoteDto).collect(Collectors.toList());
+        } catch (SQLException e) {
+            log.error("Data base error:", e);
+            return Collections.emptyList();
+        }
+    }
+
+    private PreparedQuery<Note> makeQueryForNoteTags() throws SQLException {
+        QueryBuilder<NoteTag, Long> notesTagQB = noteTagDao.queryBuilder();
+        notesTagQB.selectColumns(NoteTag.NOTE_ID_FIELD_NAME);
+        SelectArg noteSelectArg = new SelectArg();
+        notesTagQB.where().eq(NoteTag.TAG_ID_FIELD_NAME, noteSelectArg);
+
+        return noteDao.queryBuilder().where().in("id", notesTagQB).prepare();
     }
 }
