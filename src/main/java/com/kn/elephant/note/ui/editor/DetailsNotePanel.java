@@ -72,8 +72,8 @@ public class DetailsNotePanel extends BasePanel {
         box.setTop(gridPane);
         box.setCenter(createTitleLabel());
 
-        box.setBottom(new EditableLabel(noteDto.getShortDescription(), (oldText, newText) -> {
-            if(!oldText.equals(newText)) {
+        box.setBottom(new EditableLabel(noteDto.getShortDescription(), 60, (oldText, newText) -> {
+            if (!oldText.equals(newText)) {
                 ActionFactory.callAction("updateDesc", newText);
             }
         }));
@@ -82,8 +82,8 @@ public class DetailsNotePanel extends BasePanel {
     }
 
     private Node createTitleLabel() {
-        EditableLabel title = new EditableLabel(noteDto.getTitle(), (oldText, newText) -> {
-            if(!oldText.equals(newText)) {
+        EditableLabel title = new EditableLabel(noteDto.getTitle(), 50, (oldText, newText) -> {
+            if (!oldText.equals(newText)) {
                 ActionFactory.callAction("updateTitle", newText);
             }
         });
@@ -128,7 +128,6 @@ public class DetailsNotePanel extends BasePanel {
         LOGGER.info("remove tag action");
 //        todo find better way get item.
         TagDto item = ((TagNode) ((Button) event.getSource()).getParent().getParent()).getItem();
-        LOGGER.debug(item);
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
         if (isDeleted) {
             tagsDto.remove(item);

@@ -52,7 +52,10 @@ public class Main extends Application {
 
         buildUI();
         Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);
-
+        mainPane.setMinHeight(NoteConstants.MIN_HEIGHT);
+        mainPane.setMinWidth(NoteConstants.MIN_WIDTH);
+        primaryStage.setMinWidth(NoteConstants.MIN_WIDTH);
+        primaryStage.setMinHeight(NoteConstants.MIN_HEIGHT);
         Scene scene = new Scene(mainPane);
         scene.getStylesheets().addAll(loadCssFiles());
 //        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato:700italic&subset=latin,latin-ext");

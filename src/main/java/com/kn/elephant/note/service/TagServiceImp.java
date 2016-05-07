@@ -28,8 +28,9 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TagServiceImp extends BaseService implements TagService {
 
-    public static final String DELIMITER = ",";
-    public static final String PREFIX = "(";
+    private static final String COMMA = ", ";
+    private static final String OPEN_PARENTHESIS = " (";
+    private static final String CLOSE_PARENTHESIS = ") ";
     private Dao<Note, Long> noteDao;
     private Dao<Tag, Long> tagDao;
     private Dao<NoteTag, Long> noteTagDao;
@@ -156,13 +157,11 @@ public class TagServiceImp extends BaseService implements TagService {
     }
 
     private void saveTagNoteRelation(Long tagId, List<NoteDto> notes) throws SQLException {
-        String suffix = ", " + tagId + " ) ";
-        String insertValues = notes.stream().map(note -> note.getId().toString()).collect(Collectors.joining(DELIMITER,
-                PREFIX, suffix));
+        String insertValues = notes.stream().map(note -> OPEN_PARENTHESIS + note.getId() + COMMA + tagId + CLOSE_PARENTHESIS).collect(Collectors.joining(","));
         log.debug("Insert values: " + insertValues);
         StringBuilder sql = new StringBuilder(" INSERT INTO ");
         sql.append(NoteTag.TAG_NOTE_TABLE_NAME)
-                .append(" ( ").append(NoteTag.NOTE_ID_FIELD_NAME).append(", ")
+                .append(OPEN_PARENTHESIS).append(NoteTag.NOTE_ID_FIELD_NAME).append(COMMA)
                 .append(NoteTag.TAG_ID_FIELD_NAME).append(" ) VALUES ")
                 .append(insertValues)
                 .append(" ;");

@@ -14,6 +14,7 @@ import javafx.scene.layout.Region;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,15 +30,22 @@ public class EditableLabel extends Region {
     private static final Logger LOGGER = LogManager.getLogger(EditableLabel.class);
     public static final String SIZE_BUTTON = "1.1em";
 
+    private String fullText;
+    private int maxWidthText = Integer.MAX_VALUE;
     private Label labelText;
     private TextField editTextField;
     private Button editButton;
     private Button saveChangeButton;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
+    public  EditableLabel(String text, ChangeValue saveAction) {
+        this(text, Integer.MAX_VALUE, saveAction);
+    }
 
-    public EditableLabel(String text, ChangeValue saveActionFun) {
-        labelText = new Label(text);
-        editTextField = new TextField(text);
+    public EditableLabel(String text, int maxWidthText, ChangeValue saveActionFun) {
+        fullText = text;
+        this.maxWidthText = maxWidthText;
+        labelText = new Label(StringUtils.abbreviate(fullText, maxWidthText));
+        editTextField = new TextField(fullText);
         addCssClass("editable-label");
         createEditButton();
         createSaveButton(saveActionFun);
@@ -89,8 +97,8 @@ public class EditableLabel extends Region {
 
     private void saveAction(ChangeValue saveActionFun) {
         if (validatorHelper.isValid()) {
-            saveActionFun.changeText(labelText.getText(), editTextField.getText());
-            labelText.setText(editTextField.getText());
+            saveActionFun.changeText(fullText, editTextField.getText());
+            labelText.setText(StringUtils.abbreviate(editTextField.getText(), maxWidthText));
             activeNormalMode();
         }
     }

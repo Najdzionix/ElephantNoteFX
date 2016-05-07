@@ -137,7 +137,8 @@
       -fx-fill:  -color-light-gray;
 }
 .notification-pane .notification-bar > .pane {
-    -fx-background-color: -color-secondary;
+    -fx-background-radius: 2;
+    -fx-background-color: -color-divider-gray;
     -fx-padding: 0 7 0 7;
 }
 

@@ -25,4 +25,6 @@ public class NoteConstants {
     public static final String GRAY_DIVIDER = " -color-divider-gray;";
     public static final String BLUE_COLOR = " -color-blue;";
     public static final String WHITE = " white;";
+    public static final double MIN_HEIGHT = 600.0;
+    public static final double MIN_WIDTH = 1300.0;
 }
