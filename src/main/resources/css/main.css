@@ -1,7 +1,7 @@
 .root {
-    -color-secondary: #FF9800;
+    -color-secondary: #FF9800;/*orange*/
     -color-blue-gray: #455A64;
-    -color-primary: #607D8B;
+    -color-primary: #607D8B;  /*light blue gray*/
     -color-light-gray: #CFD8DC;
     -color-text-white: #FFFFFF;
     -color-text-black: #212121;
@@ -271,7 +271,36 @@
     -fx-border-color: -color-divider-gray;
     -fx-border-width: 0 0 2 0;
 }
-
+ /****************************************************************
+                Tags Panel
+ ****************************************************************/
+ .tag-cell{
+    -fx-min-width: 200;
+    -fx-padding: 10;
+    -fx-border-width: 1;
+    -fx-border-color:  -color-blue-gray;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-background-color: -color-divider-gray;
+ }
+ .tag-cell:hover {
+    -fx-border-color: -color-secondary;
+    -fx-border-width: 2;
+    -fx-padding: 9;
+ }
+ .tag-cell.active {
+    -fx-border-color: -color-blue;
+    -fx-background-color: -color-blue;
+ }
+ .tag-cell .tagName {
+    -fx-text-fill: -color-text-black;
+    -fx-font-size: 1.3em;
+    -fx-padding: 0 0 5 0;
+ }
+ .tag-cell .notesInfo {
+    -fx-fill: -color-text-secondary;
+    -fx-font-size: 0.9em;
+ }
 
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
@@ -281,6 +310,7 @@
 .testBorder {
     -fx-border-color: red;
     -fx-border-width: 1;
+ }
      /*-fx-focus-color: transparent;*/
      /*-fx-border-width:0;*/
     /*-fx-padding:5;*/

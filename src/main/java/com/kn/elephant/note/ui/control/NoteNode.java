@@ -2,11 +2,11 @@ package com.kn.elephant.note.ui.control;
 
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
-import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.ListenerFactory;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,8 +15,9 @@ import org.apache.commons.lang3.StringUtils;
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
-public class NoteNode extends BasePanel {
+class NoteNode extends BasePanel {
 
+    @Getter
     private NoteDto noteDto;
 
     public NoteNode(NoteDto noteDto) {
@@ -42,12 +43,6 @@ public class NoteNode extends BasePanel {
     }
 
     private void registerListeners() {
-        setOnMouseClicked(event -> {
-            ActionFactory.callAction("loadNote", noteDto);
-            ActionFactory.callAction("clearSelectedNoteNodes");
-            getStyleClass().add("selected-node");
-        });
-
         this.hoverProperty().addListener(ListenerFactory.getListenerHover(this));
     }
 }
