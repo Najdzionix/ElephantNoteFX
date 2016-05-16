@@ -1,7 +1,7 @@
 package com.kn.elephant.note.ui;
 
 import com.google.inject.Inject;
-import com.kn.elephant.note.Main;
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
@@ -15,21 +15,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
  * email:kamilnadlonek@gmail.com
  */
-public class MenuPanel extends BasePanel {
+@Log4j2
+public class MenuPanel extends BasePanel implements ChangeValue<View> {
 
     @Inject
     private NoteService noteService;
     private ToggleButton modeButton;
+    private List<Button> menuButtons = new ArrayList<>();
+    private Button addNoteButton;
+    private ToolBar toolBar;
 
     public MenuPanel() {
         ActionMap.register(this);
@@ -38,32 +45,39 @@ public class MenuPanel extends BasePanel {
     }
 
     private Node getSearchPanel() {
-        //TODO create utils to load css file
-        String searchBoxCss = Main.class.getResource("../../../../css/searchBox.css").toExternalForm();
         VBox vbox = new VBox();
-        vbox.getStylesheets().add(searchBoxCss);
         vbox.setPrefWidth(200);
         vbox.setMaxWidth(Control.USE_PREF_SIZE);
         vbox.getStyleClass().add("search-box");
         vbox.getChildren().add(new SearchBox());
 
-        ToolBar toolBar = new ToolBar();
+        toolBar = new ToolBar();
         toolBar.getStyleClass().add("tool-bar-menu");
-//        Button leftMenuButton = ActionUtils.createButton(ActionMap.action("showLeftMenu"));
-        //        ToggleSwitch modeButton = new ToggleSwitch("Edit");
-        modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
-        modeButton.setSelected(true);
+//        modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
+//        modeButton.setSelected(true);
 
-        Button addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
-        Button settingsButton  = new Button("Settings");
-        settingsButton.setOnAction(event -> ActionFactory.callAction("changeMainView", View.SETTINGS));
+        addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
+        addNoteButton.setVisible(true);
+        createMenuButton("Main", View.MAIN);
+        createMenuButton("Settings", View.SETTINGS);
 
-        toolBar.getItems().addAll(addNoteButton, modeButton, settingsButton);
+        toolBar.getItems().addAll(menuButtons);
+        toolBar.getItems().addAll(addNoteButton);
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         toolBar.getItems().add(spacer);
         toolBar.getItems().add(vbox);
         return toolBar;
+    }
+
+    private Button createMenuButton(String text, View view) {
+        Button button = new Button(text);
+        button.setOnAction(event -> {
+            getStyleClass().add(NoteConstants.CSS_ACTIVE);
+            ActionFactory.callAction("changeMainView", view);
+        });
+        menuButtons.add(button);
+        return button;
     }
 
     @ActionProxy(text = "Add note")
@@ -79,5 +93,22 @@ public class MenuPanel extends BasePanel {
     @ActionProxy(text = "")
     private void setEditMode(ActionEvent event) {
         modeButton.setSelected((Boolean) event.getSource());
+    }
+
+    @Override
+    public void changeValue(View oldValue, View newValue) {
+
+        if (View.MAIN.equals(newValue)) {
+            addNoteButton.setVisible(true);
+        } else {
+            addNoteButton.setVisible(false);
+        }
+
+        menuButtons.parallelStream().forEach(button -> {
+            button.getStyleClass().remove(NoteConstants.CSS_ACTIVE);
+//            if (newValue.equals(button.getView())) {
+//                button.getStyleClass().add(NoteConstants.CSS_ACTIVE);
+//            }
+        });
     }
 }

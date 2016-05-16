@@ -27,4 +27,6 @@ public class NoteConstants {
     public static final String WHITE = " white;";
     public static final double MIN_HEIGHT = 600.0;
     public static final double MIN_WIDTH = 1300.0;
+
+    public static final String CSS_ACTIVE = "active";
 }

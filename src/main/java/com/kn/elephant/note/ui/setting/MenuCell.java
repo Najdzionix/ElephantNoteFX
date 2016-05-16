@@ -5,6 +5,7 @@ import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.utils.ActionFactory;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -15,13 +16,15 @@ import lombok.extern.log4j.Log4j2;
 public class MenuCell extends BasePanel {
 
     static final String ACTIVE_CSS_CLASS = "menu-cell-active";
+    @Getter
+    private final View view;
     private Text textUI;
 
     MenuCell(String text, View view) {
+        this.view = view;
         getStyleClass().add("menu-cell");
 
         setOnMouseClicked(event -> {
-                    ActionFactory.callAction("clearMenuCell");
                     getStyleClass().add(ACTIVE_CSS_CLASS);
                     ActionFactory.callAction("changeMainView", view);
                 }

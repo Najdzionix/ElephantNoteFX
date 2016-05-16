@@ -41,7 +41,7 @@ public class EditableLabel extends Region {
         this(text, Integer.MAX_VALUE, saveAction);
     }
 
-    public EditableLabel(String text, int maxWidthText, ChangeValue saveActionFun) {
+    public EditableLabel(String text, int maxWidthText, ChangeValue<String> saveActionFun) {
         fullText = text;
         this.maxWidthText = maxWidthText;
         labelText = new Label(StringUtils.abbreviate(fullText, maxWidthText));
@@ -91,15 +91,15 @@ public class EditableLabel extends Region {
         editButton.setOnAction(event -> activeEditMode());
     }
 
-    private void createSaveButton(ChangeValue saveAction) {
+    private void createSaveButton(ChangeValue<String> saveAction) {
         saveChangeButton = new Button();
         Icons.addIcon(MaterialDesignIcon.CHECK, saveChangeButton, SIZE_BUTTON);
         saveChangeButton.setOnAction(event -> saveAction(saveAction));
     }
 
-    private void saveAction(ChangeValue saveActionFun) {
+    private void saveAction(ChangeValue<String> saveActionFun) {
         if (validatorHelper.isValid()) {
-            saveActionFun.changeText(fullText, editTextField.getText());
+            saveActionFun.changeValue(fullText, editTextField.getText());
             labelText.setText(StringUtils.abbreviate(editTextField.getText(), maxWidthText));
             activeNormalMode();
         }

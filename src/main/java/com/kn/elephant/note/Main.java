@@ -2,6 +2,7 @@ package com.kn.elephant.note;
 
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.kn.elephant.note.service.ElephantModule;
+import com.kn.elephant.note.ui.ChangeValue;
 import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.ui.editor.NotePanel;
@@ -38,14 +39,14 @@ public class Main extends Application {
     private BorderPane mainPane;
     private NotePanel notePanel;
     private LeftMenuPanel leftMenuPanel;
-
+    private List<ChangeValue<View>> observersView = new ArrayList<>();
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        LOGGER.debug("Start ElephantNoteFX.");
+        LOGGER.debug("Start NoteFX.");
         context.init();
         ActionMap.register(this);
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
@@ -82,7 +83,11 @@ public class Main extends Application {
         notePanel = new NotePanel();
         leftMenuPanel = new LeftMenuPanel();
         changeMainView(new ActionEvent(View.MAIN, null));
-        mainPane.setTop(new MenuPanel());
+        MenuPanel menuPanel = new MenuPanel();
+        mainPane.setTop(menuPanel);
+
+        observersView.add(leftMenuPanel);
+        observersView.add(menuPanel);
     }
 
     private void checkConfiguration() {
@@ -95,22 +100,25 @@ public class Main extends Application {
 
     @ActionProxy(text = "Settings")
     private void changeMainView(ActionEvent event) {
-        View view = (View) event.getSource();
-        if (View.SETTINGS.equals(view)) {
+        View currentView = (View) event.getSource();
+        observersView.parallelStream().forEach(observer -> observer.changeValue(currentView, currentView));
+        if (View.SETTINGS.equals(currentView)) {
             mainPane.setLeft(leftMenuPanel);
             mainPane.setCenter(new SettingsPanel());
-        } else if (View.TAG.equals(view)) {
+        } else if (View.TAG.equals(currentView)) {
             mainPane.setLeft(leftMenuPanel);
             mainPane.setCenter(new TagPanel());
-        } else if (View.MAIN.equals(view)) {
+        } else if (View.MAIN.equals(currentView)) {
             mainPane.setCenter(notePanel);
             mainPane.setLeft(new ListNotePanel());
-        } else if (View.ABOUT.equals(view)) {
+        } else if (View.ABOUT.equals(currentView)) {
             mainPane.setCenter(new AboutPanel());
             mainPane.setLeft(leftMenuPanel);
         } else {
-            log.warn("Not recognize type of view:" + view);
+            log.warn("Not recognize type of view:" + currentView);
         }
         mainPane.requestLayout();
     }
+
+
 }

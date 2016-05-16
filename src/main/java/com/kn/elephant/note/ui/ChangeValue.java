@@ -5,7 +5,7 @@ package com.kn.elephant.note.ui;
  * email:kamilnadlonek@gmail.com
  */
 @FunctionalInterface
-public interface ChangeValue {
+public interface ChangeValue<T> {
 
-    void changeText(String oldText, String newText);
+    void changeValue(T oldValue, T newValue);
 }

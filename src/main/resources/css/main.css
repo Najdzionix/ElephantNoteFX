@@ -195,6 +195,27 @@
     -fx-opacity: 0.9;
     -fx-alignment: center;
 }
+
+ /****************************************************************
+                Search box
+ ****************************************************************/
+.search-box .text-field {
+    -fx-background-color: white;
+    -fx-background-insets: 1;
+    -fx-background-radius: 2;
+    -fx-padding: 0 0 0 20;
+    -fx-background-image: url("../images/search.png");
+    -fx-background-position:2%;
+    -fx-background-repeat:no-repeat;
+    -fx-background-size:16;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: grey;
+}
+.search-box .text-field:focused {
+    -fx-background-color: -fx-focus-color, white;
+    -fx-background-insets: 1;
+    -fx-background-radius: 1.4;
+}
   /************************************************
                   Search Result Panel
   *************************************************/
