@@ -62,6 +62,8 @@ public class EditableLabel extends Region {
     }
 
     private void activeEditMode() {
+        //calculate width text field based on text length *Magic number "9"
+        editTextField.setPrefWidth(Math.min(editTextField.getText().length() * 9, getWidth()));
         createContent(editTextField, saveChangeButton);
         editTextField.requestFocus();
     }
