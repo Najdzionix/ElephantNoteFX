@@ -1,21 +1,23 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.control;
+
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.service.NoteService;
-import com.kn.elephant.note.ui.control.ListNotesControl;
+import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
+
 import de.jensd.fx.glyphs.octicons.OctIcon;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.

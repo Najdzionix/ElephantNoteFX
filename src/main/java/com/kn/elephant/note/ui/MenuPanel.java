@@ -1,10 +1,20 @@
 package com.kn.elephant.note.ui;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
+
 import com.google.inject.Inject;
 import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
+import com.kn.elephant.note.ui.control.SearchBox;
 import com.kn.elephant.note.utils.ActionFactory;
+
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,13 +26,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
@@ -34,7 +37,7 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
     @Inject
     private NoteService noteService;
     private ToggleButton modeButton;
-    private List<Button> menuButtons = new ArrayList<>();
+    private Map<View, Button> menuButtons = new LinkedHashMap<>();
     private Button addNoteButton;
     private ToolBar toolBar;
 
@@ -61,7 +64,7 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
         createMenuButton("Main", View.MAIN);
         createMenuButton("Settings", View.SETTINGS);
 
-        toolBar.getItems().addAll(menuButtons);
+        toolBar.getItems().addAll(menuButtons.values());
         toolBar.getItems().addAll(addNoteButton);
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -76,7 +79,7 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
             getStyleClass().add(NoteConstants.CSS_ACTIVE);
             ActionFactory.callAction("changeMainView", view);
         });
-        menuButtons.add(button);
+        menuButtons.put(view, button);
         return button;
     }
 
@@ -97,18 +100,12 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
 
     @Override
     public void changeValue(View oldValue, View newValue) {
-
-        if (View.MAIN.equals(newValue)) {
-            addNoteButton.setVisible(true);
-        } else {
-            addNoteButton.setVisible(false);
-        }
-
-        menuButtons.parallelStream().forEach(button -> {
-            button.getStyleClass().remove(NoteConstants.CSS_ACTIVE);
-//            if (newValue.equals(button.getView())) {
-//                button.getStyleClass().add(NoteConstants.CSS_ACTIVE);
-//            }
+        addNoteButton.setVisible(View.MAIN.equals(newValue));
+        menuButtons.entrySet().parallelStream().forEach(entry -> {
+            entry.getValue().getStyleClass().remove(NoteConstants.CSS_ACTIVE);
+            if (entry.getKey().equals(newValue)) {
+                entry.getValue().getStyleClass().add(NoteConstants.CSS_ACTIVE);
+            }
         });
     }
 }

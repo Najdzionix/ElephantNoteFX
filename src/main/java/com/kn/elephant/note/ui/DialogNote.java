@@ -1,23 +1,32 @@
 package com.kn.elephant.note.ui;
 
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
+
 import com.google.inject.Inject;
 import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 27.11.15.
@@ -25,7 +34,7 @@ import org.controlsfx.control.action.ActionUtils;
  */
 public class DialogNote extends BasePanel {
 
-    private static final int MAX_WIDTH_PARENT_NAME = 100;
+    private static final int MAX_WIDTH_PARENT_NAME = 50;
     private Dialog<NoteDto> dialog;
     private TextField titleText;
     private TextField shortDescText;
@@ -65,6 +74,7 @@ public class DialogNote extends BasePanel {
         VBox box = new VBox();
         box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, parentLabel, createSelectionPaneParent());
         dialog.getDialogPane().getStyleClass().add("card");
+
         dialog.getDialogPane().setContent(box);
 
         ButtonType buttonTypeOk = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
@@ -105,6 +115,7 @@ public class DialogNote extends BasePanel {
         parentsBox.setButtonCell(new NoteListCell());
         parentsBox.setCellFactory(p -> new NoteListCell());
         parentsBox.setMinWidth(280);
+        parentsBox.setMaxWidth(400);
         Button clearButton = ActionUtils.createButton(ActionFactory.getAction("clearSelection"));
         clearButton.getStyleClass().add("button-flat");
         box.getChildren().addAll(parentsBox, clearButton);

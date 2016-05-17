@@ -1,5 +1,6 @@
-package com.kn.elephant.note.ui;
+package com.kn.elephant.note.ui.control;
 
+import com.kn.elephant.note.ui.ChangeValue;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.Validator;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;

@@ -188,6 +188,13 @@
 .menuBar{
     -fx-pref-height: 40;
 }
+.menuBar .active {
+    -fx-background-color: -color-divider-gray;
+    -fx-border-color:  -color-blue;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+}
 
 .menu-bar .label {
     -fx-font-size: 12pt;
@@ -199,6 +206,8 @@
  /****************************************************************
                 Search box
  ****************************************************************/
+
+
 .search-box .text-field {
     -fx-background-color: white;
     -fx-background-insets: 1;

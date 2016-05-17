@@ -1,22 +1,27 @@
 package com.kn.elephant.note.ui.control;
 
-import com.kn.elephant.note.dto.NoteDto;
-import com.kn.elephant.note.utils.ActionFactory;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.action.ActionMap;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.kn.elephant.note.NoteConstants;
+import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.utils.ActionFactory;
+
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.octicons.OctIcon;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 06-05-2016
@@ -69,10 +74,7 @@ public class ListNotesControl {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.getStyleClass().add("content-search");
         if (notes.isEmpty()) {
-            Text text = new Text("Not found notes.");
-            text.setTextAlignment(TextAlignment.CENTER);
-            text.getStyleClass().add("not-found-text");
-            scrollPane.setContent(text);
+            scrollPane.setContent(createEmptyResultPane());
         } else {
             VBox list = new VBox();
             list.getStyleClass().add("list-search-notes");
@@ -80,6 +82,8 @@ public class ListNotesControl {
             List<Node> nodes = notes.parallelStream().map(NoteNode::new).collect(Collectors.toList());
             nodes.parallelStream().forEach(noteNode -> noteNode.setOnMouseClicked(event -> {
                 ActionFactory.callAction("loadNote", ((NoteNode) noteNode).getNoteDto());
+                ActionFactory.callAction("setSelectNote", ((NoteNode) noteNode).getNoteDto());
+
                 clearSelectedNoteNodes();
                 noteNode.getStyleClass().add("selected-node");
             }));
@@ -89,6 +93,20 @@ public class ListNotesControl {
         }
         return scrollPane;
     }
+
+	private Node createEmptyResultPane() {
+		VBox box = new VBox();
+		Label text = new Label("Not found notes.");
+		text.setTextAlignment(TextAlignment.CENTER);
+		text.getStyleClass().add("not-found-text");
+		Node icon = GlyphsDude.createIcon( OctIcon.ALERT);
+		icon.getStyleClass().addAll("glyph-icon");
+		String currentStyle = icon.getStyle();
+		icon.setStyle(currentStyle + String.format("-fx-fill: %s; -fx-font-size: %s; -fx-padding:0 0 0 30;", NoteConstants.RED_COLOR, "5em"));
+
+		box.getChildren().addAll(text, icon);
+		return box;
+	}
 
     private void clearSelectedNoteNodes() {
         ScrollPane scroll = (ScrollPane) popOver.getContentNode();
