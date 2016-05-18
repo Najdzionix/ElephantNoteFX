@@ -231,6 +231,12 @@
 .popoverM >* {
     -fx-background-color: -color-light-gray;
 }
+
+.popover > .content > .title > .text  {
+	-fx-font-size: 1.0em;
+	-fx-font-weight: bold;
+	-fx-text-fill: -color-text-black !important;
+	}
 .content-search {
     -fx-focus-color: transparent;
     -fx-padding:15;
@@ -253,6 +259,14 @@
     -fx-font-size: 18px;
     -fx-font-weight:900;
     -fx-padding:25;
+}
+.no-results {
+    -fx-padding:20 40 10 40;
+}
+.alert-icon {
+    -fx-fill: #E32B2B;
+    -fx-font-size: 4em;
+    -fx-padding:20;
 }
 
 .search-box .button:hover {

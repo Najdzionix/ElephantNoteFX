@@ -35,10 +35,12 @@ dependencies {
     compile 'com.gluonhq:ignite-guice:1.0.0'
     compile 'org.projectlombok:lombok:1.16.6'
     compile 'org.jsoup:jsoup:1.8.3'
-    compile 'de.jensd:fontawesomefx:8.9'
+//    compile 'de.jensd:fontawesomefx-commons:8.11'
+
+//    compile 'de.jensd:fontawesomefx-controls:8.11'
     compile 'commons-io:commons-io:2.4'
 
-//    compile 'de.jensd:fontawesomefx:8.6'
+    compile 'de.jensd:fontawesomefx:8.9'
 
 }
 
