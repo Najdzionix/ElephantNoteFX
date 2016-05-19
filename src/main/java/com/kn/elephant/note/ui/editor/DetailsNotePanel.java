@@ -1,5 +1,15 @@
 package com.kn.elephant.note.ui.editor;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.GridView;
+import org.controlsfx.control.ToggleSwitch;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
@@ -10,6 +20,7 @@ import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.control.EditableLabel;
 import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,15 +31,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.GridView;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -38,9 +43,8 @@ import java.util.List;
 public class DetailsNotePanel extends BasePanel {
     private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
-
     private NoteDto noteDto;
-    private GridPane gridPane;
+    private GridPane datesPane;
     private ObservableList<TagDto> tagsDto;
 
     @Inject
@@ -49,35 +53,50 @@ public class DetailsNotePanel extends BasePanel {
     @Inject
     private NoteService noteService;
 
-
     public DetailsNotePanel() {
         ActionMap.register(this);
-        setMaxHeight(150);
     }
 
     public void loadNote(NoteDto noteDto) {
         this.noteDto = noteDto;
-        Node node = createLeftPanel();
+        Node node = createNotePanel();
         getStyleClass().add("detailPanel");
         setLeft(node);
         setCenter(createTagPanel());
     }
 
-    private Node createLeftPanel() {
+    private Node createNotePanel() {
         BorderPane box = new BorderPane();
         box.getStyleClass().add("custom-pane");
-        gridPane = new GridPane();
+        datesPane = new GridPane();
         createDates("Created:", 0);
         createDates("Updated:", 2);
-        box.setTop(gridPane);
-        box.setCenter(createTitleLabel());
+        box.setTop(datesPane);
+        box.setCenter(createNoteTitlePanel());
+        box.setBottom(createButtonsPanel());
+        return box;
+    }
 
-        box.setBottom(new EditableLabel(noteDto.getShortDescription(), 60, (oldText, newText) -> {
+    private Node createButtonsPanel(){
+        HBox content = new HBox();
+        content.getStyleClass().add("button-pane");
+        ToggleSwitch modeButton = new ToggleSwitch("Edit mode");
+        modeButton.selectedProperty().addListener((observable, oldValue, newValue) -> ActionFactory.callAction("switchDisplayMode", newValue));
+        modeButton.setSelected(true);
+        content.getChildren().addAll(modeButton);
+        return content;
+    }
+
+    private Node createNoteTitlePanel() {
+        VBox box = new VBox();
+        Node titleLabel = createTitleLabel();
+        EditableLabel descLabel = new EditableLabel(noteDto.getShortDescription(), 60, (oldText, newText) -> {
             if (!oldText.equals(newText)) {
                 ActionFactory.callAction("updateDesc", newText);
             }
-        }));
+        });
 
+        box.getChildren().addAll(titleLabel, descLabel);
         return box;
     }
 
@@ -103,7 +122,7 @@ public class DetailsNotePanel extends BasePanel {
         timeLabel.getStyleClass().addAll("noteDateTime", "control-labelText-two");
         GridPane.setHalignment(timeLabel, HPos.LEFT);
         GridPane.setConstraints(timeLabel, colIndex + 1, 0);
-        gridPane.getChildren().addAll(label, timeLabel);
+        datesPane.getChildren().addAll(label, timeLabel);
     }
 
     private Node createTagPanel() {

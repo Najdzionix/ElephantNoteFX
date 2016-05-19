@@ -82,7 +82,8 @@
     -fx-padding: 8 10 10 0;
 }
 .detailPanel {
-    -fx-padding: 0 0 15 0;  
+    -fx-padding: 0 0 15 0;
+    -fx-max-height: 180;
 }
 
 .detailPanel .button {
@@ -98,7 +99,23 @@
     -fx-font-size: 1.2em;
     -fx-fill: -color-text-secondary;
 }
+.toggle-switch .thumb {
+    -fx-background-radius: 1.2em; /* large value to make sure this remains circular */
+    -fx-padding: 0.55em;
+}
 
+.toggle-switch .thumb-area{
+    -fx-padding: 0.50em 1.1em 0.50em 1.1em;
+}
+
+.toggle-switch:selected .thumb-area{
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -20%), derive(-fx-text-box-border, -30%)),
+                            linear-gradient(to bottom, derive( -color-divider-gray, 30%),  -color-divider-gray);
+ }
+
+.button-pane {
+   -fx-padding: 10 10 0 15;
+ }
 
 
 /************************************************

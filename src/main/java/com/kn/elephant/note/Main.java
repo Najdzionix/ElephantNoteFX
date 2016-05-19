@@ -1,5 +1,15 @@
 package com.kn.elephant.note;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.kn.elephant.note.service.ElephantModule;
 import com.kn.elephant.note.ui.ChangeValue;
@@ -7,8 +17,13 @@ import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.ui.editor.NotePanel;
 import com.kn.elephant.note.ui.leftMenu.ListNotePanel;
-import com.kn.elephant.note.ui.setting.*;
+import com.kn.elephant.note.ui.setting.AboutPanel;
+import com.kn.elephant.note.ui.setting.DialogDB;
+import com.kn.elephant.note.ui.setting.LeftMenuPanel;
+import com.kn.elephant.note.ui.setting.SettingsPanel;
+import com.kn.elephant.note.ui.setting.TagPanel;
 import com.kn.elephant.note.utils.Utils;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -16,15 +31,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by Kamil Nadłonek on 29.10.15.
@@ -66,7 +72,6 @@ public class Main extends Application {
     }
 
     public static List<String> loadCssFiles() {
-//        "materialfx-toggleswitch.css"
         String[] cssNames = {"material-fx-v0_3.css", "main.css"};
         List<String> cssFiles = new ArrayList<>();
         for (String cssName : cssNames) {

@@ -15,11 +15,9 @@ import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.control.SearchBox;
 import com.kn.elephant.note.utils.ActionFactory;
 
-import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -36,7 +34,6 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
 
     @Inject
     private NoteService noteService;
-    private ToggleButton modeButton;
     private Map<View, Button> menuButtons = new LinkedHashMap<>();
     private Button addNoteButton;
     private ToolBar toolBar;
@@ -56,8 +53,7 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
 
         toolBar = new ToolBar();
         toolBar.getStyleClass().add("tool-bar-menu");
-//        modeButton = ActionUtils.createToggleButton(ActionMap.action("switchDisplayMode"));
-//        modeButton.setSelected(true);
+
 
         addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
         addNoteButton.setVisible(true);
@@ -91,11 +87,6 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
             Optional<NoteDto> dto = noteService.saveNote(noteDto.get());
             ActionFactory.callAction("addNoteToList", dto.get());
         }
-    }
-
-    @ActionProxy(text = "")
-    private void setEditMode(ActionEvent event) {
-        modeButton.setSelected((Boolean) event.getSource());
     }
 
     @Override
