@@ -1,8 +1,8 @@
 package com.kn.elephant.note;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * Created by Kamil Nadłonek on 11.11.15.
@@ -29,4 +29,11 @@ public class NoteConstants {
     public static final double MIN_WIDTH = 1300.0;
 
     public static final String CSS_ACTIVE = "active";
+
+
+
+    private static final String TABLE_CSS = "<style> .pure-table{border-collapse:collapse;border-spacing:0;empty-cells:show;border:1px solid #cbcbcb}.pure-table caption{color:#000;font:italic 85%/1 arial,sans-serif;padding:1em 0;text-align:center}.pure-table td,.pure-table th{border-left:1px solid #cbcbcb;border-width:0 0 0 1px;font-size:inherit;margin:0;overflow:visible;padding:.5em 1em}.pure-table td:first-child,.pure-table th:first-child{border-left-width:0}.pure-table thead{background-color:#e0e0e0;color:#000;text-align:left;vertical-align:bottom}.pure-table td{background-color:transparent}.pure-table-odd td{background-color:#f2f2f2}.pure-table-striped tr:nth-child(2n-1) td{background-color:#f2f2f2}.pure-table-bordered td{border-bottom:1px solid #cbcbcb}.pure-table-bordered tbody>tr:last-child>td{border-bottom-width:0}.pure-table-horizontal td,.pure-table-horizontal th{border-width:0 0 1px;border-bottom:1px solid #cbcbcb}.pure-table-horizontal tbody>tr:last-child>td{border-bottom-width:0}</style>";
+
+    public static String INIT_NOTE_CONTENT = "<!DOCTYPE html> <html> <head>"  + TABLE_CSS + "</head> <body>  </body> </html>";
+
 }

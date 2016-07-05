@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
@@ -23,14 +24,19 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import lombok.extern.log4j.Log4j2;
+import netscape.javascript.JSException;
 
 /**
  * Created by Kamil Nadłonek on 10.11.15.
@@ -48,6 +54,7 @@ public class NotePanel extends BasePanel {
 	@Inject
 	private NoteService noteService;
 	private NotificationPane notificationPane;
+	private Button divButton;
 
 	public NotePanel() {
 		super();
@@ -100,6 +107,11 @@ public class NotePanel extends BasePanel {
 		insertLinkButton = new Button();
 		ActionUtils.configureButton(insertAction, insertLinkButton);
 
+		Action insertDivAction = ActionMap.action("insertTable");
+		Icons.addIcon(MaterialDesignIcon.TABLE, insertDivAction, sizeIcon);
+		divButton = new Button();
+		ActionUtils.configureButton(insertDivAction, divButton);
+
 		editor.setOnMouseClicked((MouseEvent event) -> {
 			final int clickCount = event.getClickCount();
 			if (clickCount == 2) {
@@ -107,7 +119,7 @@ public class NotePanel extends BasePanel {
 			}
 		});
 
-		toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton);
+		toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, divButton);
 	}
 
 	private void httpLisener() {
@@ -149,6 +161,98 @@ public class NotePanel extends BasePanel {
 			editor.setHtmlText(currentText.replace(selected, hyperlinkHtml));
 		}
 		insertLinkButton.getStyleClass().add("disableButton");
+	}
+
+	@ActionProxy(text = "")
+	private void insertTable() {
+		PopOver popOver = new PopOver();
+		popOver.getStyleClass().add("popoverM");
+		popOver.getRoot().getStyleClass().add("popoverM");
+		popOver.setDetachable(false);
+		VBox content = new VBox();
+		TextField colTF = new TextField();
+		TextField rowTF = new TextField();
+		content.getChildren().addAll(new Label("Columns:"), colTF, new Label("Rows:"), rowTF);
+
+		popOver.setOnHidden(event -> {
+			log.info("Asdasdasd:::" + colTF.getText());
+			StringBuilder table = new StringBuilder("<table class=\"pure-table pure-table-horizontal\"> <tbody>");
+			for (int i = 0; i < Integer.parseInt(rowTF.getText()); i++) {
+				table.append("<tr>");
+				for (int j = 0; j < Integer.parseInt(colTF.getText()); j++) {
+					table.append("<td>#</td>");
+				}
+				table.append("</tr>");
+			}
+			table.append("</tbody> </table>");
+			String table2 = "<table class=\"pure-table pure-table-horizontal\"> <thead> <tr> <th>#</th> <th>#</th> </tr> </thead> <tbody> <tr> <td>#</td> <td>#</td> </tr> </tbody> </table>";
+			insertHtml(table.toString());
+		});
+		popOver.setContentNode(content);
+		popOver.show(divButton);
+	}
+
+	private void insertHtml(String html) {
+		WebView webView = (WebView) editor.lookup("WebView");
+		WebEngine engine = webView.getEngine();
+		try {
+			String command = "document.execCommand(\"InsertHTML\", false, '" + html + "')";
+			engine.executeScript(command);
+		} catch (JSException e) {
+			log.error("Javascript error:" + e.getMessage(), e);
+		}
+	}
+
+	@ActionProxy(text = "")
+	private void insertDiv(ActionEvent event) {
+		log.info("TESTT DIVVVVVVV");
+		WebView webView = (WebView) editor.lookup("WebView");
+		String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
+
+		String currentText = editor.getHtmlText();
+		String cssStyle = "\t<style type=\"text/css\">\n" +
+			"\t\t\thtml, body {\n" +
+			"\t\t\t\theight: 100%;\n" +
+			"\t\t\t\tmin-height: 100%;\n" +
+			"\t\t\t\tmargin: 0;\n" +
+			"\t\t\t\tpadding: 0;\n" +
+			"\t\t\t}\n" +
+			"\t\t\t.split-pane-divider {\n" +
+			"\t\t\t\tbackground: #aaa;\n" +
+			"\t\t\t}\n" +
+			"\t\t\t#left-component {\n" +
+			"\t\t\t\twidth: 20em;\n" +
+			"\t\t\t}\n" +
+			"\t\t\t#divider {\n" +
+			"\t\t\t\tleft: 20em; /* same as left component width */\n" +
+			"\t\t\t\twidth: 5px;\n" +
+			"\t\t\t}\n" +
+			"\t\t\t#right-component {\n" +
+			"\t\t\t\tleft: 20em;\n" +
+			"\t\t\t\tmargin-left: 5px; /* same as divider width */\n" +
+			"\t\t\t}\n" +
+			"\t\t</style> \t<script>\n" +
+			"\t\t\t$(function() {\n" +
+			"\t\t\t\t$('div.split-pane').splitPane();\n" +
+			"\t\t\t});\n" +
+			"\t\t</script>";
+		String hyperlinkHtml = "<div style=\"width: 100%;\">\n" +
+			"   <div style=\"float:left; width: 49%; border-style: solid;\">LEFT</div>\n" +
+			"   <div style=\"float:right; width: 49%; border-style: solid;\">RIGHT</div>\n" +
+			"</div><div style=\"clear:both\"></div>";
+
+		hyperlinkHtml = "\t<div id=\"split-pane-1\" class=\"split-pane fixed-left\">\n" +
+			"\t\t\t<div class=\"split-pane-component\" id=\"left-component\">\n" +
+			"\t\t\t\tThis is the left component\n" +
+			"\t\t\t</div>\n" +
+			"\t\t\t<div class=\"split-pane-divider\" id=\"divider\"></div>\n" +
+			"\t\t\t<div class=\"split-pane-component\" id=\"right-component\">\n" +
+			"\t\t\t\tThis is the right component\n" +
+			"\t\t\t\t<button onclick=\"$('div.split-pane').splitPane('firstComponentSize', 0);\">Collapse first component</button>\n" +
+			"\t\t\t</div>\n" +
+			"\t\t</div>";
+
+//		editor.setHtmlText(currentText.replace(selected, test));
 	}
 
 	@ActionProxy(text = "")

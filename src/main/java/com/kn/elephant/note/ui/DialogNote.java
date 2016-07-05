@@ -7,6 +7,7 @@ import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.Main;
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
@@ -88,7 +89,7 @@ public class DialogNote extends BasePanel {
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
                 return new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText())
-                        .setParentNote(parentsBox.getValue());
+                        .setParentNote(parentsBox.getValue()).setContent(NoteConstants.INIT_NOTE_CONTENT);
             }
             return null;
         });
