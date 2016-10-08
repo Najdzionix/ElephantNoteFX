@@ -17,7 +17,7 @@ configurations {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    runtime(['org.controlsfx:controlsfx:8.40.10',
+    runtime(['org.controlsfx:controlsfx:8.40.12',
              'org.xerial:sqlite-jdbc:3.8.11.2',
              'com.j256.ormlite:ormlite-core:4.48',
              'com.j256.ormlite:ormlite-jdbc:4.48',
@@ -30,10 +30,10 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.logging.log4j:log4j-core:2.4.1'
     compile 'org.apache.logging.log4j:log4j-api:2.4.1'
-    compile 'org.controlsfx:controlsfx:8.40.10'
-    compile 'com.google.inject:guice:4.0'
-    compile 'com.gluonhq:ignite-guice:1.0.0'
-    compile 'org.projectlombok:lombok:1.16.6'
+    compile 'org.controlsfx:controlsfx:8.40.12'
+    compile 'com.google.inject:guice:4.1.0'
+    compile 'com.gluonhq:ignite-guice:1.0.1'
+    compile 'org.projectlombok:lombok:1.16.10'
     compile 'org.jsoup:jsoup:1.8.3'
 //    compile 'de.jensd:fontawesomefx-commons:8.11'
 
