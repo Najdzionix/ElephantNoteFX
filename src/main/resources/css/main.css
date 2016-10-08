@@ -46,7 +46,7 @@
       -fx-padding: 5 10 5 15;
 }
 .editable-label > * > .text-field {
-    -fx-min-width:  200px;
+    -fx-min-width: 200px;
 }
 .control-labelText {
     -fx-padding: 20 0 0 0;
@@ -371,6 +371,19 @@
     -fx-background-color: #404040 ;
 }    */
 
+
+ /****************************************************************
+                Insert table dialog
+ ****************************************************************/
+ .contentWhite {
+   -fx-padding: 5;
+   -fx-background-color:white;
+   -fx-pref-width:200;
+ }
+ .contentWhite .label .text {
+    -fx-font-size: 0.7em;
+    -fx-font-weight: 200;
+ }
 
 .testBorder {
     -fx-border-color: red;

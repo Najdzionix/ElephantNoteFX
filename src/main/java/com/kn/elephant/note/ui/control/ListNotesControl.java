@@ -114,6 +114,6 @@ public class ListNotesControl {
 	private void clearSelectedNoteNodes() {
 		ScrollPane scroll = (ScrollPane) popOver.getContentNode();
 		ObservableList<Node> children = ((VBox) scroll.getContent()).getChildren();
-		children.stream().forEach(node -> node.getStyleClass().remove("selected-node"));
+		children.forEach(node -> node.getStyleClass().remove("selected-node"));
 	}
 }

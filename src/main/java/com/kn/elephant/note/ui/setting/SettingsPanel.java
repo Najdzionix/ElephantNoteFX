@@ -1,8 +1,18 @@
 package com.kn.elephant.note.ui.setting;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.kn.elephant.note.NoteConstants;
+import com.kn.elephant.note.ui.UIFactory;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.Utils;
+
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,13 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 /**
  * Created by Kamil Nadłonek on 14-04-2016
@@ -61,7 +64,7 @@ public class SettingsPanel extends TitlePanel {
     private Node createContent() {
         VBox content = new VBox();
         content.getStyleClass().addAll("settings-panel");
-        Label dbLabel = createLabel("Chose notes location:");
+        Label dbLabel = UIFactory.createLabel("Chose notes location:");
         content.getChildren().addAll(dbLabel, crateDBrow(), createSaveButton());
         return content;
     }
@@ -93,12 +96,6 @@ public class SettingsPanel extends TitlePanel {
 
     private void moveDBFile(String oldPath, String newPath) throws IOException {
         FileUtils.moveFile(FileUtils.getFile(oldPath), new File(newPath));
-    }
-
-    private Label createLabel(String text) {
-        Label label = new Label(text);
-        label.getStyleClass().add("control-labelText");
-        return label;
     }
 
     private void loadPropertiesFile() {

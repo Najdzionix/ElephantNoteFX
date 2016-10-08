@@ -60,9 +60,9 @@ public class DialogNote extends BasePanel {
         dialog.setHeaderText("Welcome in wizard notes.");
         dialog.setResizable(false);
 
-        Label titleLabel = createLabel("Title: ");
-        Label shortDescriptionL = createLabel("Short description: ");
-        Label parentLabel = createLabel("Choose parent");
+        Label titleLabel = UIFactory.createLabel("Title: ");
+        Label shortDescriptionL = UIFactory.createLabel("Short description: ");
+        Label parentLabel = UIFactory.createLabel("Choose parent");
         titleText = new TextField();
 
         Platform.runLater(() -> titleText.requestFocus());
@@ -100,12 +100,6 @@ public class DialogNote extends BasePanel {
     private void uniqueTagTitleValidator() {
         validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.",
                 node -> noteService.isTitleNoteUnique(((TextField)node).getText()));
-    }
-
-    private Label createLabel(String text) {
-        Label label = new Label(text);
-        label.getStyleClass().add("control-labelText");
-        return label;
     }
 
     private Node createSelectionPaneParent() {
