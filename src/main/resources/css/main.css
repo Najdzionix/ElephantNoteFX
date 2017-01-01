@@ -378,9 +378,9 @@
  .contentWhite {
    -fx-padding: 5;
    -fx-background-color:white;
-   -fx-pref-width:200;
+   -fx-pref-width:100;
  }
- .contentWhite .label .text {
+ .contentWhite .label .text,  .contentWhite .text-field>*>.text{
     -fx-font-size: 0.7em;
     -fx-font-weight: 200;
  }

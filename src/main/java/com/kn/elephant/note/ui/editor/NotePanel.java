@@ -102,7 +102,7 @@ public class NotePanel extends BasePanel {
         Button removeButton = ActionUtils.createButton(removeAction);
 
         Action insertAction = ActionMap.action("insertLink");
-        Icons.addIcon(MaterialDesignIcon.LINK, insertAction, sizeIcon);
+        Icons.addIcon(MaterialDesignIcon.LINK_OFF, insertAction, sizeIcon);
         insertLinkButton = new Button();
         ActionUtils.configureButton(insertAction, insertLinkButton);
 

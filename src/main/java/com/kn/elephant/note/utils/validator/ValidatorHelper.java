@@ -1,12 +1,14 @@
 package com.kn.elephant.note.utils.validator;
 
-import javafx.scene.Node;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.control.Tooltip;
 
 /**
  * Created by Kamil Nadłonek on 19.03.16.
@@ -44,10 +46,28 @@ public class ValidatorHelper {
     public void registerCustomValidator(Node node, String message, Validator validator) {
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                boolean isValid = validator.validate(node);
-                setValidationResult(node, message, isValid);
+                runValidator(node, message, validator);
             }
         });
+
+    }
+
+    private void runValidator(Node node, String message, Validator validator) {
+        boolean isValid = validator.validate(node);
+        setValidationResult(node, message, isValid);
+    }
+
+    /**
+     *  Register given validator and it is fire after change text property.
+     * @param node control to validation
+     * @param message error message
+     * @param validator validator which check control
+     */
+    public void registerCustomValidatorChangeText(TextInputControl node, String message, Validator validator) {
+        node.textProperty().addListener((observable, oldValue, newValue) -> {
+            runValidator(node, message, validator);
+        });
+        runValidator(node, message, validator);
     }
 
     private void setValidationResult(Node node, String message, boolean isValid) {
@@ -67,6 +87,13 @@ public class ValidatorHelper {
     public boolean isValid() {
         long count = fields.values().stream().filter(b -> !b).count();
         return count == 0;
+    }
+
+    /**
+     * Clear all results of validation.
+     */
+    public void removeAllNodes(){
+        fields.clear();
     }
 
 }

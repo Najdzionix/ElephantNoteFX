@@ -7,8 +7,6 @@ import javafx.scene.control.Label;
  * email:kamilnadlonek@gmail.com
  */
 public class UIFactory {
-
-
 	public static Label createLabel(String text) {
 		Label label = new Label(text);
 		label.getStyleClass().add("control-labelText");
