@@ -29,6 +29,7 @@ public class TableGenerator {
     private static final String TR_END_TAG = "</tr>";
     private static final String VALIDATION_MESSAGE = "Given string is not number or number is to big. Max value is: "
             + NoteConstants.MAX_NUMBER_OF_COLUMNS_AND_ROWS;
+    private static final int MAX_CHAR_NUMBER = 7;
 
     private PopOver popOver;
     private TextField colTF;
@@ -59,7 +60,7 @@ public class TableGenerator {
 
         Validator numberValidator = node -> {
             String text = ((TextField) node).getText();
-            return StringUtils.isNotEmpty(text) && StringUtils.isNumeric(text) && Integer.parseInt(text) > -1
+            return StringUtils.isNumeric(text) && StringUtils.length(text) < MAX_CHAR_NUMBER && Integer.parseInt(text) > -1
                     && Integer.parseInt(text) < NoteConstants.MAX_NUMBER_OF_COLUMNS_AND_ROWS;
         };
         validatorHelper.registerCustomValidatorChangeText(colTF, VALIDATION_MESSAGE, numberValidator);
@@ -71,7 +72,6 @@ public class TableGenerator {
     public void insertTable(Consumer<String> consumerOfTable) {
         createDialog();
         popOver.setOnHidden(event -> {
-            log.info("KAMILLLLL" + validatorHelper.isValid());
             if (!validatorHelper.isValid()) {
                 event.consume();
                 ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Insert table failed." + VALIDATION_MESSAGE));
