@@ -15,6 +15,7 @@ import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
 
@@ -49,7 +50,12 @@ public class TableGenerator {
         content.getStyleClass().add("contentWhite");
         colTF = new TextField();
         rowTF = new TextField();
-        content.getChildren().addAll(createLabel("Columns:"), colTF, createLabel("Rows:"), rowTF);
+
+        HBox row1 = new HBox();
+        HBox row2 = new HBox();
+        row1.getChildren().addAll(createLabel("Columns:"), colTF);
+        row2.getChildren().addAll(createLabel("Rows:"), rowTF);
+        content.getChildren().addAll(row1, row2);
 
         Validator numberValidator = node -> {
             String text = ((TextField) node).getText();

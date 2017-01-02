@@ -378,11 +378,17 @@
  .contentWhite {
    -fx-padding: 5;
    -fx-background-color:white;
-   -fx-pref-width:100;
+   -fx-pref-width:150;
  }
  .contentWhite .label .text,  .contentWhite .text-field>*>.text{
-    -fx-font-size: 0.7em;
+    -fx-font-size: 0.8em;
     -fx-font-weight: 200;
+ }
+ .contentWhite .label {
+    -fx-min-width:80;
+    -fx-alignment:top-right;
+    -fx-text-alignment: right;
+    -fx-padding: 6 0 0 0;
  }
 
 .testBorder {
