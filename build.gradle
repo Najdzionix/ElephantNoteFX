@@ -24,6 +24,7 @@ dependencies {
              'org.apache.commons:commons-lang3:3.4'
 
     ])
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
 
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-jdbc:4.48'
