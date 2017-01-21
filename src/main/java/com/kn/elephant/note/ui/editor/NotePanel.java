@@ -11,14 +11,21 @@ import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.cache.SimpleMapCache;
+import com.kn.elephant.note.utils.cache.Version;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -40,6 +47,7 @@ import netscape.javascript.JSException;
 @Log4j2
 public class NotePanel extends BasePanel {
 
+    private static final SimpleMapCache<Version, NoteDto> cache = new SimpleMapCache<>(6000L, NoteConstants.MAX_SIZE_CACHE);
     private NoteDto currentNoteDto;
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
@@ -47,7 +55,7 @@ public class NotePanel extends BasePanel {
     private Button insertLinkButton;
 
 	private TableGenerator tableGenerator;
-
+    private Version version;
     @Inject
     private NoteService noteService;
     private NotificationPane notificationPane;
@@ -65,6 +73,8 @@ public class NotePanel extends BasePanel {
         addButtonsToToolbar();
 
 		tableGenerator = new TableGenerator(tableButton);
+        cachingNoteContentChanges();
+        testLoadPage();
     }
 
     private void notificationPanel() {
@@ -76,12 +86,22 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
+        NoteDto newNote = (NoteDto) event.getSource();
+        if(currentNoteDto == null) {
+            version = new Version(newNote.getId());
+        } else  {
+            version.increaseVersion();
+            cache.put(version, currentNoteDto);
+            version = new Version( newNote.getId());
+        }
         notificationPane.setContent(editor);
-        currentNoteDto = (NoteDto) event.getSource();
+        currentNoteDto = newNote;
         log.debug("Load note: " + currentNoteDto);
         detailsNotePanel.loadNote(currentNoteDto);
         editor.setHtmlText("");
         editor.setHtmlText(currentNoteDto.getContent());
+
+        cache.put(version, currentNoteDto);
     }
 
     private void addButtonsToToolbar() {
@@ -119,6 +139,58 @@ public class NotePanel extends BasePanel {
         });
 
         toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton);
+    }
+
+    private void cachingNoteContentChanges() {
+        editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            if(!currentNoteDto.getContent().equals(editor.getHtmlText())) {
+                version.increaseVersion();
+                currentNoteDto.setContent(editor.getHtmlText());
+                cache.put(version, currentNoteDto);
+            }
+        });
+    }
+
+    public void testLoadPage() {
+
+
+
+
+
+
+        WebView webView = (WebView) editor.lookup("WebView");
+        WebEngine engine = webView.getEngine();
+
+        engine.getLoadWorker().stateProperty().addListener(
+            new ChangeListener<Worker.State>() {
+            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+                String title = engine.getLoadWorker().getTitle();
+                String message = engine.getLoadWorker().getMessage();
+//                log.info("State:" + newState +"\t" +title+"\t" + message);
+                if (newState == Worker.State.SUCCEEDED) {
+//                    log.info("Kamil:DOne");
+                }
+            }
+        });
+
+        engine.locationProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue<? extends String> ov, final String oldLoc, final String loc) {
+                log.info("T:\t" + loc);
+                if (loc.contains("google")) {
+                    log.info("aaaaa");
+                    Platform.runLater(new Runnable() {
+
+                        @Override public void run() {
+                            engine.load(oldLoc);
+                        }
+                    });
+                }
+            }
+        });
+//        LRUMap
+
+
+
     }
 
     private void httpLisener() {
@@ -220,6 +292,8 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void saveNote() {
         currentNoteDto.setContent(editor.getHtmlText());
+        version.increaseVersion();
+        cache.put(version, currentNoteDto);
         log.debug("Save note:" + currentNoteDto);
         Optional<NoteDto> updatedNote = noteService.saveNote(currentNoteDto);
         if (updatedNote.isPresent()) {

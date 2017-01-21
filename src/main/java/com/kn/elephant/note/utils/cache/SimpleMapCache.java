@@ -4,10 +4,12 @@ import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.map.LRUMap;
 
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 21-01-2017 email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class SimpleMapCache<K, T> {
 
     private long timeToLive;
@@ -47,6 +49,7 @@ public class SimpleMapCache<K, T> {
     }
 
     public void put(K key, T value) {
+        log.info("Add cache:" + key);
         synchronized (cacheMap) {
             cacheMap.put(key, new CacheObject(value));
         }
@@ -71,9 +74,9 @@ public class SimpleMapCache<K, T> {
         }
     }
 
-    public int size() {
+    public K lastKey() {
         synchronized (cacheMap) {
-            return cacheMap.size();
+            return cacheMap.lastKey();
         }
     }
 
@@ -84,6 +87,7 @@ public class SimpleMapCache<K, T> {
             CacheObject c;
 
             while (itr.hasNext()) {
+                K next = itr.next();
                 c = itr.getValue();
                 if (c != null && (now > (timeToLive + c.getLastAccessed()))) {
                     itr.remove();
