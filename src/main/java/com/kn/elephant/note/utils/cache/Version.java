@@ -15,7 +15,7 @@ public class Version {
 	@Getter
 	private long noteId;
 	@Getter
-	private int version;
+	private Integer version;
 
 	public Version(final long noteId) {
 		this.noteId = noteId;

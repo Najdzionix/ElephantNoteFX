@@ -1,12 +1,14 @@
 package com.kn.elephant.note.dto;
 
-import com.kn.elephant.note.model.NoteType;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kn.elephant.note.model.NoteType;
+
+import lombok.Data;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * Created by Kamil Nadłonek on 06.11.15.
@@ -14,6 +16,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
+@ToString(exclude = {"content", "shortDescription", "subNotes"})
 public class NoteDto {
 
     private Long id;

@@ -20,7 +20,8 @@ import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Created by Kamil Nadłonek on 08-10-2016 email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 08-10-2016
+ * email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class TableGenerator {

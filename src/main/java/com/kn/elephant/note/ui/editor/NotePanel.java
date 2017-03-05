@@ -11,15 +11,13 @@ import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
-import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
-import com.kn.elephant.note.utils.cache.SimpleMapCache;
-import com.kn.elephant.note.utils.cache.Version;
+import com.kn.elephant.note.utils.cache.NoteCache;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.application.Platform;
@@ -42,20 +40,20 @@ import lombok.extern.log4j.Log4j2;
 import netscape.javascript.JSException;
 
 /**
- * Created by Kamil Nadłonek on 10.11.15. email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 10.11.15.
+ * email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class NotePanel extends BasePanel {
 
-    private static final SimpleMapCache<Version, NoteDto> cache = new SimpleMapCache<>(6000L, NoteConstants.MAX_SIZE_CACHE);
-    private NoteDto currentNoteDto;
+//    private NoteDto currentNoteDto;
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
     private WebView webView;
     private Button insertLinkButton;
 
+    private NoteCache cache = NoteCache.getInstance();
 	private TableGenerator tableGenerator;
-    private Version version;
     @Inject
     private NoteService noteService;
     private NotificationPane notificationPane;
@@ -64,6 +62,7 @@ public class NotePanel extends BasePanel {
     public NotePanel() {
         super();
         ActionMap.register(this);
+
         detailsNotePanel = new DetailsNotePanel();
         setTop(detailsNotePanel);
         editor = new HTMLEditor();
@@ -71,6 +70,7 @@ public class NotePanel extends BasePanel {
         getStyleClass().add("content-pane");
         notificationPanel();
         addButtonsToToolbar();
+
 
 		tableGenerator = new TableGenerator(tableButton);
         cachingNoteContentChanges();
@@ -87,21 +87,14 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
         NoteDto newNote = (NoteDto) event.getSource();
-        if(currentNoteDto == null) {
-            version = new Version(newNote.getId());
-        } else  {
-            version.increaseVersion();
-            cache.put(version, currentNoteDto);
-            version = new Version( newNote.getId());
-        }
-        notificationPane.setContent(editor);
-        currentNoteDto = newNote;
-        log.debug("Load note: " + currentNoteDto);
-        detailsNotePanel.loadNote(currentNoteDto);
-        editor.setHtmlText("");
-        editor.setHtmlText(currentNoteDto.getContent());
+        cache.loadNote(newNote);
 
-        cache.put(version, currentNoteDto);
+        notificationPane.setContent(editor);
+        log.debug("Load note: " + newNote); // TODO: 05/03/17 I need to this?
+        detailsNotePanel.loadNote(cache.getCurrentNoteDto());
+        editor.setHtmlText("");
+        editor.setHtmlText(cache.getCurrentNoteDto().getContent());
+
     }
 
     private void addButtonsToToolbar() {
@@ -143,11 +136,7 @@ public class NotePanel extends BasePanel {
 
     private void cachingNoteContentChanges() {
         editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            if(!currentNoteDto.getContent().equals(editor.getHtmlText())) {
-                version.increaseVersion();
-                currentNoteDto.setContent(editor.getHtmlText());
-                cache.put(version, currentNoteDto);
-            }
+            cache.noteChanged(editor.getHtmlText());
         });
     }
 
@@ -187,10 +176,6 @@ public class NotePanel extends BasePanel {
                 }
             }
         });
-//        LRUMap
-
-
-
     }
 
     private void httpLisener() {
@@ -278,29 +263,28 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void updateTitle(ActionEvent event) {
         log.debug("Update note title" + event.getSource());
-        currentNoteDto.setTitle((String) event.getSource());
+        cache.getCurrentNoteDto().setTitle((String) event.getSource());
         saveNote();
     }
 
     @ActionProxy(text = "")
     private void updateDesc(ActionEvent event) {
         log.debug("Update note desc" + event.getSource());
-        currentNoteDto.setShortDescription((String) event.getSource());
+        cache.getCurrentNoteDto().setShortDescription((String) event.getSource());
         saveNote();
     }
 
     @ActionProxy(text = "")
     private void saveNote() {
-        currentNoteDto.setContent(editor.getHtmlText());
-        version.increaseVersion();
-        cache.put(version, currentNoteDto);
-        log.debug("Save note:" + currentNoteDto);
-        Optional<NoteDto> updatedNote = noteService.saveNote(currentNoteDto);
+        cache.getCurrentNoteDto().setContent(editor.getHtmlText());
+        cache.noteChanged(cache.getCurrentNoteDto());
+        log.debug("Save note:" + cache.getCurrentNoteDto());
+        Optional<NoteDto> updatedNote = noteService.saveNote(cache.getCurrentNoteDto());
         if (updatedNote.isPresent()) {
-            currentNoteDto = updatedNote.get();
-            loadNote(new ActionEvent(currentNoteDto, null));
+            cache.loadNote(updatedNote.get());
+            loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
-            ActionFactory.callAction("refreshNote", currentNoteDto);
+            ActionFactory.callAction("refreshNote", cache.getCurrentNoteDto());
         } else {
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation saving failed"));
         }
@@ -310,8 +294,8 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void removeNote(ActionEvent event) {
-        log.debug("Remove note:" + currentNoteDto);
-        if (noteService.removeNote(currentNoteDto.getId())) {
+        log.debug("Remove note:" + cache.getCurrentNoteDto());
+        if (noteService.removeNote(cache.getCurrentNoteDto().getId())) {
             log.info("note was removed");
             ActionFactory.callAction("removeNoteFromList");
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Note has been removed."));
@@ -322,10 +306,10 @@ public class NotePanel extends BasePanel {
     private void switchDisplayMode(ActionEvent event) {
         log.debug("Switch mode display note");
         if ((boolean) event.getSource()) {
-            editor.setHtmlText(currentNoteDto.getContent());
+            editor.setHtmlText(cache.getCurrentNoteDto().getContent());
             notificationPane.setContent(editor);
         } else {
-            webView.getEngine().loadContent(currentNoteDto.getContent());
+            webView.getEngine().loadContent(cache.getCurrentNoteDto().getContent());
             webView.setContextMenuEnabled(false);
             webView.setDisable(true);
             webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);

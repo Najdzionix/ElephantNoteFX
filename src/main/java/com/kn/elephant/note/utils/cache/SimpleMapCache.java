@@ -1,5 +1,7 @@
 package com.kn.elephant.note.utils.cache;
 
+import java.util.Set;
+
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.map.LRUMap;
 
@@ -77,6 +79,12 @@ public class SimpleMapCache<K, T> {
     public K lastKey() {
         synchronized (cacheMap) {
             return cacheMap.lastKey();
+        }
+    }
+
+    public Set<K> getKeys() {
+        synchronized (cacheMap) {
+            return  cacheMap.keySet();
         }
     }
 
