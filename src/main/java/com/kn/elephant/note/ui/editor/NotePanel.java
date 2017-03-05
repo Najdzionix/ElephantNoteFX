@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
@@ -20,10 +21,7 @@ import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -36,6 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import netscape.javascript.JSException;
 
@@ -46,7 +45,7 @@ import netscape.javascript.JSException;
 @Log4j2
 public class NotePanel extends BasePanel {
 
-//    private NoteDto currentNoteDto;
+    private static final String URL_REGEX = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
     private WebView webView;
@@ -58,6 +57,8 @@ public class NotePanel extends BasePanel {
     private NoteService noteService;
     private NotificationPane notificationPane;
     private Button tableButton;
+    @Setter
+    private Application app;
 
     public NotePanel() {
         super();
@@ -74,7 +75,7 @@ public class NotePanel extends BasePanel {
 
 		tableGenerator = new TableGenerator(tableButton);
         cachingNoteContentChanges();
-        testLoadPage();
+        handleOpenLinksAction();
     }
 
     private void notificationPanel() {
@@ -135,47 +136,30 @@ public class NotePanel extends BasePanel {
     }
 
     private void cachingNoteContentChanges() {
-        editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            cache.noteChanged(editor.getHtmlText());
-        });
+        editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.noteChanged(editor.getHtmlText()));
     }
 
-    public void testLoadPage() {
-
-
-
-
-
-
+    private void handleOpenLinksAction() {
         WebView webView = (WebView) editor.lookup("WebView");
         WebEngine engine = webView.getEngine();
+        engine.locationProperty().addListener((ov, oldLoc, loc) -> {
+			if (isUrl(loc)) {
+				log.info("Open link {} browser ", loc);
+				app.getHostServices().showDocument(loc);
+				loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
+			}
 
-        engine.getLoadWorker().stateProperty().addListener(
-            new ChangeListener<Worker.State>() {
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                String title = engine.getLoadWorker().getTitle();
-                String message = engine.getLoadWorker().getMessage();
-//                log.info("State:" + newState +"\t" +title+"\t" + message);
-                if (newState == Worker.State.SUCCEEDED) {
-//                    log.info("Kamil:DOne");
-                }
-            }
-        });
+		});
+    }
 
-        engine.locationProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue<? extends String> ov, final String oldLoc, final String loc) {
-                log.info("T:\t" + loc);
-                if (loc.contains("google")) {
-                    log.info("aaaaa");
-                    Platform.runLater(new Runnable() {
-
-                        @Override public void run() {
-                            engine.load(oldLoc);
-                        }
-                    });
-                }
-            }
-        });
+    private static boolean isUrl(String url) {
+        log.info("Validate url: {}", url);
+        if(StringUtils.isNotEmpty(url)) {
+            Pattern pattern = Pattern.compile(URL_REGEX);
+            Matcher matcher = pattern.matcher(url);
+            return matcher.find();
+        }
+        return false;
     }
 
     private void httpLisener() {
@@ -222,8 +206,8 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "")
     private void insertTable() {
         tableGenerator.insertTable(this::insertHtml);
-
     }
+
     private void insertHtml(String html) {
         WebView webView = (WebView) editor.lookup("WebView");
         WebEngine engine = webView.getEngine();

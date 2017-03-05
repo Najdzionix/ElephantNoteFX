@@ -37,11 +37,10 @@ public class NoteCache {
             version.increaseVersion();
             cache.put(version, currentNoteDto);
         }
-        version = new Version(newNote.getId());
-        currentNoteDto = newNote;
 
-        // Optional<Version> versionOnCache = findNewestVersionOnCache(newNote.getId());
-        // version = versionOnCache.orElseGet(() -> new Version(newNote.getId()));
+        Optional<Version> versionOnCache = findNewestVersionOnCache(newNote.getId());
+        version = versionOnCache.orElseGet(() -> new Version(newNote.getId()));
+        currentNoteDto = newNote;
     }
 
     public void noteChanged(NoteDto noteDto) {
@@ -50,7 +49,7 @@ public class NoteCache {
             currentNoteDto = noteDto;
             cache.put(version, currentNoteDto);
         } else {
-            log.info("Nie bradzo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
+            log.error("Something gone wrong!!!!");
         }
     }
 

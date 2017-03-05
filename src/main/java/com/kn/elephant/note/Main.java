@@ -86,6 +86,7 @@ public class Main extends Application {
         mainPane = new BorderPane();
         mainPane.getStyleClass().add("root");
         notePanel = new NotePanel();
+        notePanel.setApp(this);
         leftMenuPanel = new LeftMenuPanel();
         changeMainView(new ActionEvent(View.MAIN, null));
         MenuPanel menuPanel = new MenuPanel();
