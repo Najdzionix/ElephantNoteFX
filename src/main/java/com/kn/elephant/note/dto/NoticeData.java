@@ -1,9 +1,9 @@
 package com.kn.elephant.note.dto;
 
 import com.kn.elephant.note.NoteConstants;
-import de.jensd.fx.glyphs.GlyphIcons;
-import de.jensd.fx.glyphs.GlyphsDude;
+
 import de.jensd.fx.glyphs.octicons.OctIcon;
+import de.jensd.fx.glyphs.octicons.OctIconView;
 import javafx.scene.Node;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,9 +27,9 @@ public class NoticeData {
         return new NoticeData(message, OctIcon.ALERT, NoteConstants.RED_COLOR);
     }
 
-    public NoticeData(String message, GlyphIcons icon, String color) {
+    public NoticeData(String message, OctIcon icon, String color) {
         this.message = message;
-        this.icon = GlyphsDude.createIcon(icon);;
+        this.icon = new OctIconView(icon);
         this.icon.getStyleClass().addAll("glyph-icon","icon-notification");
         String currentStyle = this.icon.getStyle();
         this.icon.setStyle(currentStyle + String.format("-fx-fill: %s; -fx-font-size: %s;", color, "2em"));

@@ -1,25 +1,31 @@
 package com.kn.elephant.note.ui.setting;
 
-import com.kn.elephant.note.Main;
-import com.kn.elephant.note.NoteConstants;
-import com.kn.elephant.note.ui.BasePanel;
-import com.kn.elephant.note.utils.Icons;
-import com.kn.elephant.note.utils.NoteException;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.event.ActionEvent;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.stage.DirectoryChooser;
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
+import static com.kn.elephant.note.utils.Utils.createFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static com.kn.elephant.note.utils.Utils.createFile;
+import org.apache.commons.lang3.StringUtils;
+
+import com.kn.elephant.note.Main;
+import com.kn.elephant.note.NoteConstants;
+import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.NoteException;
+
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 17-04-2016
@@ -82,7 +88,7 @@ public class DialogDB extends BasePanel {
         location = new Label(NoteConstants.APP_DIC);
         location.getStyleClass().add("db-text");
         Button dicButton = new Button();
-        Icons.addIcon(MaterialDesignIcon.FOLDER, dicButton, "1.1em");
+        Icons.addIcon(MaterialIcon.FOLDER_OPEN, dicButton, "1.1em");
         dicButton.setOnAction(event -> {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setTitle("Chose new location for notes.");

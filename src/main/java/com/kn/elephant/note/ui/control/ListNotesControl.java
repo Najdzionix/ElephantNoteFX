@@ -10,8 +10,8 @@ import org.controlsfx.control.action.ActionMap;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.utils.ActionFactory;
 
-import de.jensd.fx.glyphs.GlyphsDude;
-import de.jensd.fx.glyphs.octicons.OctIcon;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
+import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -102,7 +102,8 @@ public class ListNotesControl {
 		Label text = new Label("Not found notes.");
 		text.setTextAlignment(TextAlignment.CENTER);
 		text.getStyleClass().add("not-found-text");
-		Node icon = GlyphsDude.createIcon(OctIcon.ALERT);
+//		Node icon = GlyphsDude.createIcon(OctIcon.ALERT);
+		Node icon = new MaterialIconView(MaterialIcon.PRIORITY_HIGH);
 		icon.getStyleClass().addAll("glyph-icon", "alert-icon");
 		String currentStyle = icon.getStyle();
 		icon.setStyle(currentStyle + String.format("-fx-font-size: %s; ","4em"));

@@ -1,10 +1,8 @@
 package com.kn.elephant.note.ui.control;
 
 import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.service.NoteService;
@@ -41,9 +39,8 @@ public class SearchBox extends BasePanel {
         setMaxSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         textBox = new TextField();
         textBox.setPromptText("Search");
-        Action clearAction = ActionFactory.getAction("clearAction");
-        clearButton = ActionUtils.createButton(clearAction);
-        Icons.addIcon(OctIcon.X, clearAction, "1.0em");
+        clearButton = ActionFactory.createButtonWithAction("clearAction");
+        Icons.addIcon(OctIcon.X, clearButton, "1.0em");
         clearButton.setVisible(false);
 
         ListNotesControl notesControl = new ListNotesControl("Results");

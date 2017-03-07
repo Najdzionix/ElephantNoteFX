@@ -8,6 +8,9 @@ apply plugin: 'idea'
 
 repositories {
     mavenCentral()
+    jcenter {
+        url "http://jcenter.bintray.com/"
+    }
 }
 
 configurations {
@@ -36,12 +39,13 @@ dependencies {
     compile 'com.gluonhq:ignite-guice:1.0.1'
     compile 'org.projectlombok:lombok:1.16.10'
     compile 'org.jsoup:jsoup:1.8.3'
-//    compile 'de.jensd:fontawesomefx-commons:8.11'
-
-//    compile 'de.jensd:fontawesomefx-controls:8.11'
     compile 'commons-io:commons-io:2.4'
 
-    compile 'de.jensd:fontawesomefx:8.9'
+//    compile 'de.jensd:fontawesomefx:8.9'
+    compile 'de.jensd:fontawesomefx-commons:8.15'
+    compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5'
+    compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-4'
+    compile 'de.jensd:fontawesomefx-octicons:4.3.0-5'
 
 }
 

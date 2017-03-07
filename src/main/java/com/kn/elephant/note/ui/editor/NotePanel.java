@@ -6,10 +6,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.NotificationPane;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
@@ -21,6 +19,7 @@ import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -106,24 +105,19 @@ public class NotePanel extends BasePanel {
     }
 
     private void createButtons(ToolBar toolBar) {
-        Action saveAction = ActionMap.action("saveNote");
-        final String sizeIcon = "1.4em";
-        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveAction, sizeIcon);
-        Button saveButton = ActionUtils.createButton(saveAction);
+        final String sizeIcon = "1.3em";
 
-        Action removeAction = ActionMap.action("removeNote");
-        Icons.addIcon(MaterialDesignIcon.DELETE, removeAction, sizeIcon);
-        Button removeButton = ActionUtils.createButton(removeAction);
+        Button saveButton = ActionFactory.createButtonWithAction("saveNote");
+        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveButton, sizeIcon);
 
-        Action insertAction = ActionMap.action("insertLink");
-        Icons.addIcon(MaterialDesignIcon.LINK_OFF, insertAction, sizeIcon);
-        insertLinkButton = new Button();
-        ActionUtils.configureButton(insertAction, insertLinkButton);
+        Button removeButton = ActionFactory.createButtonWithAction("removeNote");
+        Icons.addIcon(MaterialIcon.DELETE, removeButton, sizeIcon);
 
-        Action insertDivAction = ActionMap.action("insertTable");
-        Icons.addIcon(MaterialDesignIcon.TABLE, insertDivAction, sizeIcon);
-        tableButton = new Button();
-        ActionUtils.configureButton(insertDivAction, tableButton);
+        insertLinkButton = ActionFactory.createButtonWithAction("insertLink");
+        Icons.addIcon(MaterialDesignIcon.LINK_VARIANT, insertLinkButton, sizeIcon);
+
+        tableButton = ActionFactory.createButtonWithAction("insertTable");
+        Icons.addIcon(MaterialDesignIcon.GRID, tableButton, sizeIcon);
 
         editor.setOnMouseClicked((MouseEvent event) -> {
             final int clickCount = event.getClickCount();
@@ -194,11 +188,18 @@ public class NotePanel extends BasePanel {
         log.debug("Insert link");
         WebView webView = (WebView) editor.lookup("WebView");
         String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
-        String currentText = editor.getHtmlText();
-        String hyperlinkHtml = "<a href=\"" + selected.trim() + "\" title=\"" + selected + "\" target=\"_blank\">" + selected + "</a>";
 
-        if (selected != null & !selected.isEmpty()) {
-            editor.setHtmlText(currentText.replace(selected, hyperlinkHtml));
+        if (selected != null && !selected.isEmpty()) {
+            String url = "\"http://" + selected +"\"; \n";
+            log.debug(url);
+            String script = " var range = window.getSelection().getRangeAt(0);\n" +
+                "var selectionContents = range.extractContents();\n" +
+                "var div = document.createElement(\"a\");\n" +
+                "var url = "  + url +
+                "div.href=url;\n" +
+                "div.appendChild(selectionContents);\n" +
+                "range.insertNode(div);";
+            webView.getEngine().executeScript(script);
         }
         insertLinkButton.getStyleClass().add("disableButton");
     }

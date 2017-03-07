@@ -1,17 +1,17 @@
 package com.kn.elephant.note.ui.control;
 
+import org.controlsfx.control.GridCell;
+
 import com.kn.elephant.note.dto.TagDto;
+import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
+
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import org.controlsfx.control.GridCell;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionUtils;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -24,9 +24,11 @@ public class TagNode extends GridCell<TagDto> {
     private BorderPane box;
 
     public TagNode(String actionName) {
-        Action action = ActionMap.action(actionName);
-        Icons.addIcon(MaterialDesignIcon.CLOSE, action, "1.5em");
-        removeButton = ActionUtils.createButton(action);
+        removeButton = new Button();
+        Icons.addIcon(MaterialDesignIcon.CLOSE, removeButton, "1.3em");
+        removeButton.setOnAction((event) -> {
+            ActionFactory.callAction(actionName, getItem());
+        });
         removeButton.getStyleClass().add("removeButton");
         setGraphic(createContent(actionName));
 

@@ -1,14 +1,16 @@
 package com.kn.elephant.note.utils;
 
-import javafx.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.glyphfont.Glyph;
 
-import java.util.HashMap;
-import java.util.Map;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 
 /**
  * Created by Kamil Nadłonek on 17.11.15.
@@ -53,5 +55,13 @@ public class ActionFactory {
             return action;
         }
 
+    }
+
+    public static Button createButtonWithAction(String actionName) {
+        Button buttonBase = new Button();
+        buttonBase.setOnAction((event) -> {
+            ActionFactory.callAction(actionName);
+        });
+        return buttonBase;
     }
 }

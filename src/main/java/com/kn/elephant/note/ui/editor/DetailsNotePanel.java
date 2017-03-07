@@ -26,7 +26,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -145,8 +144,7 @@ public class DetailsNotePanel extends BasePanel {
     @ActionProxy(text = "")
     protected void removeTag(ActionEvent event) {
         LOGGER.info("remove tag action");
-//        todo find better way get item.
-        TagDto item = ((TagNode) ((Button) event.getSource()).getParent().getParent()).getItem();
+        TagDto item = (TagDto) event.getSource();
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
         if (isDeleted) {
             tagsDto.remove(item);
