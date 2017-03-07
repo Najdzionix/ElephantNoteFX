@@ -61,6 +61,14 @@
     -fx-background-radius: 2.0;
     -fx-padding: 15 15 15 15;
 }
+.glyph-icon {
+    -fx-fill: -color-text-secondary;
+}
+
+.glyph-icon:hover {
+    -fx-fill: -color-secondary;
+}
+
 
 
 /************************************************
@@ -132,11 +140,11 @@
 
     -fx-background-radius: 4;
 }
-.tag .text { 
+.tag * {
     -fx-fill:white; 
     -fx-text-alignment:center;
 }
-.tag .text:hover { -fx-fill:orange;}
+.tag *:hover { -fx-fill:orange;}
 
 /***************
     Add tag 
