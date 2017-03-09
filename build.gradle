@@ -40,8 +40,7 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.10'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'commons-io:commons-io:2.4'
-
-//    compile 'de.jensd:fontawesomefx:8.9'
+    
     compile 'de.jensd:fontawesomefx-commons:8.15'
     compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5'
     compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-4'

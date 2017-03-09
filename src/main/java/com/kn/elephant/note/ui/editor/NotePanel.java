@@ -1,10 +1,7 @@
 package com.kn.elephant.note.ui.editor;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
@@ -16,18 +13,19 @@ import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.LinkUtils;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
+import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
-import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.HTMLEditor;
@@ -38,20 +36,18 @@ import lombok.extern.log4j.Log4j2;
 import netscape.javascript.JSException;
 
 /**
- * Created by Kamil Nadłonek on 10.11.15.
- * email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 10.11.15. email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class NotePanel extends BasePanel {
-
-    private static final String URL_REGEX = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+    
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
     private WebView webView;
     private Button insertLinkButton;
 
     private NoteCache cache = NoteCache.getInstance();
-	private TableGenerator tableGenerator;
+    private TableGenerator tableGenerator;
     @Inject
     private NoteService noteService;
     private NotificationPane notificationPane;
@@ -71,10 +67,10 @@ public class NotePanel extends BasePanel {
         notificationPanel();
         addButtonsToToolbar();
 
-
-		tableGenerator = new TableGenerator(tableButton);
+        tableGenerator = new TableGenerator(tableButton);
         cachingNoteContentChanges();
         handleOpenLinksAction();
+        httpWatcher();
     }
 
     private void notificationPanel() {
@@ -90,7 +86,7 @@ public class NotePanel extends BasePanel {
         cache.loadNote(newNote);
 
         notificationPane.setContent(editor);
-        log.debug("Load note: " + newNote); // TODO: 05/03/17 I need to this?
+        log.debug("Load note: " + newNote);
         detailsNotePanel.loadNote(cache.getCurrentNoteDto());
         editor.setHtmlText("");
         editor.setHtmlText(cache.getCurrentNoteDto().getContent());
@@ -105,19 +101,10 @@ public class NotePanel extends BasePanel {
     }
 
     private void createButtons(ToolBar toolBar) {
-        final String sizeIcon = "1.3em";
-
-        Button saveButton = ActionFactory.createButtonWithAction("saveNote");
-        Icons.addIcon(MaterialDesignIcon.CONTENT_SAVE, saveButton, sizeIcon);
-
-        Button removeButton = ActionFactory.createButtonWithAction("removeNote");
-        Icons.addIcon(MaterialIcon.DELETE, removeButton, sizeIcon);
-
-        insertLinkButton = ActionFactory.createButtonWithAction("insertLink");
-        Icons.addIcon(MaterialDesignIcon.LINK_VARIANT, insertLinkButton, sizeIcon);
-
-        tableButton = ActionFactory.createButtonWithAction("insertTable");
-        Icons.addIcon(MaterialDesignIcon.GRID, tableButton, sizeIcon);
+        Button saveButton = createToolBarButton("saveNote", MaterialDesignIcon.CONTENT_SAVE);
+        Button removeButton = createToolBarButton("removeNote", MaterialIcon.DELETE);
+        insertLinkButton = createToolBarButton("insertLink", MaterialDesignIcon.LINK_VARIANT);
+        tableButton = createToolBarButton("insertTable", MaterialDesignIcon.GRID);
 
         editor.setOnMouseClicked((MouseEvent event) -> {
             final int clickCount = event.getClickCount();
@@ -129,6 +116,13 @@ public class NotePanel extends BasePanel {
         toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton);
     }
 
+    private static Button createToolBarButton(String actionName, GlyphIcons icon) {
+        final String sizeIcon = "1.3em";
+        Button saveButton = ActionFactory.createButtonWithAction(actionName);
+        Icons.addIcon(icon, saveButton, sizeIcon);
+        return saveButton;
+    }
+
     private void cachingNoteContentChanges() {
         editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.noteChanged(editor.getHtmlText()));
     }
@@ -137,68 +131,42 @@ public class NotePanel extends BasePanel {
         WebView webView = (WebView) editor.lookup("WebView");
         WebEngine engine = webView.getEngine();
         engine.locationProperty().addListener((ov, oldLoc, loc) -> {
-			if (isUrl(loc)) {
-				log.info("Open link {} browser ", loc);
-				app.getHostServices().showDocument(loc);
-				loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
-			}
+            if (LinkUtils.isUrl(loc)) {
+                log.info("Open link {} browser ", loc);
+                app.getHostServices().showDocument(loc);
+                loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
+            }
 
-		});
+        });
     }
 
-    private static boolean isUrl(String url) {
-        log.info("Validate url: {}", url);
-        if(StringUtils.isNotEmpty(url)) {
-            Pattern pattern = Pattern.compile(URL_REGEX);
-            Matcher matcher = pattern.matcher(url);
-            return matcher.find();
-        }
-        return false;
-    }
 
-    private void httpLisener() {
-        editor.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler<InputEvent>() {
-            Pattern urlPattern = Pattern.compile("http://[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]");
 
-            @Override
-            public void handle(InputEvent event) {
-                log.info("event ");
-                log.info(editor.getHtmlText());
-                String text = editor.getHtmlText();
-                Matcher matcher = urlPattern.matcher(text);
-                // check all occurance
-                boolean foundUrl = false;
-                while (matcher.find()) {
-                    System.out.print("Start index: " + matcher.start());
-                    System.out.print(" End index: " + matcher.end() + " ");
-                    System.out.println(matcher.group());
-                    text.replace(matcher.group(), "<url>" + matcher.group() + "</url>");
-                    foundUrl = true;
+    private void httpWatcher() {
+        editor.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                String content = LinkUtils.replaceLinkOnHtmlLinkTag(editor.getHtmlText());
+                if (!editor.getHtmlText().equals(content)) {
+                    editor.setHtmlText(content);
+                    editor.requestFocus();
                 }
-                // if(foundUrl) {
-                // editor.setHtmlText(text);
-                // }
+
             }
         });
-
     }
 
     @ActionProxy(text = "")
-    private void insertLink(ActionEvent event) {
+    private void insertLink() {
         log.debug("Insert link");
         WebView webView = (WebView) editor.lookup("WebView");
         String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
 
         if (selected != null && !selected.isEmpty()) {
-            String url = "\"http://" + selected +"\"; \n";
+            String url = "\"http://" + selected + "\"; \n";
             log.debug(url);
-            String script = " var range = window.getSelection().getRangeAt(0);\n" +
-                "var selectionContents = range.extractContents();\n" +
-                "var div = document.createElement(\"a\");\n" +
-                "var url = "  + url +
-                "div.href=url;\n" +
-                "div.appendChild(selectionContents);\n" +
-                "range.insertNode(div);";
+            String script = " var range = window.getSelection().getRangeAt(0);\n" + "var selectionContents = range.extractContents();\n"
+                    + "var div = document.createElement(\"a\");\n" + "var url = " + url + "div.href=url;\n" + "div.appendChild(selectionContents);\n"
+                    + "range.insertNode(div);";
             webView.getEngine().executeScript(script);
         }
         insertLinkButton.getStyleClass().add("disableButton");
