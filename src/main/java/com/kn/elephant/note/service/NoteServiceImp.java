@@ -1,16 +1,5 @@
 package com.kn.elephant.note.service;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.*;
-import com.kn.elephant.note.dto.NoteDto;
-import com.kn.elephant.note.model.Note;
-import com.kn.elephant.note.model.NoteTag;
-import com.kn.elephant.note.model.NoteType;
-import com.kn.elephant.note.model.Tag;
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +7,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.UpdateBuilder;
+import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteTag;
+import com.kn.elephant.note.model.NoteType;
+import com.kn.elephant.note.model.Tag;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -83,7 +89,7 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (noteDto.getId() == null) {
                 note = new Note();
                 note.setCreateAt(LocalDateTime.now());
-                note.setType(NoteType.HTML);
+                noteDto.setType(NoteType.HTML);
                 if (noteDto.getParentNote() != null) {
                     note.setParent(noteDao.queryForId(noteDto.getParentNote().getId()));
                 }

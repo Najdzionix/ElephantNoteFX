@@ -104,6 +104,7 @@ public class NotePanel extends BasePanel {
     private void createButtons(ToolBar toolBar) {
         Button saveButton = createToolBarButton("saveNote", MaterialDesignIcon.CONTENT_SAVE);
         Button removeButton = createToolBarButton("removeNote", MaterialIcon.DELETE);
+        Button testButton = createToolBarButton("insertDiv", MaterialIcon.ADD);
         insertLinkButton = createToolBarButton("insertLink", MaterialDesignIcon.LINK_VARIANT);
         tableButton = createToolBarButton("insertTable", MaterialDesignIcon.GRID);
 
@@ -114,7 +115,7 @@ public class NotePanel extends BasePanel {
             }
         });
 
-        toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton);
+        toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton, new Separator(),testButton);
     }
 
     private static Button createToolBarButton(String actionName, GlyphIcons icon) {
@@ -194,27 +195,7 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void insertDiv(ActionEvent event) {
-        log.info("TESTT DIVVVVVVV");
-        WebView webView = (WebView) editor.lookup("WebView");
-        String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
-
-        String currentText = editor.getHtmlText();
-        String cssStyle = "\t<style type=\"text/css\">\n" + "\t\t\thtml, body {\n" + "\t\t\t\theight: 100%;\n" + "\t\t\t\tmin-height: 100%;\n"
-                + "\t\t\t\tmargin: 0;\n" + "\t\t\t\tpadding: 0;\n" + "\t\t\t}\n" + "\t\t\t.split-pane-divider {\n" + "\t\t\t\tbackground: #aaa;\n" + "\t\t\t}\n"
-                + "\t\t\t#left-component {\n" + "\t\t\t\twidth: 20em;\n" + "\t\t\t}\n" + "\t\t\t#divider {\n"
-                + "\t\t\t\tleft: 20em; /* same as left component width */\n" + "\t\t\t\twidth: 5px;\n" + "\t\t\t}\n" + "\t\t\t#right-component {\n"
-                + "\t\t\t\tleft: 20em;\n" + "\t\t\t\tmargin-left: 5px; /* same as divider width */\n" + "\t\t\t}\n" + "\t\t</style> \t<script>\n"
-                + "\t\t\t$(function() {\n" + "\t\t\t\t$('div.split-pane').splitPane();\n" + "\t\t\t});\n" + "\t\t</script>";
-        String hyperlinkHtml = "<div style=\"width: 100%;\">\n" + "   <div style=\"float:left; width: 49%; border-style: solid;\">LEFT</div>\n"
-                + "   <div style=\"float:right; width: 49%; border-style: solid;\">RIGHT</div>\n" + "</div><div style=\"clear:both\"></div>";
-
-        hyperlinkHtml = "\t<div id=\"split-pane-1\" class=\"split-pane fixed-left\">\n" + "\t\t\t<div class=\"split-pane-component\" id=\"left-component\">\n"
-                + "\t\t\t\tThis is the left component\n" + "\t\t\t</div>\n" + "\t\t\t<div class=\"split-pane-divider\" id=\"divider\"></div>\n"
-                + "\t\t\t<div class=\"split-pane-component\" id=\"right-component\">\n" + "\t\t\t\tThis is the right component\n"
-                + "\t\t\t\t<button onclick=\"$('div.split-pane').splitPane('firstComponentSize', 0);\">Collapse first component</button>\n" + "\t\t\t</div>\n"
-                + "\t\t</div>";
-
-        // editor.setHtmlText(currentText.replace(selected, test));
+        editor.setHtmlText(HtmlGenerator.test(editor.getHtmlText()));
     }
 
     @ActionProxy(text = "")

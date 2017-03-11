@@ -58,6 +58,7 @@ public class NoteCache {
     }
 
     public void noteChanged(String contentNote) {
+        log.info(contentNote);
         if (!currentNoteDto.getContent().equals(contentNote)) {
             version.increaseVersion();
             currentNoteDto.setContent(contentNote);
