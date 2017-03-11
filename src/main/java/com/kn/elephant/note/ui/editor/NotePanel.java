@@ -20,6 +20,7 @@ import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -40,7 +41,7 @@ import netscape.javascript.JSException;
  */
 @Log4j2
 public class NotePanel extends BasePanel {
-    
+
     private DetailsNotePanel detailsNotePanel;
     private HTMLEditor editor;
     private WebView webView;
@@ -140,17 +141,20 @@ public class NotePanel extends BasePanel {
         });
     }
 
-
-
     private void httpWatcher() {
         editor.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 String content = LinkUtils.replaceLinkOnHtmlLinkTag(editor.getHtmlText());
                 if (!editor.getHtmlText().equals(content)) {
-                    editor.setHtmlText(content);
-                    editor.requestFocus();
+                    cache.noteChanged(content);
+                    Platform.runLater(() -> {
+                        editor.requestFocus();
+                        WebView webView = (WebView) editor.lookup("WebView");
+                        webView.getEngine().loadContent(content);
+                        String script = "var input = document.querySelector('input');\n" + " input.focus();";
+                        webView.getEngine().executeScript(script);
+                    });
                 }
-
             }
         });
     }

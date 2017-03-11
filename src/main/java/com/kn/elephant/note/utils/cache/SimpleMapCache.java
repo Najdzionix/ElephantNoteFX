@@ -51,7 +51,7 @@ public class SimpleMapCache<K, T> {
     }
 
     public void put(K key, T value) {
-        log.info("Add cache:" + key);
+        log.debug("Add cache:" + key);
         synchronized (cacheMap) {
             cacheMap.put(key, new CacheObject(value));
         }
