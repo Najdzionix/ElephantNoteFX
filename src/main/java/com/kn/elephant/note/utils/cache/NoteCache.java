@@ -45,9 +45,13 @@ public class NoteCache {
 
     public void noteChanged(NoteDto noteDto) {
         if (noteDto.getId().equals(currentNoteDto.getId())) {
-            version.increaseVersion();
-            currentNoteDto = noteDto;
-            cache.put(version, currentNoteDto);
+            if(findChanges(noteDto)) {
+                version.increaseVersion();
+                currentNoteDto = noteDto;
+                cache.put(version, currentNoteDto);
+            } else {
+                log.debug("Not found changes, so note does not kept to cache.");
+            }
         } else {
             log.error("Something gone wrong!!!!");
         }
@@ -64,5 +68,27 @@ public class NoteCache {
     private Optional<Version> findNewestVersionOnCache(long noteId) {
         return cache.getKeys().stream().filter(v -> v.getNoteId() == noteId).max(Comparator.comparing(Version::getVersion));
     }
+
+    private boolean findChanges(NoteDto newNote){
+        if(newNote == null) {
+            return  false;
+        }
+
+        if(!currentNoteDto.getTitle().equals(newNote.getTitle())){
+            return true;
+        }
+        if(!currentNoteDto.getShortDescription().equals(newNote.getShortDescription())){
+            return true;
+        }
+        if(!currentNoteDto.getType().equals(newNote.getType())){
+            return true;
+        }
+        if(!currentNoteDto.getContent().equals(newNote.getContent())){
+            return true;
+        }
+        return false;
+    }
+
+
 
 }
