@@ -66,4 +66,10 @@ public class SearchBox extends BasePanel {
         textBox.setText("");
         textBox.requestFocus();
     }
+
+    @ActionProxy(text = "")
+    public void setSearchFocus(){
+        log.info("Search focus.....");
+        textBox.requestFocus();
+    }
 }

@@ -151,7 +151,7 @@ public class NotePanel extends BasePanel {
                         editor.requestFocus();
                         WebView webView = (WebView) editor.lookup("WebView");
                         webView.getEngine().loadContent(content);
-                        String script = "var input = document.querySelector('input');\n" + " input.focus();";
+                        String script = "document.querySelector('div').focus();";
                         webView.getEngine().executeScript(script);
                     });
                 }

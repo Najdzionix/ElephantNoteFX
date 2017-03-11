@@ -66,6 +66,7 @@ public class Main extends Application {
         Scene scene = new Scene(mainPane);
         scene.getStylesheets().addAll(loadCssFiles());
 //        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato:700italic&subset=latin,latin-ext");
+        new Shortcuts(scene);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
