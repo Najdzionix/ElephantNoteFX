@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.kn.elephant.note.Main;
 import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
@@ -28,11 +29,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import lombok.extern.log4j.Log4j2;
 
 /**
- * Created by Kamil Nadłonek on 27.11.15.
- * email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 27.11.15. email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class DialogNote extends BasePanel {
 
     private static final int MAX_WIDTH_PARENT_NAME = 50;
@@ -40,7 +42,7 @@ public class DialogNote extends BasePanel {
     private TextField titleText;
     private TextField shortDescText;
     private ComboBox<NoteDto> parentsBox;
-
+    private ComboBox<NoteType> typeBox;
     @Inject
     private NoteService noteService;
     private ValidatorHelper validatorHelper;
@@ -53,6 +55,7 @@ public class DialogNote extends BasePanel {
     public TextField getTitleText() {
         return titleText;
     }
+
     private void createContent() {
         dialog = new Dialog<>();
         validatorHelper = new ValidatorHelper();
@@ -63,6 +66,7 @@ public class DialogNote extends BasePanel {
         Label titleLabel = UIFactory.createLabel("Title: ");
         Label shortDescriptionL = UIFactory.createLabel("Short description: ");
         Label parentLabel = UIFactory.createLabel("Choose parent");
+        Label noteTypeLabel = UIFactory.createLabel("Choose note type");
         titleText = new TextField();
 
         Platform.runLater(() -> titleText.requestFocus());
@@ -73,7 +77,8 @@ public class DialogNote extends BasePanel {
         validatorHelper.registerEmptyValidator(shortDescText, "Short description can not be empty.");
         titleText.requestFocus();
         VBox box = new VBox();
-        box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, parentLabel, createSelectionPaneParent());
+        box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, noteTypeLabel, createListNoteTypes(), parentLabel,
+                createSelectionPaneParent());
         dialog.getDialogPane().getStyleClass().add("card");
 
         dialog.getDialogPane().setContent(box);
@@ -88,8 +93,8 @@ public class DialogNote extends BasePanel {
         });
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
-                return new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText())
-                        .setParentNote(parentsBox.getValue()).setContent(NoteConstants.INIT_NOTE_CONTENT);
+                return new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
+                        .setContent(NoteConstants.INIT_NOTE_CONTENT).setType(typeBox.getValue());
             }
             return null;
         });
@@ -98,8 +103,7 @@ public class DialogNote extends BasePanel {
     }
 
     private void uniqueTagTitleValidator() {
-        validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.",
-                node -> noteService.isTitleNoteUnique(((TextField)node).getText()));
+        validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText()));
     }
 
     private Node createSelectionPaneParent() {
@@ -115,6 +119,18 @@ public class DialogNote extends BasePanel {
         clearButton.getStyleClass().add("button-flat");
         box.getChildren().addAll(parentsBox, clearButton);
 
+        return box;
+    }
+
+    private Node createListNoteTypes() {
+        HBox box = new HBox();
+        box.setSpacing(6);
+        ObservableList<NoteType> types = FXCollections.observableArrayList(NoteType.HTML, NoteType.TODO);
+        typeBox = new ComboBox<>(types);
+        typeBox.setMinWidth(280);
+        typeBox.setMaxWidth(400);
+        typeBox.getSelectionModel().select(0);
+        box.getChildren().addAll(typeBox);
         return box;
     }
 

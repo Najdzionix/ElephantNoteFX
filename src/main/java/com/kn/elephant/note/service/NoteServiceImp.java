@@ -20,7 +20,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
-import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
 
 import lombok.extern.log4j.Log4j2;
@@ -89,13 +88,13 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (noteDto.getId() == null) {
                 note = new Note();
                 note.setCreateAt(LocalDateTime.now());
-                noteDto.setType(NoteType.HTML);
                 if (noteDto.getParentNote() != null) {
                     note.setParent(noteDao.queryForId(noteDto.getParentNote().getId()));
                 }
             } else {
                 note = noteDao.queryForId(noteDto.getId());
             }
+            note.setType(noteDto.getType());
             note.setTitle(noteDto.getTitle());
             note.setType(noteDto.getType());
             note.setUpdateAt(LocalDateTime.now());

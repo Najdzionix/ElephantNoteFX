@@ -5,5 +5,5 @@ package com.kn.elephant.note.model;
  * email:kamilnadlonek@gmail.com
  */
 public enum NoteType {
-    HTML, SIMPLE
+    HTML, TODO
 }
