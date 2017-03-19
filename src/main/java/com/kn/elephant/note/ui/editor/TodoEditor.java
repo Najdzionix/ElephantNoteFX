@@ -49,6 +49,7 @@ public class TodoEditor extends BasePanel implements Editor {
 
     @Override
     public String getContent() {
+        // TODO: 19/03/17 lose information about selected tasks
         return listTasks.getItems().stream().collect(Collectors.joining(SEPARATOR));
     }
 

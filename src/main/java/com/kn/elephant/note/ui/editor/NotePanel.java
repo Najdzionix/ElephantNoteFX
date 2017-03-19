@@ -1,7 +1,5 @@
 package com.kn.elephant.note.ui.editor;
 
-import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
-
 import java.util.Optional;
 
 import org.controlsfx.control.NotificationPane;
@@ -15,27 +13,14 @@ import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
-import com.kn.elephant.note.utils.LinkUtils;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
-import javafx.scene.control.ToolBar;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.web.HTMLEditor;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import netscape.javascript.JSException;
 
 /**
  * Created by Kamil Nadłonek on 10.11.15. email:kamilnadlonek@gmail.com
@@ -44,18 +29,17 @@ import netscape.javascript.JSException;
 public class NotePanel extends BasePanel {
 
     private DetailsNotePanel detailsNotePanel;
-    private HTMLEditor editor;
-    private WebView webView;
-    private Button insertLinkButton;
 
     private NoteCache cache = NoteCache.getInstance();
-    private TableGenerator tableGenerator;
+
     @Inject
     private NoteService noteService;
     private NotificationPane notificationPane;
-    private Button tableButton;
+
     @Setter
     private Application app;
+
+    private Editor currentEditor;
 
     public NotePanel() {
         super();
@@ -63,16 +47,10 @@ public class NotePanel extends BasePanel {
 
         detailsNotePanel = new DetailsNotePanel();
         setTop(detailsNotePanel);
-        editor = new HTMLEditor();
-        webView = new WebView();
+
         getStyleClass().add("content-pane");
         notificationPanel();
-        addButtonsToToolbar();
-
-        tableGenerator = new TableGenerator(tableButton);
         cachingNoteContentChanges();
-        handleOpenLinksAction();
-        httpWatcher();
     }
 
     private void notificationPanel() {
@@ -87,116 +65,21 @@ public class NotePanel extends BasePanel {
         NoteDto newNote = (NoteDto) event.getSource();
         cache.loadNote(newNote);
 
-        // TODO: 19/03/17 check type of note and chose correct editor
         if(newNote.getType() == NoteType.TODO) {
-            TodoEditor todoEditor = new TodoEditor();
-            todoEditor.loadNote(newNote);
-            notificationPane.setContent(todoEditor);
+            currentEditor = new TodoEditor();
         } else {
-            notificationPane.setContent(editor);
-            editor.setHtmlText("");
-            editor.setHtmlText(cache.getCurrentNoteDto().getContent());
+            currentEditor = new HtmlEditor();
         }
+
+        currentEditor.loadNote(newNote);
+        notificationPane.setContent((Node) currentEditor);
         log.debug("Load note: " + newNote);
         detailsNotePanel.loadNote(cache.getCurrentNoteDto());
 
     }
 
-    private void addButtonsToToolbar() {
-        Node node = editor.lookup(".top-toolbar");
-        if (node instanceof ToolBar) {
-            createButtons((ToolBar) node);
-        }
-    }
-
-    private void createButtons(ToolBar toolBar) {
-        final String sizeIcon = "1.3em";
-        Button saveButton = createButtonWithIcon(sizeIcon, "saveNote", MaterialDesignIcon.CONTENT_SAVE);
-        Button removeButton = createButtonWithIcon(sizeIcon, "removeNote", MaterialIcon.DELETE);
-        Button testButton = createButtonWithIcon(sizeIcon, "insertDiv", MaterialIcon.ADD);
-        insertLinkButton = createButtonWithIcon(sizeIcon, "insertLink", MaterialDesignIcon.LINK_VARIANT);
-        tableButton = createButtonWithIcon(sizeIcon, "insertTable", MaterialDesignIcon.GRID);
-
-        editor.setOnMouseClicked((MouseEvent event) -> {
-            final int clickCount = event.getClickCount();
-            if (clickCount == 2) {
-                insertLinkButton.getStyleClass().remove("disableButton");
-            }
-        });
-        toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton, new Separator(),testButton);
-    }
-
     private void cachingNoteContentChanges() {
-        editor.addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.noteChanged(editor.getHtmlText()));
-    }
-
-    private void handleOpenLinksAction() {
-        WebView webView = (WebView) editor.lookup("WebView");
-        WebEngine engine = webView.getEngine();
-        engine.locationProperty().addListener((ov, oldLoc, loc) -> {
-            if (LinkUtils.isUrl(loc)) {
-                log.info("Open link {} browser ", loc);
-                app.getHostServices().showDocument(loc);
-                loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
-            }
-
-        });
-    }
-
-    private void httpWatcher() {
-        editor.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                String content = LinkUtils.replaceLinkOnHtmlLinkTag(editor.getHtmlText());
-                if (!editor.getHtmlText().equals(content)) {
-                    cache.noteChanged(content);
-                    Platform.runLater(() -> {
-                        editor.requestFocus();
-                        WebView webView = (WebView) editor.lookup("WebView");
-                        webView.getEngine().loadContent(content);
-                        String script = "document.querySelector('div').focus();";
-                        webView.getEngine().executeScript(script);
-                    });
-                }
-            }
-        });
-    }
-
-    @ActionProxy(text = "")
-    private void insertLink() {
-        log.debug("Insert link");
-        WebView webView = (WebView) editor.lookup("WebView");
-        String selected = (String) webView.getEngine().executeScript("window.getSelection().toString();");
-
-        if (selected != null && !selected.isEmpty()) {
-            String url = "\"http://" + selected + "\"; \n";
-            log.debug(url);
-            String script = " var range = window.getSelection().getRangeAt(0);\n" + "var selectionContents = range.extractContents();\n"
-                    + "var div = document.createElement(\"a\");\n" + "var url = " + url + "div.href=url;\n" + "div.appendChild(selectionContents);\n"
-                    + "range.insertNode(div);";
-            webView.getEngine().executeScript(script);
-        }
-        insertLinkButton.getStyleClass().add("disableButton");
-    }
-
-    @ActionProxy(text = "")
-    private void insertTable() {
-        tableGenerator.insertTable(this::insertHtml);
-    }
-
-    private void insertHtml(String html) {
-        WebView webView = (WebView) editor.lookup("WebView");
-        WebEngine engine = webView.getEngine();
-        try {
-            String command = "document.execCommand(\"InsertHTML\", false, '" + html + "')";
-            engine.executeScript(command);
-        } catch (JSException e) {
-            log.error("Javascript error:" + e.getMessage(), e);
-        }
-    }
-
-    @ActionProxy(text = "")
-    private void insertDiv(ActionEvent event) {
-        editor.setHtmlText(HtmlGenerator.test(editor.getHtmlText()));
+        addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.noteChanged(currentEditor.getContent()));
     }
 
     @ActionProxy(text = "")
@@ -215,7 +98,7 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void saveNote() {
-        cache.getCurrentNoteDto().setContent(editor.getHtmlText());
+        cache.getCurrentNoteDto().setContent(currentEditor.getContent());
         cache.noteChanged(cache.getCurrentNoteDto());
         log.debug("Save note:" + cache.getCurrentNoteDto());
         Optional<NoteDto> updatedNote = noteService.saveNote(cache.getCurrentNoteDto());
@@ -238,21 +121,6 @@ public class NotePanel extends BasePanel {
             log.info("note was removed");
             ActionFactory.callAction("removeNoteFromList");
             ActionFactory.callAction("showNotificationPanel", new NoticeData("Note has been removed."));
-        }
-    }
-
-    @ActionProxy(text = "Edit mode")
-    private void switchDisplayMode(ActionEvent event) {
-        log.debug("Switch mode display note");
-        if ((boolean) event.getSource()) {
-            editor.setHtmlText(cache.getCurrentNoteDto().getContent());
-            notificationPane.setContent(editor);
-        } else {
-            webView.getEngine().loadContent(cache.getCurrentNoteDto().getContent());
-            webView.setContextMenuEnabled(false);
-            webView.setDisable(true);
-            webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-            notificationPane.setContent(webView);
         }
     }
 
