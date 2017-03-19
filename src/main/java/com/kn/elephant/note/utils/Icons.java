@@ -17,6 +17,7 @@ import de.jensd.fx.glyphs.materialicons.utils.MaterialIconFactory;
 import de.jensd.fx.glyphs.octicons.OctIcon;
 import de.jensd.fx.glyphs.octicons.OctIconView;
 import de.jensd.fx.glyphs.octicons.utils.OctIconFactory;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -61,5 +62,11 @@ public class Icons {
     public static void addIcon(GlyphIcons icon, ButtonBase node, String size) {
         Text graphic = createGraphic(icon, size);
         node.setGraphic(graphic);
+    }
+
+    public static Button createButtonWithIcon(String sizeIcon, String actionName, GlyphIcons icon) {
+        Button saveButton = ActionFactory.createButtonWithAction(actionName);
+        Icons.addIcon(icon, saveButton, sizeIcon);
+        return saveButton;
     }
 }

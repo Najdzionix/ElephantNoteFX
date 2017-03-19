@@ -80,8 +80,8 @@ public class DetailsNotePanel extends BasePanel {
         HBox content = new HBox();
         content.getStyleClass().add("button-pane");
         ToggleSwitch modeButton = new ToggleSwitch("Edit mode");
-        modeButton.selectedProperty().addListener((observable, oldValue, newValue) -> ActionFactory.callAction("switchDisplayMode", newValue));
         modeButton.setSelected(true);
+        modeButton.selectedProperty().addListener((observable, oldValue, newValue) -> ActionFactory.callAction("switchDisplayMode", newValue));
         content.getChildren().addAll(modeButton);
         return content;
     }

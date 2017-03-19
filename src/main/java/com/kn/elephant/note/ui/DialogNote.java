@@ -93,8 +93,12 @@ public class DialogNote extends BasePanel {
         });
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
-                return new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
-                        .setContent(NoteConstants.INIT_NOTE_CONTENT).setType(typeBox.getValue());
+                NoteDto noteDto = new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
+                        .setType(typeBox.getValue());
+                if (noteDto.getType() == NoteType.HTML) {
+                    noteDto.setContent(NoteConstants.INIT_NOTE_CONTENT);
+                }
+                return noteDto;
             }
             return null;
         });

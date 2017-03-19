@@ -1,5 +1,7 @@
 package com.kn.elephant.note.ui.editor;
 
+import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
+
 import java.util.Optional;
 
 import org.controlsfx.control.NotificationPane;
@@ -9,14 +11,13 @@ import org.controlsfx.control.action.ActionProxy;
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
+import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
-import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.LinkUtils;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
-import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
@@ -86,11 +87,18 @@ public class NotePanel extends BasePanel {
         NoteDto newNote = (NoteDto) event.getSource();
         cache.loadNote(newNote);
 
-        notificationPane.setContent(editor);
+        // TODO: 19/03/17 check type of note and chose correct editor
+        if(newNote.getType() == NoteType.TODO) {
+            TodoEditor todoEditor = new TodoEditor();
+            todoEditor.loadNote(newNote);
+            notificationPane.setContent(todoEditor);
+        } else {
+            notificationPane.setContent(editor);
+            editor.setHtmlText("");
+            editor.setHtmlText(cache.getCurrentNoteDto().getContent());
+        }
         log.debug("Load note: " + newNote);
         detailsNotePanel.loadNote(cache.getCurrentNoteDto());
-        editor.setHtmlText("");
-        editor.setHtmlText(cache.getCurrentNoteDto().getContent());
 
     }
 
@@ -102,11 +110,12 @@ public class NotePanel extends BasePanel {
     }
 
     private void createButtons(ToolBar toolBar) {
-        Button saveButton = createToolBarButton("saveNote", MaterialDesignIcon.CONTENT_SAVE);
-        Button removeButton = createToolBarButton("removeNote", MaterialIcon.DELETE);
-        Button testButton = createToolBarButton("insertDiv", MaterialIcon.ADD);
-        insertLinkButton = createToolBarButton("insertLink", MaterialDesignIcon.LINK_VARIANT);
-        tableButton = createToolBarButton("insertTable", MaterialDesignIcon.GRID);
+        final String sizeIcon = "1.3em";
+        Button saveButton = createButtonWithIcon(sizeIcon, "saveNote", MaterialDesignIcon.CONTENT_SAVE);
+        Button removeButton = createButtonWithIcon(sizeIcon, "removeNote", MaterialIcon.DELETE);
+        Button testButton = createButtonWithIcon(sizeIcon, "insertDiv", MaterialIcon.ADD);
+        insertLinkButton = createButtonWithIcon(sizeIcon, "insertLink", MaterialDesignIcon.LINK_VARIANT);
+        tableButton = createButtonWithIcon(sizeIcon, "insertTable", MaterialDesignIcon.GRID);
 
         editor.setOnMouseClicked((MouseEvent event) -> {
             final int clickCount = event.getClickCount();
@@ -114,15 +123,7 @@ public class NotePanel extends BasePanel {
                 insertLinkButton.getStyleClass().remove("disableButton");
             }
         });
-
         toolBar.getItems().addAll(saveButton, new Separator(), removeButton, new Separator(), insertLinkButton, tableButton, new Separator(),testButton);
-    }
-
-    private static Button createToolBarButton(String actionName, GlyphIcons icon) {
-        final String sizeIcon = "1.3em";
-        Button saveButton = ActionFactory.createButtonWithAction(actionName);
-        Icons.addIcon(icon, saveButton, sizeIcon);
-        return saveButton;
     }
 
     private void cachingNoteContentChanges() {
