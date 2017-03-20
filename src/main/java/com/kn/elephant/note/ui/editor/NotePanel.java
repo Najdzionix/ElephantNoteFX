@@ -13,6 +13,7 @@ import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.NoteException;
 import com.kn.elephant.note.utils.cache.NoteCache;
 
 import javafx.application.Application;
@@ -50,10 +51,11 @@ public class NotePanel extends BasePanel {
 
         getStyleClass().add("content-pane");
         notificationPanel();
-        cachingNoteContentChanges();
+
     }
 
     private void notificationPanel() {
+
         notificationPane = new NotificationPane();
         notificationPane.showFromTopProperty().setValue(false);
         notificationPane.getStyleClass().add("notification");
@@ -65,12 +67,13 @@ public class NotePanel extends BasePanel {
         NoteDto newNote = (NoteDto) event.getSource();
         cache.loadNote(newNote);
 
-        if(newNote.getType() == NoteType.TODO) {
+        if (newNote.getType() == NoteType.TODO) {
             currentEditor = new TodoEditor();
         } else {
             currentEditor = new HtmlEditor();
         }
-
+        currentEditor.setNoteCache(cache);
+        cachingNoteContentChanges();
         currentEditor.loadNote(newNote);
         notificationPane.setContent((Node) currentEditor);
         log.debug("Load note: " + newNote);
@@ -79,7 +82,7 @@ public class NotePanel extends BasePanel {
     }
 
     private void cachingNoteContentChanges() {
-        addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.noteChanged(currentEditor.getContent()));
+        addEventFilter(MouseEvent.MOUSE_EXITED, event -> cache.contentNoteChanged(currentEditor.getContent()));
     }
 
     @ActionProxy(text = "")
@@ -98,16 +101,21 @@ public class NotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     private void saveNote() {
-        cache.getCurrentNoteDto().setContent(currentEditor.getContent());
-        cache.noteChanged(cache.getCurrentNoteDto());
-        log.debug("Save note:" + cache.getCurrentNoteDto());
-        Optional<NoteDto> updatedNote = noteService.saveNote(cache.getCurrentNoteDto());
-        if (updatedNote.isPresent()) {
-            cache.loadNote(updatedNote.get());
-            loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
-            ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
-            ActionFactory.callAction("refreshNote", cache.getCurrentNoteDto());
-        } else {
+        try {
+            cache.contentNoteChanged(currentEditor.getContent());
+            // cache.noteChanged(cache.getCurrentNoteDto());
+            log.debug("Save note:" + cache.getCurrentNoteDto());
+            Optional<NoteDto> updatedNote = noteService.saveNote(cache.getCurrentNoteDto());
+            if (updatedNote.isPresent()) {
+                // cache.loadNote(updatedNote.get());
+                loadNote(new ActionEvent(updatedNote.get(), null));
+                ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
+                ActionFactory.callAction("refreshNote", cache.getCurrentNoteDto());
+            } else {
+                throw new NoteException("Save note operation failed.");
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation saving failed"));
         }
 

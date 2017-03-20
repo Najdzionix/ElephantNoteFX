@@ -25,6 +25,7 @@ import com.kn.elephant.note.ui.setting.TagPanel;
 import com.kn.elephant.note.utils.Utils;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -40,6 +41,7 @@ import lombok.extern.log4j.Log4j2;
 public class Main extends Application {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
+    private static HostServices hostServices;
     private GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
 
     private BorderPane mainPane;
@@ -52,8 +54,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         LOGGER.debug("Start NoteFX.");
         context.init();
+
         ActionMap.register(this);
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
 
@@ -70,6 +74,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
+        hostServices = getHostServices();
     }
 
     public static List<String> loadCssFiles() {
@@ -127,5 +132,7 @@ public class Main extends Application {
         mainPane.requestLayout();
     }
 
-
+    public static HostServices getHostService() {
+        return hostServices ;
+    }
 }

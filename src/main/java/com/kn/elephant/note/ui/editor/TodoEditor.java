@@ -2,13 +2,17 @@ package com.kn.elephant.note.ui.editor;
 
 import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.CheckListView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.utils.cache.NoteCache;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
@@ -28,7 +32,9 @@ public class TodoEditor extends BasePanel implements Editor {
     private static final String SEPARATOR = "#;#";
     private static final String DEFAULT_TASK = "Default task";
     private CheckListView<String> listTasks;
-	private ValidatorHelper validatorHelper = new ValidatorHelper();
+    private NoteCache cache;
+    private ValidatorHelper validatorHelper = new ValidatorHelper();
+
     public TodoEditor() {
         getStyleClass().add("custom-pane");
     }
@@ -53,6 +59,11 @@ public class TodoEditor extends BasePanel implements Editor {
         return listTasks.getItems().stream().collect(Collectors.joining(SEPARATOR));
     }
 
+    @Override
+    public void setNoteCache(NoteCache cache) {
+        this.cache = cache;
+    }
+
     private void createContent() {
         setCenter(listTasks);
         BorderPane content = new BorderPane();
@@ -72,17 +83,30 @@ public class TodoEditor extends BasePanel implements Editor {
         HBox pane = new HBox();
         validatorHelper.removeAllNodes();
         TextField textField = new TextField();
-		validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");
+        validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");
         pane.setSpacing(5);
         Button addButton = new Button("Add");
         addButton.setOnAction(event -> {
-        	if(validatorHelper.isValid()) {
-				String task = textField.getText();
-				listTasks.getItems().add(task);
-			}
+            if (validatorHelper.isValid()) {
+                String task = textField.getText();
+                listTasks.getItems().add(task);
+                cache.contentNoteChanged(getContent());
+            }
         });
         pane.getChildren().addAll(textField, addButton);
         return pane;
+    }
+
+    public String convertToJson(List<NoteTask> tasks) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(tasks);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 
 }

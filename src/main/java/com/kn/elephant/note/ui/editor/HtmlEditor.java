@@ -4,9 +4,11 @@ import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 
 import org.controlsfx.control.action.ActionProxy;
 
+import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.utils.LinkUtils;
+import com.kn.elephant.note.utils.cache.NoteCache;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
@@ -36,6 +38,7 @@ public class HtmlEditor extends BasePanel implements Editor {
     private Button insertLinkButton;
     private Button tableButton;
     private TableGenerator tableGenerator;
+    private NoteCache cache;
 
     public HtmlEditor() {
         editor = new HTMLEditor();
@@ -57,6 +60,11 @@ public class HtmlEditor extends BasePanel implements Editor {
     @Override
     public String getContent() {
         return editor.getHtmlText();
+    }
+
+    @Override
+    public void setNoteCache(NoteCache cache) {
+        this.cache = cache;
     }
 
     private void createButtons(ToolBar toolBar) {
@@ -89,10 +97,9 @@ public class HtmlEditor extends BasePanel implements Editor {
         engine.locationProperty().addListener((ov, oldLoc, loc) -> {
             if (LinkUtils.isUrl(loc)) {
                 log.info("Open link {} browser ", loc);
-                // app.getHostServices().showDocument(loc);
-                // loadNote(new ActionEvent(cache.getCurrentNoteDto(), null));
+                Main.getHostService().showDocument(loc);
+                loadNote(cache.getCurrentNoteDto());
             }
-
         });
     }
 
@@ -101,7 +108,7 @@ public class HtmlEditor extends BasePanel implements Editor {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 String content = LinkUtils.replaceLinkOnHtmlLinkTag(editor.getHtmlText());
                 if (!editor.getHtmlText().equals(content)) {
-                    // cache.noteChanged(content);
+                    cache.contentNoteChanged(content);
                     Platform.runLater(() -> {
                         editor.requestFocus();
                         WebView webView = (WebView) editor.lookup("WebView");
@@ -156,15 +163,13 @@ public class HtmlEditor extends BasePanel implements Editor {
     private void switchDisplayMode(ActionEvent event) {
         log.debug("Switch mode display note");
         if ((boolean) event.getSource()) {
-            // editor.setHtmlText(cache.getCurrentNoteDto().getContent());
-            // notificationPane.setContent(editor);
+            editor.setHtmlText(cache.getCurrentNoteDto().getContent());
             setCenter(editor);
         } else {
-            // webView.getEngine().loadContent(cache.getCurrentNoteDto().getContent());
+            webView.getEngine().loadContent(cache.getCurrentNoteDto().getContent());
             webView.setContextMenuEnabled(false);
             webView.setDisable(true);
             webView.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-            // notificationPane.setContent(webView);
             setCenter(webView);
         }
     }
