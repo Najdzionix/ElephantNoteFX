@@ -20,6 +20,8 @@ configurations {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.7.19'
+
     runtime(['org.controlsfx:controlsfx:8.40.12',
              'org.xerial:sqlite-jdbc:3.8.11.2',
              'com.j256.ormlite:ormlite-core:4.48',
@@ -28,7 +30,8 @@ dependencies {
 
     ])
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.7'
+    
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-jdbc:4.48'
     compile 'org.apache.commons:commons-lang3:3.4'
@@ -40,6 +43,7 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.10'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'commons-io:commons-io:2.4'
+    
     
     compile 'de.jensd:fontawesomefx-commons:8.15'
     compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5'
