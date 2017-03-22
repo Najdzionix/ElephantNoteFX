@@ -10,21 +10,24 @@ import org.controlsfx.control.CheckListView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.JsonParser;
 import com.kn.elephant.note.utils.cache.NoteCache;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -38,7 +41,7 @@ public class TodoEditor extends BasePanel implements Editor {
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
     public TodoEditor() {
-        getStyleClass().add("custom-pane");
+        getStyleClass().add("custom-todo");
     }
 
     @Override
@@ -103,32 +106,40 @@ public class TodoEditor extends BasePanel implements Editor {
         BorderPane content = new BorderPane();
         HBox addPanel = new HBox();
         addPanel.setSpacing(10);
-        String iconSize = "1.2em";
+        String iconSize = "1.8em";
         Button saveButton = createButtonWithIcon(iconSize, "saveNote", MaterialDesignIcon.CONTENT_SAVE);
-        Button deleteButton = createButtonWithIcon(iconSize, "removeNote", MaterialIcon.DELETE);
+        Button deleteButton = createButtonWithIcon(iconSize, "removeNote", MaterialDesignIcon.CALENDAR_REMOVE);
         addPanel.getChildren().addAll(saveButton, deleteButton);
         content.setLeft(addPanel);
         content.setRight(createAddTaskUI());
+        content.getStyleClass().addAll("custom-pane", "kamil");
         setTop(content);
     }
 
     private Node createAddTaskUI() {
-        // TODO: 19/03/17 set empty validator
         HBox pane = new HBox();
-        validatorHelper.removeAllNodes();
-        TextField textField = new TextField();
-        validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");
         pane.setSpacing(5);
-        Button addButton = new Button("Add");
+        pane.getStyleClass().add("textFieldTag");
+        TextField textField = new TextField();
+        Label addTaskLabel = new Label("Add task:");
+        validatorHelper.removeAllNodes();
+        validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");
+        Button addButton = new Button("");
+        Icons.addIcon(MaterialDesignIcon.CHECK, addButton, "1.5em");
         addButton.setOnAction(event -> {
             if (validatorHelper.isValid()) {
                 NoteTask task = new NoteTask();
                 task.setTask(textField.getText());
                 listTasks.getItems().add(task);
                 cache.contentNoteChanged(getContent());
+                textField.setText("");
             }
         });
-        pane.getChildren().addAll(textField, addButton);
+        pane.getChildren().addAll(addTaskLabel, textField, addButton);
+
+        Pane spacer = new Pane();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
         return pane;
     }
 }

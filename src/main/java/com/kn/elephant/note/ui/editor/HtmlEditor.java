@@ -70,7 +70,7 @@ public class HtmlEditor extends BasePanel implements Editor {
     private void createButtons(ToolBar toolBar) {
         final String sizeIcon = "1.3em";
         Button saveButton = createButtonWithIcon(sizeIcon, "saveNote", MaterialDesignIcon.CONTENT_SAVE);
-        Button removeButton = createButtonWithIcon(sizeIcon, "removeNote", MaterialIcon.DELETE);
+        Button removeButton = createButtonWithIcon(sizeIcon, "removeNote", MaterialDesignIcon.CALENDAR_REMOVE);
         Button testButton = createButtonWithIcon(sizeIcon, "insertDiv", MaterialIcon.ADD);
         insertLinkButton = createButtonWithIcon(sizeIcon, "insertLink", MaterialDesignIcon.LINK_VARIANT);
         tableButton = createButtonWithIcon(sizeIcon, "insertTable", MaterialDesignIcon.GRID);

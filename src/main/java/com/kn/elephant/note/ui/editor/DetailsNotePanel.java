@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.dto.TagDto;
+import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
@@ -72,7 +73,9 @@ public class DetailsNotePanel extends BasePanel {
         createDates("Updated:", 2);
         box.setTop(datesPane);
         box.setCenter(createNoteTitlePanel());
-        box.setBottom(createButtonsPanel());
+        if(noteDto.getType() == NoteType.HTML) {
+            box.setBottom(createButtonsPanel());
+        }
         return box;
     }
 

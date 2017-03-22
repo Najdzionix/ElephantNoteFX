@@ -5,8 +5,8 @@
     -color-light-gray: #CFD8DC;
     -color-text-white: #FFFFFF;
     -color-text-black: #212121;
-    -color-text-secondary: #727272;
-    -color-divider-gray: #B6B6B6;
+    -color-text-secondary: #727272; /* dark gray*/
+    -color-divider-gray: #B6B6B6;  /* gray*/
     -color-blue:#42A5F5
 }
 
@@ -155,6 +155,11 @@
 
 .textFieldTag > .label {
     -fx-padding: 7 0 0 0;
+}
+
+
+.buttonIcon {
+  -fx-padding: 5 5 5 5;
 }
 
 
@@ -403,6 +408,26 @@
     -fx-border-color: red;
     -fx-border-width: 1;
  }
+
+
+ .custom-todo {
+     -fx-focus-color: transparent;
+ }
+ .custom-todo > * {
+      -fx-focus-color: transparent;
+ }
+ .list-view {
+     -fx-border-color:  -swatch-grey;
+     -fx-border-width: 2px 0 0 0;
+ }
+ .list-view:focused {
+     -fx-background-color:transparent;
+ }
+ .kamil {
+    -fx-background-color: -swatch-toolbar;
+    -fx-text-fill: -fx-text-base-color;
+
+         }
      /*-fx-focus-color: transparent;*/
      /*-fx-border-width:0;*/
     /*-fx-padding:5;*/

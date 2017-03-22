@@ -61,6 +61,7 @@ public class Icons {
 
     public static void addIcon(GlyphIcons icon, ButtonBase node, String size) {
         Text graphic = createGraphic(icon, size);
+        node.getStyleClass().add("buttonIcon");
         node.setGraphic(graphic);
     }
 
