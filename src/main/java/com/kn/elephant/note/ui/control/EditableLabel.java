@@ -1,9 +1,14 @@
 package com.kn.elephant.note.ui.control;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.kn.elephant.note.ui.ChangeValue;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.Validator;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
+
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -15,9 +20,6 @@ import javafx.scene.layout.Region;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -63,8 +65,6 @@ public class EditableLabel extends Region {
     }
 
     private void activeEditMode() {
-        //calculate width text field based on text length *Magic number "9"
-        editTextField.setPrefWidth(Math.min(editTextField.getText().length() * 9, getWidth()));
         createContent(editTextField, saveChangeButton);
         editTextField.requestFocus();
     }

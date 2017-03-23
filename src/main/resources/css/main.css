@@ -26,6 +26,9 @@
     -fx-background-color: -color-blue;
     -fx-text-fill: -color-text-white;
 }
+.buttonIcon {
+  -fx-padding: 5 5 5 5;
+}
 .scroll-pane {
     -fx-background-color:transparent;
 }
@@ -156,12 +159,6 @@
 .textFieldTag > .label {
     -fx-padding: 7 0 0 0;
 }
-
-
-.buttonIcon {
-  -fx-padding: 5 5 5 5;
-}
-
 
 /************************************************
             Note Editor panel -> HtmlEditor 

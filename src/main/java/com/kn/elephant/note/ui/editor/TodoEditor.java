@@ -5,11 +5,11 @@ import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.CheckListView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.ui.control.CheckBoxWithEditCell;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.JsonParser;
 import com.kn.elephant.note.utils.cache.NoteCache;
@@ -17,13 +17,12 @@ import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -35,8 +34,8 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class TodoEditor extends BasePanel implements Editor {
-    private static final String DEFAULT_TASK = "Default task";
-    private CheckListView<NoteTask> listTasks;
+    private static final String DEFAULT_TASK = "Default content";
+    private ListView<NoteTask> listTasks;
     private NoteCache cache;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
@@ -46,42 +45,14 @@ public class TodoEditor extends BasePanel implements Editor {
 
     @Override
     public void loadNote(NoteDto noteDto) {
-        ObservableList<NoteTask> strings = FXCollections.observableArrayList();
+        ObservableList<NoteTask> noteTasks = FXCollections.observableArrayList();
         if (!StringUtils.isEmpty(noteDto.getContent())) {
             List<NoteTask> tasks = getTasks(noteDto);
-            strings.addAll(tasks);
+            noteTasks.addAll(tasks);
         }
 
-        listTasks = new CheckListView<>(strings);
-
-        for (int i = 0; i < listTasks.getItems().size(); i++) {
-            if (listTasks.getItems().get(i).isDone()) {
-                listTasks.getCheckModel().check(i);
-            }
-        }
-
-        listTasks.setCellFactory(lv -> new CheckBoxListCell<NoteTask>(listTasks::getItemBooleanProperty) {
-            @Override
-            public void updateItem(NoteTask employee, boolean empty) {
-                super.updateItem(employee, empty);
-                setText(employee == null ? "" : employee.getTask());
-            }
-        });
-
-        listTasks.getCheckModel().getCheckedItems().addListener((ListChangeListener<NoteTask>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    for (NoteTask task : c.getAddedSubList()) {
-                        task.setDone(true);
-                    }
-                }
-                if (c.wasRemoved()) {
-                    for (NoteTask task : c.getRemoved()) {
-                        task.setDone(false);
-                    }
-                }
-            }
-        });
+        listTasks = new ListView<>(noteTasks);
+        listTasks.setCellFactory(param -> new CheckBoxWithEditCell<>());
 
         createContent();
     }
@@ -121,7 +92,7 @@ public class TodoEditor extends BasePanel implements Editor {
         pane.setSpacing(5);
         pane.getStyleClass().add("textFieldTag");
         TextField textField = new TextField();
-        Label addTaskLabel = new Label("Add task:");
+        Label addTaskLabel = new Label("Add content:");
         validatorHelper.removeAllNodes();
         validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");
         Button addButton = new Button("");
@@ -129,7 +100,7 @@ public class TodoEditor extends BasePanel implements Editor {
         addButton.setOnAction(event -> {
             if (validatorHelper.isValid()) {
                 NoteTask task = new NoteTask();
-                task.setTask(textField.getText());
+                task.setContent(textField.getText());
                 listTasks.getItems().add(task);
                 cache.contentNoteChanged(getContent());
                 textField.setText("");
