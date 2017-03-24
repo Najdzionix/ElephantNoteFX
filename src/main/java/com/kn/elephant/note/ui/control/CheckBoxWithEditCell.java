@@ -57,7 +57,7 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
         label.getLabelText().setWrapText(true);
         Parent parent = getParent().getParent().getParent();
         parent.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-            double newWidth = newValue.getWidth() - 200;
+            double newWidth = newValue.getWidth() - 130;
             label.getLabelText().prefWidthProperty().bind(new SimpleDoubleProperty(newWidth));
             label.getEditTextField().prefWidthProperty().bind(new SimpleDoubleProperty(newWidth));
         });
