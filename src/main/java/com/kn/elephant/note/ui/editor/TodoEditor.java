@@ -5,6 +5,8 @@ import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kn.elephant.note.dto.NoteDto;
@@ -18,6 +20,7 @@ import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,13 +37,13 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class TodoEditor extends BasePanel implements Editor {
-    private static final String DEFAULT_TASK = "Default content";
     private ListView<NoteTask> listTasks;
     private NoteCache cache;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
     public TodoEditor() {
-        getStyleClass().add("custom-todo");
+        ActionMap.register(this);
+        getStyleClass().add("todo-editor");
     }
 
     @Override
@@ -52,7 +55,7 @@ public class TodoEditor extends BasePanel implements Editor {
         }
 
         listTasks = new ListView<>(noteTasks);
-        listTasks.setCellFactory(param -> new CheckBoxWithEditCell<>());
+        listTasks.setCellFactory(param -> new CheckBoxWithEditCell<>("deleteTask"));
 
         createContent();
     }
@@ -83,7 +86,7 @@ public class TodoEditor extends BasePanel implements Editor {
         addPanel.getChildren().addAll(saveButton, deleteButton);
         content.setLeft(addPanel);
         content.setRight(createAddTaskUI());
-        content.getStyleClass().addAll("custom-pane", "kamil");
+        content.getStyleClass().addAll("custom-pane", "tool-bar-editor");
         setTop(content);
     }
 
@@ -112,5 +115,13 @@ public class TodoEditor extends BasePanel implements Editor {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         return pane;
+    }
+
+    @ActionProxy(text = "deleteTask")
+    private void deleteTask(ActionEvent event){
+        log.info(event.getSource());
+        if(!listTasks.getItems().remove(event.getSource())) {
+            log.error("Can not remove task:" + event.getSource());
+        }
     }
 }
