@@ -5,8 +5,6 @@ import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kn.elephant.note.dto.NoteDto;
@@ -20,7 +18,6 @@ import com.kn.elephant.note.utils.validator.ValidatorHelper;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,7 +39,6 @@ public class TodoEditor extends BasePanel implements Editor {
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
     public TodoEditor() {
-        ActionMap.register(this);
         getStyleClass().add("todo-editor");
     }
 
@@ -55,7 +51,7 @@ public class TodoEditor extends BasePanel implements Editor {
         }
 
         listTasks = new ListView<>(noteTasks);
-        listTasks.setCellFactory(param -> new CheckBoxWithEditCell<>("deleteTask"));
+        listTasks.setCellFactory(param -> new CheckBoxWithEditCell<>(task -> removeTask(task.getId())));
 
         createContent();
     }
@@ -117,11 +113,12 @@ public class TodoEditor extends BasePanel implements Editor {
         return pane;
     }
 
-    @ActionProxy(text = "deleteTask")
-    private void deleteTask(ActionEvent event){
-        log.info(event.getSource());
-        if(!listTasks.getItems().remove(event.getSource())) {
-            log.error("Can not remove task:" + event.getSource());
+    private void removeTask(String taskId) {
+        boolean result = listTasks.getItems().removeIf(task -> task.getId().equals(taskId));
+        if (!result) {
+            log.error("Can not remove task:" + taskId);
+        } else {
+            cache.contentNoteChanged(getContent());
         }
     }
 }

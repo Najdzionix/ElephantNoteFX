@@ -1,7 +1,8 @@
 package com.kn.elephant.note.ui.control;
 
+import java.util.function.Consumer;
+
 import com.kn.elephant.note.ui.ChangeValue;
-import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
@@ -24,9 +25,9 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
 
     private final CheckBox checkBox;
     private ChangeValue<String> saveAction;
-    private String deleteAction;
+    private Consumer<T> deleteAction;
 
-    public CheckBoxWithEditCell(String deleteAction) {
+    public CheckBoxWithEditCell(Consumer<T> deleteAction) {
         this.deleteAction = deleteAction;
         checkBox = new CheckBox();
         getStyleClass().add("check-box-cell");
@@ -64,7 +65,7 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
         Button deleteButton = new Button();
         Icons.addIcon(MaterialDesignIcon.CLOSE, deleteButton, "1.2em");
         deleteButton.setOnAction(event -> {
-            ActionFactory.callAction(deleteAction, item);
+              deleteAction.accept(item);
         });
         pane.getChildren().addAll(checkBox, label, deleteButton);
         return pane;

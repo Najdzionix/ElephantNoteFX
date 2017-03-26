@@ -25,18 +25,19 @@ public class JsonParserTest {
 		// When
 		String result = JsonParser.serializeToJsonString(tasks);
 		// Then
-		Assert.assertEquals("[{\"content\":\"Change test!!\",\"done\":true}]", result);
+		Assert.assertEquals("[{\"content\":\"Change test!!\",\"id\":\""+task.getId() +"\",\"done\":true}]", result);
 	}
 	
 	@Test
 	public void shouldUnmarshallingJsonStringToObject() {
 		// Given
-		String tasksString = "[{\"content\":\"Simple test!!\",\"done\":true}]";
+		String tasksString = "[{\"content\":\"Simple test!!\",\"done\":true, \"id\":\"testId\"}]";
 		// When
 		List<NoteTask> tasks = JsonParser.unmarshallJSON(new TypeReference<List<NoteTask>>() {}, tasksString);
 		// Then
 		Assert.assertEquals(1, tasks.size());
 		Assert.assertEquals("Simple test!!", tasks.get(0).getContent());
+		Assert.assertEquals("testId", tasks.get(0).getId());
 		Assert.assertTrue(tasks.get(0).isDone());
 	}
 
