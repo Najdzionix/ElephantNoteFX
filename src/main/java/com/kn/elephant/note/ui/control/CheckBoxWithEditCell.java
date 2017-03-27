@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 @Getter
 public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
 
+    private static final int PADDING = 130;
     private final CheckBox checkBox;
     private ChangeValue<String> saveAction;
     private Consumer<T> deleteAction;
@@ -57,10 +58,10 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
         EditableLabel label = new EditableLabel(item.getContent(), getSaveAction());
         label.getLabelText().setWrapText(true);
         Parent parent = getParent().getParent().getParent();
+        setWithLabel(label, parent.getBoundsInParent().getWidth() - PADDING);
         parent.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-            double newWidth = newValue.getWidth() - 130;
-            label.getLabelText().prefWidthProperty().bind(new SimpleDoubleProperty(newWidth));
-            label.getEditTextField().prefWidthProperty().bind(new SimpleDoubleProperty(newWidth));
+            double newWidth = newValue.getWidth() - PADDING;
+            setWithLabel(label, newWidth);
         });
         Button deleteButton = new Button();
         Icons.addIcon(MaterialDesignIcon.CLOSE, deleteButton, "1.2em");
@@ -69,5 +70,10 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
         });
         pane.getChildren().addAll(checkBox, label, deleteButton);
         return pane;
+    }
+
+    private static void setWithLabel(EditableLabel label, double width) {
+        label.getLabelText().prefWidthProperty().bind(new SimpleDoubleProperty(width));
+        label.getEditTextField().prefWidthProperty().bind(new SimpleDoubleProperty(width));
     }
 }
