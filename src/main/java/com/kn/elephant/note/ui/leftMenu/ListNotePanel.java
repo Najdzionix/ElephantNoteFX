@@ -115,8 +115,12 @@ public class ListNotePanel extends BasePanel {
 		treeView.getSelectionModel().select(item);
 		treeView.refresh();
 	}
-
 	@ActionProxy(text = "")
+	private void refreshList() {
+		log.info("Refresh list ALL");
+		contentPane.setContent(getContent());
+	}
+		@ActionProxy(text = "")
 	private void refreshNote(ActionEvent event) {
 		log.debug("Refresh item to tree");
 		NoteDto noteDto = (NoteDto) event.getSource();

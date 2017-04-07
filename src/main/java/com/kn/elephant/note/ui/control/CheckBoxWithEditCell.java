@@ -66,7 +66,7 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
         Button deleteButton = new Button();
         Icons.addIcon(MaterialDesignIcon.CLOSE, deleteButton, "1.2em");
         deleteButton.setOnAction(event -> {
-              deleteAction.accept(item);
+            deleteAction.accept(item);
         });
         pane.getChildren().addAll(checkBox, label, deleteButton);
         return pane;

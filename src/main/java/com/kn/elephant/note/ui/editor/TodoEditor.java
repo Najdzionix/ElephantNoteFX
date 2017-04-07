@@ -34,11 +34,12 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class TodoEditor extends BasePanel implements Editor {
+    private static final int SPACING_NODES = 5;
     private ListView<NoteTask> listTasks;
     private NoteCache cache;
     private ValidatorHelper validatorHelper = new ValidatorHelper();
 
-    public TodoEditor() {
+    TodoEditor() {
         getStyleClass().add("todo-editor");
     }
 
@@ -75,7 +76,7 @@ public class TodoEditor extends BasePanel implements Editor {
         setCenter(listTasks);
         BorderPane content = new BorderPane();
         HBox addPanel = new HBox();
-        addPanel.setSpacing(10);
+        addPanel.setSpacing(5);
         String iconSize = "1.8em";
         Button saveButton = createButtonWithIcon(iconSize, "saveNote", MaterialDesignIcon.CONTENT_SAVE);
         Button deleteButton = createButtonWithIcon(iconSize, "removeNote", MaterialDesignIcon.CALENDAR_REMOVE);
@@ -88,7 +89,7 @@ public class TodoEditor extends BasePanel implements Editor {
 
     private Node createAddTaskUI() {
         HBox pane = new HBox();
-        pane.setSpacing(5);
+        pane.setSpacing(SPACING_NODES);
         pane.getStyleClass().add("textFieldTag");
         TextField textField = new TextField();
         Label addTaskLabel = new Label("Add content:");
