@@ -5,9 +5,9 @@
     -color-light-gray: #CFD8DC;
     -color-text-white: #FFFFFF;
     -color-text-black: #212121;
-    -color-text-secondary: #727272; /* dark gray*/
+    -dark-gray: #727272; /* dark gray*/
     -color-divider-gray: #B6B6B6;  /* gray*/
-    -color-blue:#42A5F5
+    -color-brown: #44382A; /* #543F3D;/*#42A5F5 */
 }
 
 @font-face {
@@ -17,13 +17,13 @@
 
 .button {
     -fx-background-color: -color-light-gray;
-    -fx-text-fill: -color-text-secondary;
+    -fx-text-fill: -dark-gray;
 }
 .button:hover {
     -fx-text-fill:-color-secondary;
 }
 .button-blue {
-    -fx-background-color: -color-blue;
+    -fx-background-color: -color-brown;
     -fx-text-fill: -color-text-white;
 }
 .buttonIcon {
@@ -41,7 +41,7 @@
 .selected-node {
     -fx-border-color: white !important;
     -fx-font-weight: bold;
-    -fx-background-color: -color-blue !important;
+    -fx-background-color: -color-brown !important;
 }
 
 .editable-label > * > .label{
@@ -65,7 +65,7 @@
     -fx-padding: 15 15 15 15;
 }
 .glyph-icon {
-    -fx-fill: -color-text-secondary;
+    -fx-fill: -dark-gray;
 }
 
 .glyph-icon:hover {
@@ -108,7 +108,7 @@
 
 .control-label-two .text {
     -fx-font-size: 1.2em;
-    -fx-fill: -color-text-secondary;
+    -fx-fill: -dark-gray;
 }
 .toggle-switch .thumb {
     -fx-background-radius: 1.2em; /* large value to make sure this remains circular */
@@ -133,21 +133,20 @@
             Details panel -> Tag Panel 
 *************************************************/
 .removeButton {
-    -fx-background-color: -color-blue;
+    -fx-background-color: -dark-gray;
     -fx-padding: 0 5 5 0;
     -fx-font-weight: 900;
 }
 .tag {
-    -fx-background-color: -color-blue;
+    -fx-background-color: -dark-gray;
     -fx-padding: 0 5 5 0;
-
     -fx-background-radius: 4;
 }
 .tag * {
-    -fx-fill:white; 
+    -fx-fill: -color-text-white; 
     -fx-text-alignment:center;
 }
-.tag *:hover { -fx-fill:orange;}
+.tag *:hover { -fx-fill:-color-secondary;}
 
 /***************
     Add tag 
@@ -175,6 +174,19 @@
 .notification-bar .text {
     -fx-fill: -color-text-black;
 }
+.notificationButton {
+    -fx-background-color: -color-brown;
+    -fx-text-fill: -color-text-white;
+    -fx-padding: 5px;
+}
+.notificationButton .text {
+    -fx-fill: -color-text-white;
+}
+
+.notificationButton .text:hover {
+    -fx-fill: -color-secondary;
+}
+
 /************************************************
             Note Editor panel -> TodoEditor
 *************************************************/
@@ -218,9 +230,9 @@
 
 .tree-cell:selected {
     -fx-font-weight: bold ;
-    -fx-background-color:-color-blue;
+    -fx-background-color: -dark-gray;
     -fx-font-style: italic;
-    -fx-fill: -color-blue;
+    -fx-fill: -color-brown;
 }
 
 /************************************************
@@ -238,7 +250,7 @@
 }
 .menuBar .active {
     -fx-background-color: -color-divider-gray;
-    -fx-border-color:  -color-blue;
+    -fx-border-color:  -color-brown;
     -fx-border-width: 0 0 3 0;
     -fx-border-radius: 2;
     -fx-background-radius: 2;
@@ -344,7 +356,7 @@
     -fx-font-weight: bold;
 }
 .menu-cell-active {
-    -fx-border-color: -color-blue !important;
+    -fx-border-color: -color-brown !important;
     -fx-font-weight: bold;
 }
 .settings-panel .control-labelText {
@@ -385,8 +397,8 @@
     -fx-padding: 9;
  }
  .tag-cell.active {
-    -fx-border-color: -color-blue;
-    -fx-background-color: -color-blue;
+    -fx-border-color: -color-brown;
+    -fx-background-color: -color-brown;
  }
  .tag-cell .tagName {
     -fx-text-fill: -color-text-black;
@@ -394,7 +406,7 @@
     -fx-padding: 0 0 5 0;
  }
  .tag-cell .notesInfo {
-    -fx-fill: -color-text-secondary;
+    -fx-fill: -dark-gray;
     -fx-font-size: 0.9em;
  }
 

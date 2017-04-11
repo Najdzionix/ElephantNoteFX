@@ -158,10 +158,10 @@ public class NotePanel extends BasePanel {
         box.setAlignment(Pos.CENTER_LEFT);
         box.setSpacing(10);
         box.getChildren().addAll(noticeData.getIcon(), label);
-        log.info("Notice type:" + noticeData.getType());
         if (ActionNoticeData.ACTION_NOTICE_TYPE.equals(noticeData.getType())) {
             ActionNoticeData actionNoticeData = (ActionNoticeData) noticeData;
             Button restoreButton = new Button(actionNoticeData.getButtonName());
+            restoreButton.getStyleClass().add("notificationButton");
             restoreButton.setOnAction(eventButton -> {
                 actionNoticeData.callAction();
             });
