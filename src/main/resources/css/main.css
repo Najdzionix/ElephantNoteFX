@@ -16,10 +16,15 @@
 
 .button {
     -fx-background-color: -color-white-gray;
+    -fx-border-width: 2;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-border-color: transparent;
     -fx-text-fill: -dark-gray;
 }
 .button:hover {
-    -fx-text-fill:-color-orange;
+    -fx-text-fill: -color-orange;
+    -fx-border-color: -color-orange;
 }
 .button-action {
     -fx-background-color: -dark-gray !important;
@@ -32,14 +37,15 @@
 	-fx-border-color: -color-orange;
 }
 .list-cell {
- -fx-border-width: 0 0 2 0;
+    -fx-border-width: 0 0 2 0;
+    -fx-accent: transparent;
+    -fx-border-color: transparent;
 }
 
 .list-view:hover .list-cell:hover {
 	-fx-font-weight: 700;
 	-fx-text-fill: -color-text-black;
 	-fx-border-color: -color-orange;
-	-fx-border-width: 0 0 2 0;
 	-fx-background-color:transparent;
 }
 
@@ -62,7 +68,7 @@
 .selected-node {
     -fx-border-color: white !important;
     -fx-font-weight: bold;
-    -fx-background-color: -color-brown !important;
+    -fx-background-color: -dark-gray !important;
 }
 
 .editable-label > * > .label{
@@ -83,17 +89,15 @@
 .custom-pane {
     -fx-background-color: white;
     -fx-background-radius: 2.0;
-    -fx-padding: 15 15 15 15;
+    -fx-padding: 15;
 }
 .glyph-icon {
     -fx-fill: -dark-gray;
 }
 
-.glyph-icon:hover {
+.button:hover .glyph-icon, .glyph-icon:hover {
     -fx-fill: -color-orange;
 }
-
-
 
 /************************************************
                     Details panel 
@@ -208,6 +212,11 @@
     -fx-fill: -color-orange;
 }
 
+.tool-bar > * > .button:hover {
+    -fx-border-color: transparent;
+    -fx-fill: -color-orange;
+}
+
 /************************************************
             Note Editor panel -> TodoEditor
 *************************************************/
@@ -248,9 +257,7 @@
     -fx-border-width: 0 0 2 0;
     -fx-padding: 0 5 5 5 ;
 }
-.list-cell:hover {
-    -fx-background-color: red;
-}
+
 .tree-cell:selected {
     -fx-font-weight: bold ;
     -fx-background-color: -dark-gray;
