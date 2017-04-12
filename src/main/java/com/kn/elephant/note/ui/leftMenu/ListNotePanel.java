@@ -80,7 +80,7 @@ public class ListNotePanel extends BasePanel {
 			}
 		});
 		treeView.getSelectionModel().select(0);
-		treeView.setStyle(" -fx-background-color: -color-light-gray;");
+		treeView.setStyle(" -fx-background-color: -color-white-gray;");
 		return treeView;
 	}
 

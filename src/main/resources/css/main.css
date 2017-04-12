@@ -1,12 +1,11 @@
 .root {
-    -color-secondary: #FF9800;/*orange*/
+    -color-orange: #FF9800; /*orange*/
     -color-blue-gray: #455A64;
-    -color-primary: #607D8B;  /*light blue gray*/
-    -color-light-gray: #CFD8DC;
+    -color-white-gray: #CFD8DC;
+    -dark-gray: #727272; /* dark gray*/
     -color-text-white: #FFFFFF;
     -color-text-black: #212121;
-    -dark-gray: #727272; /* dark gray*/
-    -color-divider-gray: #B6B6B6;  /* gray*/
+    -color-light-gray: #B6B6B6;  /* gray*/
     -color-brown: #44382A; /* #543F3D;/*#42A5F5 */
 }
 
@@ -16,11 +15,11 @@
 }
 
 .button {
-    -fx-background-color: -color-light-gray;
+    -fx-background-color: -color-white-gray;
     -fx-text-fill: -dark-gray;
 }
 .button:hover {
-    -fx-text-fill:-color-secondary;
+    -fx-text-fill:-color-orange;
 }
 .button-blue {
     -fx-background-color: -color-brown;
@@ -69,7 +68,7 @@
 }
 
 .glyph-icon:hover {
-    -fx-fill: -color-secondary;
+    -fx-fill: -color-orange;
 }
 
 
@@ -121,7 +120,7 @@
 
 .toggle-switch:selected .thumb-area{
     -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -20%), derive(-fx-text-box-border, -30%)),
-                            linear-gradient(to bottom, derive( -color-divider-gray, 30%),  -color-divider-gray);
+                            linear-gradient(to bottom, derive( -color-light-gray, 30%),  -color-light-gray);
  }
 
 .button-pane {
@@ -146,7 +145,7 @@
     -fx-fill: -color-text-white; 
     -fx-text-alignment:center;
 }
-.tag *:hover { -fx-fill:-color-secondary;}
+.tag *:hover { -fx-fill:-color-orange;}
 
 /***************
     Add tag 
@@ -163,11 +162,11 @@
             Note Editor panel -> HtmlEditor 
 *************************************************/
 .disableButton .text {
-      -fx-fill:  -color-light-gray;
+      -fx-fill:  -color-white-gray;
 }
 .notification-pane .notification-bar > .pane {
     -fx-background-radius: 2;
-    -fx-background-color: -color-divider-gray;
+    -fx-background-color: -color-light-gray;
     -fx-padding: 0 7 0 7;
 }
 
@@ -184,7 +183,7 @@
 }
 
 .notificationButton .text:hover {
-    -fx-fill: -color-secondary;
+    -fx-fill: -color-orange;
 }
 
 /************************************************
@@ -200,7 +199,7 @@
 
 .check-box-cell:hover {
 	-fx-background-color: -swatch-light-grey;
-	-fx-text-fill: -color-secondary;
+	-fx-text-fill: -color-orange;
 	-fx-font-weight: 700 ;
 }
  .tool-bar-editor {
@@ -223,7 +222,7 @@
 }
 
 .noteItem {
-    -fx-border-color: -color-divider-gray;
+    -fx-border-color: -color-light-gray;
     -fx-border-width: 0 0 2 0;
     -fx-padding: 0 5 5 5 ;
 }
@@ -242,14 +241,14 @@
     -fx-pref-width: 150;
 }
 .tool-bar-menu .button:hover, .tool-bar-menu .toggle-button:hover {
-    -fx-border-color:  -color-secondary;
+    -fx-border-color:  -color-orange;
     -fx-border-width: 0 0 3 0;
 }
 .menuBar{
     -fx-pref-height: 40;
 }
 .menuBar .active {
-    -fx-background-color: -color-divider-gray;
+    -fx-background-color: -color-light-gray;
     -fx-border-color:  -color-brown;
     -fx-border-width: 0 0 3 0;
     -fx-border-radius: 2;
@@ -289,7 +288,7 @@
                   Search Result Panel
   *************************************************/
 .popoverM >* {
-    -fx-background-color: -color-light-gray;
+    -fx-background-color: -color-white-gray;
 }
 
 .popover > .content > .title > .text  {
@@ -311,7 +310,7 @@
 
 .note-node {
      -fx-background-color: white;
-     -fx-border-color: -color-divider-gray;
+     -fx-border-color: -color-light-gray;
      -fx-border-width: 0 0 2 0;
      -fx-padding: 10 5 5 5 ;
 }
@@ -345,14 +344,14 @@
 }
 .menu-cell {
     -fx-background-color:white;
-    -fx-border-color: -color-divider-gray;
+    -fx-border-color: -color-light-gray;
     -fx-border-width: 0 0 2 0;
     -fx-padding: 30 5 10 5 ;
 
 }
 .menu-cell > * { -fx-font-size: 18;}
 .menu-cell:hover {
-    -fx-border-color: -color-secondary;
+    -fx-border-color: -color-orange;
     -fx-font-weight: bold;
 }
 .menu-cell-active {
@@ -376,7 +375,7 @@
     -fx-font-size: 18;
     -fx-padding: 7 10 5 0;
     -fx-text-fill: -color-text-black;
-    -fx-border-color: -color-divider-gray;
+    -fx-border-color: -color-light-gray;
     -fx-border-width: 0 0 2 0;
 }
  /****************************************************************
@@ -389,10 +388,10 @@
     -fx-border-color:  -color-blue-gray;
     -fx-border-radius: 3;
     -fx-background-radius: 3;
-    -fx-background-color: -color-divider-gray;
+    -fx-background-color: -color-light-gray;
  }
  .tag-cell:hover {
-    -fx-border-color: -color-secondary;
+    -fx-border-color: -color-orange;
     -fx-border-width: 2;
     -fx-padding: 9;
  }

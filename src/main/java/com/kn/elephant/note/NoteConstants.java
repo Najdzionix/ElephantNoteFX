@@ -21,8 +21,8 @@ public class NoteConstants {
 
     public static final String RED_COLOR = "#E32B2B";
     public static final String YELLOW_COLOR = "#E0E632";
-    public static final String ORANGE_COLOR = " -color-secondary;";
-    public static final String GRAY_DIVIDER = " -color-divider-gray;";
+    public static final String ORANGE_COLOR = " -color-orange;";
+    public static final String GRAY_DIVIDER = " -color-light-gray;";
     public static final String BLUE_COLOR = " -color-brown;";
     public static final String WHITE = " white;";
     public static final double MIN_HEIGHT = 600.0;
