@@ -42,7 +42,7 @@ public class SettingsPanel extends TitlePanel {
         HBox content = new HBox();
         content.getStyleClass().addAll("custom-pane");
         Button saveButton = new Button("Save");
-        saveButton.getStyleClass().addAll("button-blue");
+        saveButton.getStyleClass().addAll("button-action");
         content.setAlignment(Pos.TOP_CENTER);
         saveButton.setOnAction(event -> {
             String pathDB = properties.getProperty(NoteConstants.DB_KEY_PROPERTY);

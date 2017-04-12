@@ -84,8 +84,10 @@ public class DialogNote extends BasePanel {
         dialog.getDialogPane().setContent(box);
 
         ButtonType buttonTypeOk = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
+
         dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
         final Button btOk = (Button) dialog.getDialogPane().lookupButton(buttonTypeOk);
+        btOk.getStyleClass().add("button-action");
         btOk.addEventFilter(ActionEvent.ACTION, event -> {
             if (!validatorHelper.isValid()) {
                 event.consume();

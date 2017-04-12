@@ -76,7 +76,7 @@ public class AddTagPanel extends BasePanel {
                 new TagStringConverter());
 
         bind.setOnAutoCompleted(event -> {
-            log.info("auto:" + event.getCompletion());
+            log.info("auto:" + event.getCompletion());    /** TODO */
             autoCompleteTag = event.getCompletion();
             tagTF.setText(autoCompleteTag.getName());
         });

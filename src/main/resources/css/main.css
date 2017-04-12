@@ -21,13 +21,35 @@
 .button:hover {
     -fx-text-fill:-color-orange;
 }
-.button-blue {
-    -fx-background-color: -color-brown;
+.button-action {
+    -fx-background-color: -dark-gray !important;
     -fx-text-fill: -color-text-white;
 }
 .buttonIcon {
   -fx-padding: 5 5 5 5;
 }
+.text-area:focused, .text-field:focused, .combo-box:focused, .choice-box:focused {
+	-fx-border-color: -color-orange;
+}
+.list-cell {
+ -fx-border-width: 0 0 2 0;
+}
+
+.list-view:hover .list-cell:hover {
+	-fx-font-weight: 700;
+	-fx-text-fill: -color-text-black;
+	-fx-border-color: -color-orange;
+	-fx-border-width: 0 0 2 0;
+	-fx-background-color:transparent;
+}
+
+.list-view:focused .list-cell:filled:focused:selected {
+	-fx-background-color: -dark-gray;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-text-black;
+    -fx-font-style: italic;
+}
+
 .scroll-pane {
     -fx-background-color:transparent;
 }
@@ -226,7 +248,9 @@
     -fx-border-width: 0 0 2 0;
     -fx-padding: 0 5 5 5 ;
 }
-
+.list-cell:hover {
+    -fx-background-color: red;
+}
 .tree-cell:selected {
     -fx-font-weight: bold ;
     -fx-background-color: -dark-gray;
@@ -436,16 +460,6 @@
 .testBorder {
     -fx-border-color: red;
     -fx-border-width: 1;
- }
-
-
-
- .list-view {
-     -fx-border-color:  -swatch-grey;
-     -fx-border-width: 2px 0 0 0;
- }
- .list-view:focused {
-     -fx-background-color:transparent;
  }
 
      /*-fx-focus-color: transparent;*/
