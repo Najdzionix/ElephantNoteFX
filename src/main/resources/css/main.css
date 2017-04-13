@@ -235,8 +235,18 @@
 }
  .tool-bar-editor {
     -fx-background-color: -swatch-toolbar;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -color-light-gray;
     -fx-text-fill: -fx-text-base-color;
  }
+
+.check-box-cell:odd { -fx-background-color: #DCDCDC; }
+.check-box-cell:even { -fx-background-color: #F6F6F6; }
+.check-box-done > * > .text {  /*FIXME*/
+        -fx-strikethrough: true;
+        -fx-text-fill: -color-text-white !important;
+        -fx-fill: -color-text-white !important;
+    }
 
 /************************************************
                Left Menu Panel

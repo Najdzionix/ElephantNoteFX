@@ -43,6 +43,11 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
             checkBox.setSelected(item.isCheck());
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 item.setCheck(newValue);
+                if(newValue) {
+                    getStyleClass().add("check-box-done");
+                } else {
+                    getStyleClass().remove("check-box-done");
+                }
             });
             setGraphic(buildUI(item));
             setText(null);
