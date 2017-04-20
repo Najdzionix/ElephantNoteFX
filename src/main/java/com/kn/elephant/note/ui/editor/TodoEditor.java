@@ -12,6 +12,7 @@ import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.control.CheckBoxWithEditCell;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.JsonParser;
+import com.kn.elephant.note.utils.TextUtils;
 import com.kn.elephant.note.utils.cache.NoteCache;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
@@ -92,6 +93,12 @@ public class TodoEditor extends BasePanel implements Editor {
         pane.setSpacing(SPACING_NODES);
         pane.getStyleClass().add("textFieldTag");
         TextField textField = new TextField();
+        textField.textProperty().addListener((ob, o, n) -> {
+			// expand the textfield
+			double prefWidth = TextUtils.computeTextWidth(textField.getFont(), textField.getText(), 0.0D) + 15;
+            int magic_number = 350;
+            textField.setPrefWidth(Math.min(prefWidth, getBoundsInParent().getWidth() - magic_number));
+		});
         Label addTaskLabel = new Label("Add content:");
         validatorHelper.removeAllNodes();
         validatorHelper.registerEmptyValidator(textField, "Task can not be empty.");

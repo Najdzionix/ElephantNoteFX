@@ -177,7 +177,7 @@
     Add tag 
 ***************/
 .textFieldTag .text-field {
-    -fx-pref-width:250;
+    -fx-min-width:250;
 }
 
 .textFieldTag > .label {
