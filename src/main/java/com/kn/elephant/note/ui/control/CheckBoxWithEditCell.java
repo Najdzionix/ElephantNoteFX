@@ -27,6 +27,7 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
     private final CheckBox checkBox;
     private ChangeValue<String> saveAction;
     private Consumer<T> deleteAction;
+    private EditableLabel label;
 
     public CheckBoxWithEditCell(Consumer<T> deleteAction) {
         this.deleteAction = deleteAction;
@@ -40,16 +41,16 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
 
         if (!empty) {
             saveAction = (oldValue, newValue) -> item.setContent(newValue);
-            checkBox.setSelected(item.isCheck());
+            setGraphic(buildUI(item));
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 item.setCheck(newValue);
-                if(newValue) {
-                    getStyleClass().add("check-box-done");
+                if (newValue) {
+                    label.getStyleClass().add("check-box-done");
                 } else {
-                    getStyleClass().remove("check-box-done");
+                    label.getStyleClass().remove("check-box-done");
                 }
             });
-            setGraphic(buildUI(item));
+            checkBox.setSelected(item.isCheck());
             setText(null);
         } else {
             setGraphic(null);
@@ -60,7 +61,7 @@ public class CheckBoxWithEditCell<T extends CheckBoxCell> extends ListCell<T> {
     private Node buildUI(T item) {
         HBox pane = new HBox();
         pane.setSpacing(2);
-        EditableLabel label = new EditableLabel(item.getContent(), getSaveAction());
+        label = new EditableLabel(item.getContent(), getSaveAction());
         label.getLabelText().setWrapText(true);
         Parent parent = getParent().getParent().getParent();
         setWithLabel(label, parent.getBoundsInParent().getWidth() - PADDING);

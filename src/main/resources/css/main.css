@@ -242,10 +242,9 @@
 
 .check-box-cell:odd { -fx-background-color: #DCDCDC; }
 .check-box-cell:even { -fx-background-color: #F6F6F6; }
-.check-box-done > * > .text {  /*FIXME*/
+.check-box-done > * > * > .text { 
         -fx-strikethrough: true;
-        -fx-text-fill: -color-text-white !important;
-        -fx-fill: -color-text-white !important;
+        -fx-fill: -color-light-gray;
     }
 
 /************************************************
