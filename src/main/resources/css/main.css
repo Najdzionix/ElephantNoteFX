@@ -327,8 +327,9 @@
   /************************************************
                   Search Result Panel
   *************************************************/
-.popoverM >* {
+.popoverM > * {
     -fx-background-color: -color-white-gray;
+    -fx-max-height:800px;
 }
 
 .popover > .content > .title > .text  {

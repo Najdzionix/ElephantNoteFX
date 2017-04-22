@@ -61,7 +61,6 @@ public class ListNotesControl {
 
 	public void showNotes(List<NoteDto> notes) {
 		if (popOver.isShowing()) {
-			log.debug("Is showing result of search.");
 			popOver.setContentNode(createListOfNotes(notes));
 		} else {
 			popOver.setContentNode(createListOfNotes(notes));
@@ -102,7 +101,6 @@ public class ListNotesControl {
 		Label text = new Label("Not found notes.");
 		text.setTextAlignment(TextAlignment.CENTER);
 		text.getStyleClass().add("not-found-text");
-//		Node icon = GlyphsDude.createIcon(OctIcon.ALERT);
 		Node icon = new MaterialIconView(MaterialIcon.PRIORITY_HIGH);
 		icon.getStyleClass().addAll("glyph-icon", "alert-icon");
 		String currentStyle = icon.getStyle();
