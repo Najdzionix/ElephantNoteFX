@@ -230,7 +230,6 @@
 
 .check-box-cell:hover {
 	-fx-background-color: -swatch-light-grey;
-	-fx-text-fill: -color-orange;
 	-fx-font-weight: 700 ;
 }
  .tool-bar-editor {

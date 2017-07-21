@@ -31,7 +31,8 @@ import javafx.scene.layout.Priority;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Created by Kamil Nadłonek on 19-03-2017 email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 19-03-2017
+ * email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class TodoEditor extends BasePanel implements Editor {

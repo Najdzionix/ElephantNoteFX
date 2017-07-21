@@ -2,6 +2,7 @@ package com.kn.elephant.note.ui.editor;
 
 import static com.kn.elephant.note.utils.Icons.createButtonWithIcon;
 
+import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
 import com.kn.elephant.note.Main;
@@ -41,9 +42,9 @@ public class HtmlEditor extends BasePanel implements Editor {
     private NoteCache cache;
 
     public HtmlEditor() {
+        ActionMap.register(this);
         editor = new HTMLEditor();
         webView = new WebView();
-        tableGenerator = new TableGenerator(tableButton);
 
         addButtonsToToolbar();
         handleOpenLinksAction();
@@ -74,7 +75,8 @@ public class HtmlEditor extends BasePanel implements Editor {
         Button testButton = createButtonWithIcon(sizeIcon, "insertDiv", MaterialIcon.ADD);
         insertLinkButton = createButtonWithIcon(sizeIcon, "insertLink", MaterialDesignIcon.LINK_VARIANT);
         tableButton = createButtonWithIcon(sizeIcon, "insertTable", MaterialDesignIcon.GRID);
-
+        tableGenerator = new TableGenerator(tableButton);
+        
         editor.setOnMouseClicked((MouseEvent event) -> {
             final int clickCount = event.getClickCount();
             if (clickCount == 2) {

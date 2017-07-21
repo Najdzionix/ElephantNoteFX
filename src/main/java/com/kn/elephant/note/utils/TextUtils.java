@@ -10,11 +10,12 @@ import javafx.scene.text.TextBoundsType;
  */
 public class TextUtils {
 
-	static final Text helper;
-	static final double DEFAULT_WRAPPING_WIDTH;
-	static final double DEFAULT_LINE_SPACING;
-	static final String DEFAULT_TEXT;
-	static final TextBoundsType DEFAULT_BOUNDS_TYPE;
+	private static final Text helper;
+	private static final double DEFAULT_WRAPPING_WIDTH;
+	private static final double DEFAULT_LINE_SPACING;
+	private static final String DEFAULT_TEXT;
+	private static final TextBoundsType DEFAULT_BOUNDS_TYPE;
+	
 	static {
 		helper = new Text();
 		DEFAULT_WRAPPING_WIDTH = helper.getWrappingWidth();
@@ -24,9 +25,6 @@ public class TextUtils {
 	}
 
 	public static double computeTextWidth(Font font, String text, double help0) {
-		// Toolkit.getToolkit().getFontLoader().computeStringWidth(field.getText(),
-		// field.getFont());
-
 		helper.setText(text);
 		helper.setFont(font);
 
