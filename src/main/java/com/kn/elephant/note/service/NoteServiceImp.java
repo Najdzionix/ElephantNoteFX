@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -20,7 +21,10 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
+import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
+import com.kn.elephant.note.ui.editor.NoteTask;
+import com.kn.elephant.note.utils.JsonParser;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -101,7 +105,7 @@ public class NoteServiceImp extends BaseService implements NoteService {
             note.setContent(noteDto.getContent());
             note.setShortDescription(noteDto.getShortDescription());
             if (StringUtils.isNotEmpty(note.getContent())) {
-                note.setCleanContent(Jsoup.parse(noteDto.getContent()).text());
+                note.setCleanContent(getCleanContentText(noteDto));
             }
 
             noteDao.createOrUpdate(note);
@@ -117,6 +121,28 @@ public class NoteServiceImp extends BaseService implements NoteService {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Remove all special characters. Return only text.
+     * @param noteDto
+     * @return
+     */
+    private String getCleanContentText(NoteDto noteDto) {
+        String cleanContent;
+        if(noteDto.getType() == NoteType.HTML) {
+             cleanContent = Jsoup.parse(noteDto.getContent()).text();
+         } else if (noteDto.getType() == NoteType.TODO) {
+            List<NoteTask> tasks = JsonParser.unmarshallJSON(new TypeReference<List<NoteTask>>() {
+            }, noteDto.getContent());
+            cleanContent = tasks.stream().map(NoteTask::getContent).collect(Collectors.joining(";"));
+
+        } else {
+            log.warn("Not recognize type note: %s", noteDto.getType());
+            cleanContent = "";
+        }
+
+        return cleanContent;
     }
 
     @Override

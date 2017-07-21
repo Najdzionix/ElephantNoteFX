@@ -32,7 +32,7 @@ public class JsonParser {
     public static <T> T unmarshallJSON(final TypeReference<T> type, final String jsonPacket) {
         T data = null;
         try {
-            data = new ObjectMapper().readValue(jsonPacket, type);
+            data = mapper.readValue(jsonPacket, type);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
