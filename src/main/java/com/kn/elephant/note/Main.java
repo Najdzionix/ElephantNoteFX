@@ -62,7 +62,7 @@ public class Main extends Application {
         primaryStage.setTitle("Hello in ElephantNoteFX alpha version");
 
         buildUI();
-        Font.loadFont(Main.class.getResource("../../../../fonts/Lato-Regular.ttf").toExternalForm(), 20);
+        Font.loadFont(Main.class.getResource("/fonts/Lato-Regular.ttf").toExternalForm(), 20);
         mainPane.setMinHeight(NoteConstants.MIN_HEIGHT);
         mainPane.setMinWidth(NoteConstants.MIN_WIDTH);
         primaryStage.setMinWidth(NoteConstants.MIN_WIDTH);
@@ -81,7 +81,7 @@ public class Main extends Application {
         String[] cssNames = {"material-fx-v0_3.css", "main.css"};
         List<String> cssFiles = new ArrayList<>();
         for (String cssName : cssNames) {
-            cssFiles.add(Main.class.getResource("../../../../css/" + cssName).toExternalForm());
+            cssFiles.add(Main.class.getResource("/css/" + cssName).toExternalForm());
         }
 
         return cssFiles;

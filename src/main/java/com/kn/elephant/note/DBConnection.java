@@ -12,6 +12,7 @@ import com.kn.elephant.note.service.InsertDataService;
 import com.kn.elephant.note.utils.Utils;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,8 +55,9 @@ public class DBConnection {
         if (connectionSource != null) {
             try {
                 connectionSource.close();
-            } catch (SQLException e) {
+            } catch (IOException e) {
                 log.warn("Error during close connection to DB, {}", e);
+                e.printStackTrace();
             }
         }
     }
@@ -64,7 +66,7 @@ public class DBConnection {
      * If table not exists than create table.
      */
     private void verifyDatabase() throws Exception {
-        long amountTable = connectionSource.getReadOnlyConnection().queryForLong(SQL_VERIFY_STRUCTURE_DB);
+        long amountTable = connectionSource.getReadOnlyConnection("sqlite_master").queryForLong(SQL_VERIFY_STRUCTURE_DB);
         if (EXPECTED_AMOUNT_TABLE != amountTable) {
             createTableIfNotExists(connectionSource);
             loadDao();
@@ -78,7 +80,7 @@ public class DBConnection {
     private void loadDao() {
         log.debug("Load Dao");
         daoMap = new HashMap<>();
-        listModelClass.stream().forEach(clazz -> {
+        listModelClass.stream().forEach((Class clazz) -> {
             Dao dao = null;
             try {
                 dao = DaoManager.createDao(connectionSource, clazz);
