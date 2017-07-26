@@ -19,4 +19,8 @@ abstract class BaseService {
             log.error("DBConnection exception: {}", e.getMessage());
         }
     }
+
+    protected void setDbConnection(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
 }
