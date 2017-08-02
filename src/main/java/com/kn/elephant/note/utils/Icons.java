@@ -18,7 +18,7 @@ import de.jensd.fx.glyphs.octicons.OctIcon;
 import de.jensd.fx.glyphs.octicons.OctIconView;
 import de.jensd.fx.glyphs.octicons.utils.OctIconFactory;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
+import javafx.scene.control.Labeled;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -59,7 +59,7 @@ public class Icons {
         return graphic;
     }
 
-    public static void addIcon(GlyphIcons icon, ButtonBase node, String size) {
+    public static void addIcon(GlyphIcons icon, Labeled node, String size) {
         Text graphic = createGraphic(icon, size);
         node.getStyleClass().add("buttonIcon");
         node.setGraphic(graphic);

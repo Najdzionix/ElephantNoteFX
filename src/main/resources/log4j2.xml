@@ -9,7 +9,7 @@
         </File>
     </appenders>
     <loggers>
-        <logger name="com.kn.elephant.note" level="debug" additivity="false">
+        <logger name="com.kn.elephant.note" level="INFO" additivity="false">
             <appender-ref ref="Console"/>
             <appender-ref ref="File"/>
         </logger>
