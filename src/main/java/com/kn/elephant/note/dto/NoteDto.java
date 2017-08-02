@@ -28,6 +28,8 @@ public class NoteDto {
     private NoteDto parentNote;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+    private String icon;
+    private String colorIcon;
 
     public NoteDto() {
         subNotes = new ArrayList<>();

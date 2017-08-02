@@ -1,10 +1,11 @@
 package com.kn.elephant.note.model;
 
+import java.time.LocalDateTime;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.Data;
 
-import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * Created by Kamil Nadłonek on 11.11.15.
@@ -49,5 +50,8 @@ public class Note {
     public Note() {
     }
 
-    ;
+    @DatabaseField
+    private String icon;
+    @DatabaseField
+    private String colorIcon;
 }

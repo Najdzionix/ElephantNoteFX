@@ -81,7 +81,9 @@ public class NoteServiceImp extends BaseService implements NoteService {
                 .setContent(note.getContent())
                 .setCreateAt(note.getCreateAt())
                 .setUpdateAt(note.getUpdateAt())
-                .setType(note.getType());
+                .setType(note.getType())
+                .setIcon(note.getIcon())
+                .setColorIcon(note.getColorIcon());
         return dto;
     }
 

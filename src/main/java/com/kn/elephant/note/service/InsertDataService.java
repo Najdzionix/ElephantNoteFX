@@ -1,13 +1,5 @@
 package com.kn.elephant.note.service;
 
-import com.j256.ormlite.dao.Dao;
-import com.kn.elephant.note.DBConnection;
-import com.kn.elephant.note.model.Note;
-import com.kn.elephant.note.model.NoteTag;
-import com.kn.elephant.note.model.NoteType;
-import com.kn.elephant.note.model.Tag;
-import lombok.extern.log4j.Log4j2;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,12 +7,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.j256.ormlite.dao.Dao;
+import com.kn.elephant.note.DBConnection;
+import com.kn.elephant.note.model.Note;
+import com.kn.elephant.note.model.NoteTag;
+import com.kn.elephant.note.model.NoteType;
+import com.kn.elephant.note.model.Tag;
+
+import lombok.extern.log4j.Log4j2;
+
 /**
  * Created by Kamil Nadłonek on 29.10.15.
  * email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class InsertDataService {
+    private static final String NOTE_TODO_CONTENT = "[{\"content\":\"First task\",\"id\":\"158f5924-454e-403b-950d-c05def435e97\",\"done\":false},{\"content\":\"Completed task\",\"id\":\"981d5fda-528c-40b5-8867-382330392684\",\"done\":true},{\"content\":\"Last task\",\"id\":\"889a43ea-3e6d-40b7-8730-3fb00674258e\",\"done\":false}]";
     private Dao<Note, Long> noteDao;
     private Dao<Tag, Long> tagDao;
     private Dao<NoteTag, Long> noteTagDao;
@@ -44,6 +46,11 @@ public class InsertDataService {
             createChildrenNotes(note);
             noteNumber++;
         }
+        Note todoNote = createTestNote(noteNumber, "Todo note");
+        todoNote.setType(NoteType.TODO);
+        todoNote.setContent(NOTE_TODO_CONTENT);
+        saveNote(todoNote);
+
     }
 
     private List<Tag> createTagsList() {
