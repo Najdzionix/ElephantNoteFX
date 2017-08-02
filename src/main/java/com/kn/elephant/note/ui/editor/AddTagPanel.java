@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -37,8 +36,8 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class AddTagPanel extends BasePanel {
-    private ValidatorHelper validatorHelper = new ValidatorHelper();
-    private TextField tagTF;
+    private final ValidatorHelper validatorHelper;
+    private final TextField tagTF;
     private TagDto autoCompleteTag;
     private NoteDto noteDto;
     private ObservableList<TagDto> tagsDto;
@@ -55,17 +54,19 @@ public class AddTagPanel extends BasePanel {
         box.setSpacing(5);
         Label addTagLabel = new Label("Add tag:");
         tagTF = new TextField();
+        tagTF.setId("addTagTextField");
         box.getStyleClass().add("textFieldTag");
         initAutoCompleteForTags(noteTags);
-        validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
-//        Action removeAction = ActionMap.action("removeNote");
 
-        Button addTagButton = ActionFactory.createButtonWithAction("addTag");
+        Button addTagButton = new Button();
+        addTagButton.setOnAction(event -> addTag());
         Icons.addIcon(MaterialDesignIcon.CHECK, addTagButton, "1.5em");
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         box.getChildren().addAll(spacer, addTagLabel, tagTF, addTagButton);
         setCenter(box);
+        validatorHelper = new ValidatorHelper();
+        validatorHelper.registerEmptyValidator(tagTF, "Name tag can not be empty!");
     }
 
     private void initAutoCompleteForTags(List<TagDto> tags) {
@@ -82,7 +83,6 @@ public class AddTagPanel extends BasePanel {
         });
     }
 
-    @ActionProxy(text = "")
     private void addTag() {
         log.info(String.format("Add tag of name %s", tagTF.getText()));
         if (!validatorHelper.isValid() || StringUtils.isEmpty(tagTF.getText())) {
@@ -103,7 +103,6 @@ public class AddTagPanel extends BasePanel {
             tagTF.clear();
         } else {
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation add tag failed"));
-
         }
     }
 }

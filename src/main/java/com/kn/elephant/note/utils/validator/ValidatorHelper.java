@@ -9,16 +9,22 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.Tooltip;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 19.03.16.
  * email:kamilnadlonek@gmail.com
  */
+@Log4j2
 public class ValidatorHelper {
     private static final String ERROR_CSS = "error";
-    private Map<Node, Boolean> fields = new HashMap<>();
+    private Map<String, Boolean> fields = new HashMap<>();
 
     public void registerEmptyValidator(Node node, String message) {
+        log.debug("Register validator for node:"+node.getId());
+        if(node.getId() == null && fields.containsKey(node.getId())) {
+            throw new IllegalArgumentException("Node have to define unique ID!");
+        }
         if (node instanceof TextField) {
             TextField tf = ((TextField) node);
             tf.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -33,7 +39,7 @@ public class ValidatorHelper {
             });
         }
 
-        fields.put(node, true);
+        fields.put(node.getId(), true);
     }
 
     /**
@@ -76,11 +82,11 @@ public class ValidatorHelper {
             tip.getStyleClass().add("tooltipError");
             Tooltip.install(node, tip);
             node.getStyleClass().add(ERROR_CSS);
-            fields.put(node, false);
+            fields.put(node.getId(), false);
         } else {
             Tooltip.uninstall(node, null);
             node.getStyleClass().remove(ERROR_CSS);
-            fields.put(node, true);
+            fields.put(node.getId(), true);
         }
     }
 

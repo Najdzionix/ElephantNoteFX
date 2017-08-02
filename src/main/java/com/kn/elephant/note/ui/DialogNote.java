@@ -68,12 +68,13 @@ public class DialogNote extends BasePanel {
         Label parentLabel = UIFactory.createLabel("Choose parent");
         Label noteTypeLabel = UIFactory.createLabel("Choose note type");
         titleText = new TextField();
-
+        titleText.setId("dialogNoteTitleText");
         Platform.runLater(() -> titleText.requestFocus());
 
         validatorHelper.registerEmptyValidator(titleText, "Title can not empty.");
         uniqueTagTitleValidator();
         shortDescText = new TextField();
+        shortDescText.setId("dialogNoteDescText");
         validatorHelper.registerEmptyValidator(shortDescText, "Short description can not be empty.");
         titleText.requestFocus();
         VBox box = new VBox();

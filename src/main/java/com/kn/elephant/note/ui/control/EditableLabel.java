@@ -1,5 +1,6 @@
 package com.kn.elephant.note.ui.control;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +50,7 @@ public class EditableLabel extends Region {
         this.maxWidthText = maxWidthText;
         labelText = new Label(StringUtils.abbreviate(fullText, maxWidthText));
         editTextField = new TextField(fullText);
+        editTextField.setId("editableLabelTextField-" + RandomStringUtils.random(10,true,false));  //??
         addCssClass("editable-label");
         createEditButton();
         createSaveButton(saveActionFun);

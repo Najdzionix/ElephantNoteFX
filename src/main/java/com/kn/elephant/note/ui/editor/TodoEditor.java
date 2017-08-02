@@ -94,6 +94,7 @@ public class TodoEditor extends BasePanel implements Editor {
         pane.setSpacing(SPACING_NODES);
         pane.getStyleClass().add("textFieldTag");
         TextField textField = new TextField();
+        textField.setId("todoEditorTextField");
         textField.textProperty().addListener((ob, o, n) -> {
 			// expand the textfield
 			double prefWidth = TextUtils.computeTextWidth(textField.getFont(), textField.getText(), 0.0D) + 15;
