@@ -3,11 +3,15 @@ package com.kn.elephant.note.ui.leftMenu;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kn.elephant.note.dto.NoteDto;
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.ListenerFactory;
 
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -27,23 +31,32 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
             setText(null);
             setGraphic(null);
         } else {
-            ;
             setGraphic(createNoteCell(getTreeItem()));
         }
     }
 
     private Node createNoteCell(TreeItem<NoteDto> item) {
         NoteDto currentNoteDto = item.getValue();
-        VBox vBox = new VBox();
+        HBox box = new HBox();
 
-        vBox.hoverProperty().addListener(ListenerFactory.getListenerHover(vBox));
-        this.focusedProperty().addListener(ListenerFactory.getListenerFocused(vBox));
+        box.hoverProperty().addListener(ListenerFactory.getListenerHover(box));
+        this.focusedProperty().addListener(ListenerFactory.getListenerFocused(box));
 
         Text title = new Text(currentNoteDto.getTitle());
         Text desc = new Text(StringUtils.abbreviate(currentNoteDto.getShortDescription(), 30));
+        desc.getStyleClass().add("smallText");
+        VBox vBox = new VBox();
         vBox.getChildren().addAll(title, desc);
-        vBox.getStyleClass().add("noteItem");
-        return vBox;
+
+        String iconName = item.getValue().getIcon();
+        if(iconName != null ) {
+            Label iconLabel = new Label();
+            Icons.addIcon(MaterialDesignIcon.valueOf(iconName), iconLabel, "1.3em");
+            box.getChildren().add(iconLabel);
+        }
+        box.getChildren().add(vBox);
+        box.getStyleClass().add("noteItem");
+        return box;
     }
 
     private String getString() {

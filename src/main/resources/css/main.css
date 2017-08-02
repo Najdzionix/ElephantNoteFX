@@ -273,6 +273,11 @@
     -fx-fill: -color-brown;
 }
 
+.smallText {
+    -fx-font-size: 12;
+    -fx-font-style: italic;
+}
+
 /************************************************
                 Top Menu Panel
 *************************************************/
