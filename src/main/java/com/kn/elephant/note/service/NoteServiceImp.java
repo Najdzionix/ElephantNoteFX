@@ -106,6 +106,8 @@ public class NoteServiceImp extends BaseService implements NoteService {
             note.setUpdateAt(LocalDateTime.now());
             note.setContent(noteDto.getContent());
             note.setShortDescription(noteDto.getShortDescription());
+            note.setIcon(noteDto.getIcon());
+            note.setColorIcon(noteDto.getColorIcon());
             if (StringUtils.isNotEmpty(note.getContent())) {
                 note.setCleanContent(getCleanContentText(noteDto));
             }

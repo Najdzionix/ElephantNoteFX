@@ -1,22 +1,29 @@
 package com.kn.elephant.note.utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
+import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconNameComparator;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import de.jensd.fx.glyphs.materialicons.utils.MaterialIconFactory;
 import de.jensd.fx.glyphs.octicons.OctIcon;
 import de.jensd.fx.glyphs.octicons.OctIconView;
 import de.jensd.fx.glyphs.octicons.utils.OctIconFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.paint.Color;
@@ -47,14 +54,14 @@ public class Icons {
     private static Text createGraphic(GlyphIcons icon, String size) {
         Text graphic = null;
 
-        if(icon instanceof MaterialDesignIcon) {
-          graphic = MaterialDesignIconFactory.get().createIcon(icon, size);
-        } else if (icon instanceof MaterialIcon)  {
+        if (icon instanceof MaterialDesignIcon) {
+            graphic = MaterialDesignIconFactory.get().createIcon(icon, size);
+        } else if (icon instanceof MaterialIcon) {
             graphic = MaterialIconFactory.get().createIcon(icon, size);
         } else if (icon instanceof OctIcon) {
             graphic = OctIconFactory.get().createIcon(icon, size);
-        }                 else {
-           log.error("Not recognize icon");
+        } else {
+            log.error("Not recognize icon");
         }
         return graphic;
     }
@@ -67,7 +74,15 @@ public class Icons {
 
     public static Button createButtonWithIcon(String sizeIcon, String actionName, GlyphIcons icon) {
         Button saveButton = ActionFactory.createButtonWithAction(actionName);
-        Icons.addIcon(icon, saveButton, sizeIcon);
+        addIcon(icon, saveButton, sizeIcon);
         return saveButton;
+    }
+
+    public static ObservableList<GlyphIcon> getListNoteIcons() {
+        List<GlyphIcon> materialDesignIconsList = Stream.of(MaterialDesignIcon.values())
+            .sorted(new MaterialDesignIconNameComparator())
+            .map(i -> new MaterialDesignIconView(i, "2.0em"))
+            .collect(Collectors.toList());
+        return FXCollections.observableArrayList(materialDesignIconsList);
     }
 }

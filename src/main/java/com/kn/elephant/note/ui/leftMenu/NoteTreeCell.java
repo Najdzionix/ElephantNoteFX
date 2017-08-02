@@ -13,6 +13,7 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -51,7 +52,8 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
         String iconName = item.getValue().getIcon();
         if(iconName != null ) {
             Label iconLabel = new Label();
-            Icons.addIcon(MaterialDesignIcon.valueOf(iconName), iconLabel, "1.3em");
+            Icons.addIcon(MaterialDesignIcon.valueOf(iconName), iconLabel, "1.7em");
+            iconLabel.setTextFill(Color.valueOf("#"+item.getValue().getColorIcon()));
             box.getChildren().add(iconLabel);
         }
         box.getChildren().add(vBox);

@@ -12,8 +12,10 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
+import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -46,6 +49,8 @@ public class DialogNote extends BasePanel {
     @Inject
     private NoteService noteService;
     private ValidatorHelper validatorHelper;
+    private ColorPicker colorPicker;
+    private ComboBox<GlyphIcon> iconBox;
 
     DialogNote() {
         ActionMap.register(this);
@@ -67,6 +72,7 @@ public class DialogNote extends BasePanel {
         Label shortDescriptionL = UIFactory.createLabel("Short description: ");
         Label parentLabel = UIFactory.createLabel("Choose parent");
         Label noteTypeLabel = UIFactory.createLabel("Choose note type");
+        Label iconLabel = UIFactory.createLabel("Choose icon for note");
         titleText = new TextField();
         titleText.setId("dialogNoteTitleText");
         Platform.runLater(() -> titleText.requestFocus());
@@ -79,7 +85,7 @@ public class DialogNote extends BasePanel {
         titleText.requestFocus();
         VBox box = new VBox();
         box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, noteTypeLabel, createListNoteTypes(), parentLabel,
-                createSelectionPaneParent());
+                createSelectionPaneParent(), iconLabel, createIconPicker());
         dialog.getDialogPane().getStyleClass().add("card");
 
         dialog.getDialogPane().setContent(box);
@@ -96,8 +102,11 @@ public class DialogNote extends BasePanel {
         });
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
+                String hexColor = Integer.toHexString(colorPicker.getValue().hashCode()).substring(0, 6).toUpperCase();
+                String iconName = iconBox.getValue().getGlyphName();
+                log.info("name"+ iconName+"\t color:"+hexColor     );
                 NoteDto noteDto = new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
-                        .setType(typeBox.getValue());
+                        .setType(typeBox.getValue()).setIcon(iconName).setColorIcon(hexColor);
                 if (noteDto.getType() == NoteType.HTML) {
                     noteDto.setContent(NoteConstants.INIT_NOTE_CONTENT);
                 }
@@ -139,6 +148,18 @@ public class DialogNote extends BasePanel {
         typeBox.getSelectionModel().select(0);
         box.getChildren().addAll(typeBox);
         return box;
+    }
+
+    private Node createIconPicker() {
+        HBox box = new HBox();
+        colorPicker = new ColorPicker();
+        iconBox = new ComboBox<>(Icons.getListNoteIcons());
+        iconBox.setMinWidth(100);
+        iconBox.setMaxWidth(300);
+        iconBox.getSelectionModel().select(0);
+        box.getChildren().addAll(iconBox, colorPicker);
+        return box;
+        
     }
 
     @ActionProxy(text = "Clear")
