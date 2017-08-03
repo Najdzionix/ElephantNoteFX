@@ -1,21 +1,18 @@
 package com.kn.elephant.note.utils;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
-import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconFactory;
-import de.jensd.fx.glyphs.materialdesignicons.utils.MaterialDesignIconNameComparator;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import de.jensd.fx.glyphs.materialicons.utils.MaterialIconFactory;
@@ -25,6 +22,7 @@ import de.jensd.fx.glyphs.octicons.utils.OctIconFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -78,11 +76,31 @@ public class Icons {
         return saveButton;
     }
 
-    public static ObservableList<GlyphIcon> getListNoteIcons() {
-        List<GlyphIcon> materialDesignIconsList = Stream.of(MaterialDesignIcon.values())
-            .sorted(new MaterialDesignIconNameComparator())
-            .map(i -> new MaterialDesignIconView(i, "2.0em"))
-            .collect(Collectors.toList());
-        return FXCollections.observableArrayList(materialDesignIconsList);
+    public static Label builderIcon(GlyphIcons icon, String iconSize) {
+        Label iconLabel = new Label();
+        Text graphic = createGraphic(icon, iconSize);
+        iconLabel.setGraphic(graphic);
+        iconLabel.getStyleClass().add("noteIcon");
+        return iconLabel;
+    }
+
+    public static ObservableList<GlyphIcons> getListNoteIcons() {
+        List<GlyphIcons> listIcons = Arrays.asList(MaterialIcon.ACCOUNT_CIRCLE,
+            MaterialIcon.WATCH_LATER,
+            MaterialIcon.ACCOUNT_BOX,
+            MaterialIcon.ADD_BOX,
+            MaterialIcon.ALL_INCLUSIVE,
+            MaterialIcon.BUILD,
+            MaterialIcon.EMAIL,
+            MaterialIcon.WB_INCANDESCENT,
+            MaterialIcon.REMOVE_CIRCLE,
+            MaterialIcon.LANGUAGE,
+            MaterialIcon.STAR,
+            MaterialIcon.SHOPPING_CART,
+            MaterialIcon.DIRECTIONS_SUBWAY,
+            MaterialIcon.REPORT,
+            MaterialIcon.HOME
+        );
+        return FXCollections.observableArrayList(listIcons);
     }
 }

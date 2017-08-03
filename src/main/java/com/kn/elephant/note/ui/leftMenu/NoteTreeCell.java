@@ -6,14 +6,13 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.ListenerFactory;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -21,6 +20,9 @@ import javafx.scene.text.Text;
  * email:kamilnadlonek@gmail.com
  */
 public class NoteTreeCell extends TreeCell<NoteDto> {
+
+    private static final String ICON_SIZE = "1.7em";
+
     public NoteTreeCell() {
     }
 
@@ -51,9 +53,8 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
 
         String iconName = item.getValue().getIcon();
         if(iconName != null ) {
-            Label iconLabel = new Label();
-            Icons.addIcon(MaterialDesignIcon.valueOf(iconName), iconLabel, "1.7em");
-            iconLabel.setTextFill(Color.valueOf("#"+item.getValue().getColorIcon()));
+            Label iconLabel = Icons.builderIcon(MaterialIcon.valueOf(iconName), ICON_SIZE);
+            iconLabel.setStyle(" -fx-fill: #"+item.getValue().getColorIcon() +" ;");
             box.getChildren().add(iconLabel);
         }
         box.getChildren().add(vBox);

@@ -11,15 +11,17 @@ import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
+import com.kn.elephant.note.ui.control.GlyphsListCell;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
-import de.jensd.fx.glyphs.GlyphIcon;
+import de.jensd.fx.glyphs.GlyphIcons;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -31,7 +33,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -41,6 +45,7 @@ import lombok.extern.log4j.Log4j2;
 public class DialogNote extends BasePanel {
 
     private static final int MAX_WIDTH_PARENT_NAME = 50;
+    private static final int VALUE = 6;
     private Dialog<NoteDto> dialog;
     private TextField titleText;
     private TextField shortDescText;
@@ -50,7 +55,7 @@ public class DialogNote extends BasePanel {
     private NoteService noteService;
     private ValidatorHelper validatorHelper;
     private ColorPicker colorPicker;
-    private ComboBox<GlyphIcon> iconBox;
+    private ComboBox<GlyphIcons> iconBox;
 
     DialogNote() {
         ActionMap.register(this);
@@ -102,9 +107,8 @@ public class DialogNote extends BasePanel {
         });
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
-                String hexColor = Integer.toHexString(colorPicker.getValue().hashCode()).substring(0, 6).toUpperCase();
-                String iconName = iconBox.getValue().getGlyphName();
-                log.info("name"+ iconName+"\t color:"+hexColor     );
+                String hexColor = Integer.toHexString(colorPicker.getValue().hashCode()).substring(0, VALUE).toUpperCase();
+                String iconName = iconBox.getValue().name();
                 NoteDto noteDto = new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
                         .setType(typeBox.getValue()).setIcon(iconName).setColorIcon(hexColor);
                 if (noteDto.getType() == NoteType.HTML) {
@@ -124,7 +128,7 @@ public class DialogNote extends BasePanel {
 
     private Node createSelectionPaneParent() {
         HBox box = new HBox();
-        box.setSpacing(6);
+        box.setSpacing(VALUE);
         ObservableList<NoteDto> notesDto = FXCollections.observableArrayList(noteService.getAllNotes());
         parentsBox = new ComboBox<>(notesDto);
         parentsBox.setButtonCell(new NoteListCell());
@@ -140,7 +144,7 @@ public class DialogNote extends BasePanel {
 
     private Node createListNoteTypes() {
         HBox box = new HBox();
-        box.setSpacing(6);
+        box.setSpacing(VALUE);
         ObservableList<NoteType> types = FXCollections.observableArrayList(NoteType.HTML, NoteType.TODO);
         typeBox = new ComboBox<>(types);
         typeBox.setMinWidth(280);
@@ -152,11 +156,15 @@ public class DialogNote extends BasePanel {
 
     private Node createIconPicker() {
         HBox box = new HBox();
-        colorPicker = new ColorPicker();
+        box.setPadding(new Insets(5));
+        box.setSpacing(VALUE);
+        colorPicker = new ColorPicker(Color.BLACK);
         iconBox = new ComboBox<>(Icons.getListNoteIcons());
-        iconBox.setMinWidth(100);
-        iconBox.setMaxWidth(300);
-        iconBox.getSelectionModel().select(0);
+        iconBox.setCellFactory(param -> new GlyphsListCell());
+        iconBox.setButtonCell( new GlyphsListCell());
+        iconBox.getStyleClass().add("iconComboBox");
+        HBox.setHgrow(iconBox, Priority.ALWAYS);
+        HBox.setHgrow(colorPicker, Priority.ALWAYS);
         box.getChildren().addAll(iconBox, colorPicker);
         return box;
         
