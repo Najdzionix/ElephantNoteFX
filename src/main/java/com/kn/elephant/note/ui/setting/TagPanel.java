@@ -1,16 +1,20 @@
 package com.kn.elephant.note.ui.setting;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+
 import com.google.inject.Inject;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.control.TagCell;
+
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import lombok.extern.log4j.Log4j2;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Kamil Nadłonek on 16-04-2016
@@ -24,6 +28,7 @@ public class TagPanel extends TitlePanel {
     private List<TagCell> tagCells;
 
     public TagPanel() {
+        ActionMap.register(this);
         setTitle("List tags");
         setContent(createTagPanel());
     }
@@ -43,6 +48,12 @@ public class TagPanel extends TitlePanel {
         content.getChildren().addAll(tagCells);
 
         return content;
+    }
+
+    @ActionProxy(text = "")
+    private void refreshListTags(){
+        log.info("Refresh list tags...");
+        setContent(createTagPanel());
     }
 
     private void clearCssTagCell() {

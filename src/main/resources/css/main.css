@@ -457,9 +457,28 @@
     -fx-fill: -dark-gray;
     -fx-font-size: 0.9em;
  }
+ .tag-cell .button {
+     -fx-border-width: 0;
+     -fx-background-color: transparent;
+ }
+ .tag-cell .button .glyph-icon {
+    -fx-fill: -color-text-black;
+ }
+ .tag-cell.active .button .glyph-icon, .tag-cell.active .tagName, .tag-cell.active .notesInfo {
+     -fx-text-fill: -color-text-white;
+     -fx-fill: -color-text-white;
+ }
+.tag-cell .button:hover .glyph-icon, .tag-cell.active .button:hover .glyph-icon {
+    -fx-fill: -color-orange;
+ }
+
 
 /*.tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
+
+
+    -fx-border-color: red;
+    -fx-border-width: 2;
 }    */
 
 

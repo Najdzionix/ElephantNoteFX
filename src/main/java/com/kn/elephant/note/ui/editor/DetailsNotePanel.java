@@ -146,8 +146,8 @@ public class DetailsNotePanel extends BasePanel {
 
     @ActionProxy(text = "")
     protected void removeTag(ActionEvent event) {
-        LOGGER.info("remove tag action");
         TagDto item = (TagDto) event.getSource();
+        LOGGER.info("Remove tag (" + item + ") action from note:" + noteDto);
         boolean isDeleted = tagService.removeTagFromNote(item.getId(), noteDto.getId());
         if (isDeleted) {
             tagsDto.remove(item);
