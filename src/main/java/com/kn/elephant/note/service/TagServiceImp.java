@@ -1,8 +1,17 @@
 package com.kn.elephant.note.service;
 
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedDelete;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
@@ -11,15 +20,8 @@ import com.kn.elephant.note.dto.TagDto;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.Tag;
-import lombok.extern.log4j.Log4j2;
 
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 12.11.15.
@@ -122,11 +124,23 @@ public class TagServiceImp extends BaseService implements TagService {
     public boolean removeTag(Long id) {
         try {
             Tag tag = tagDao.queryForId(id);
+            deletedAllRelationshipsForTag(id);
             tag.setDeleted(true);
             return tagDao.createOrUpdate(tag).isUpdated();
         } catch (SQLException e) {
             log.error("Data base error:", e);
             return false;
+        }
+    }
+
+    private void deletedAllRelationshipsForTag(Long tagId) {
+        try {
+            DeleteBuilder<NoteTag, Long> deleteBuilder = noteTagDao.deleteBuilder();
+            PreparedQuery<NoteTag> prepare = deleteBuilder.where().in(NoteTag.TAG_ID_FIELD_NAME, tagId).prepare();
+            int query = noteTagDao.delete((PreparedDelete<NoteTag>) prepare);
+            log.debug("Deleted " + query  + " relations between Note and Tag, for tagId:" + tagId);
+        } catch (SQLException e) {
+            log.error("Can not deleted relations Note->Tag, data base error:", e);
         }
     }
 
