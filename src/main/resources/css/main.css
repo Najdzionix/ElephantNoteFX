@@ -177,6 +177,10 @@
 }
 .tag *:hover { -fx-fill:-color-orange;}
 
+.iconNote {
+   -fx-padding: 0 0 0 15;
+}
+
 /***************
     Add tag 
 ***************/

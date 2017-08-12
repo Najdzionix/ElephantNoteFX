@@ -3,6 +3,7 @@ package com.kn.elephant.note.ui.editor;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.GridView;
@@ -21,7 +22,9 @@ import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.control.EditableLabel;
 import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
+import com.kn.elephant.note.utils.Icons;
 
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,7 +35,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -90,7 +92,7 @@ public class DetailsNotePanel extends BasePanel {
     }
 
     private Node createNoteTitlePanel() {
-        VBox box = new VBox();
+        BorderPane borderPane = new BorderPane();
         Node titleLabel = createTitleLabel();
         EditableLabel descLabel = new EditableLabel(noteDto.getShortDescription(), 60, (oldText, newText) -> {
             if (!oldText.equals(newText)) {
@@ -98,8 +100,14 @@ public class DetailsNotePanel extends BasePanel {
             }
         });
 
-        box.getChildren().addAll(titleLabel, descLabel);
-        return box;
+        borderPane.setBottom(descLabel);
+        borderPane.setCenter(titleLabel);
+        if(StringUtils.isNoneEmpty(noteDto.getIcon())) {
+            Label iconLabel = Icons.builderIcon(MaterialIcon.valueOf(noteDto.getIcon()), "2.5em", noteDto.getColorIcon());
+            iconLabel.getStyleClass().add("iconNote");
+            borderPane.setLeft(iconLabel);
+        }
+        return borderPane;
     }
 
     private Node createTitleLabel() {

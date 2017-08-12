@@ -83,6 +83,13 @@ public class Icons {
         iconLabel.getStyleClass().add("noteIcon");
         return iconLabel;
     }
+    public static Label builderIcon(GlyphIcons icon, String iconSize, String color) {
+        Label iconLabel = builderIcon(icon, iconSize);
+        iconLabel.setStyle(" -fx-fill: #" + color + " !important;");
+        return iconLabel;
+    }
+
+
 
     public static ObservableList<GlyphIcons> getListNoteIcons() {
         List<GlyphIcons> listIcons = Arrays.asList(MaterialIcon.ACCOUNT_CIRCLE,

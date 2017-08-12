@@ -53,8 +53,7 @@ public class NoteTreeCell extends TreeCell<NoteDto> {
 
         String iconName = item.getValue().getIcon();
         if(iconName != null ) {
-            Label iconLabel = Icons.builderIcon(MaterialIcon.valueOf(iconName), ICON_SIZE);
-            iconLabel.setStyle(" -fx-fill: #"+item.getValue().getColorIcon() +" ;");
+            Label iconLabel = Icons.builderIcon(MaterialIcon.valueOf(iconName), ICON_SIZE, item.getValue().getColorIcon());
             box.getChildren().add(iconLabel);
         }
         box.getChildren().add(vBox);
