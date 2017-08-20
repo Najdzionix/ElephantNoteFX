@@ -5,5 +5,5 @@ package com.kn.elephant.note.ui;
  * email:kamilnadlonek@gmail.com
  */
 public enum View {
-    MAIN, SETTINGS, TAG, ABOUT
+    MAIN, SETTINGS, TAG, ABOUT, EVENTS
 }

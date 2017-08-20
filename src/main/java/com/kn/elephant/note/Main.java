@@ -16,6 +16,8 @@ import com.kn.elephant.note.ui.ChangeValue;
 import com.kn.elephant.note.ui.MenuPanel;
 import com.kn.elephant.note.ui.View;
 import com.kn.elephant.note.ui.editor.NotePanel;
+import com.kn.elephant.note.ui.event.EventPanel;
+import com.kn.elephant.note.ui.event.ListEvents;
 import com.kn.elephant.note.ui.leftMenu.ListNotePanel;
 import com.kn.elephant.note.ui.setting.AboutPanel;
 import com.kn.elephant.note.ui.setting.DialogDB;
@@ -113,20 +115,32 @@ public class Main extends Application {
     private void changeMainView(ActionEvent event) {
         View currentView = (View) event.getSource();
         observersView.parallelStream().forEach(observer -> observer.changeValue(currentView, currentView));
-        if (View.SETTINGS.equals(currentView)) {
-            mainPane.setLeft(leftMenuPanel);
-            mainPane.setCenter(new SettingsPanel());
-        } else if (View.TAG.equals(currentView)) {
-            mainPane.setLeft(leftMenuPanel);
-            mainPane.setCenter(new TagPanel());
-        } else if (View.MAIN.equals(currentView)) {
+
+        switch (currentView) {
+        case MAIN:
             mainPane.setCenter(notePanel);
             mainPane.setLeft(new ListNotePanel());
-        } else if (View.ABOUT.equals(currentView)) {
+            break;
+        case TAG:
+            mainPane.setCenter(new TagPanel());
+            mainPane.setLeft(leftMenuPanel);
+            break;
+        case ABOUT:
             mainPane.setCenter(new AboutPanel());
             mainPane.setLeft(leftMenuPanel);
-        } else {
+            break;
+        case SETTINGS:
+            mainPane.setCenter(new SettingsPanel());
+            mainPane.setLeft(leftMenuPanel);
+            break;
+
+        case EVENTS:
+            mainPane.setCenter(new EventPanel());
+            mainPane.setLeft(new ListEvents());
+            break;
+        default:
             log.warn("Not recognize type of view:" + currentView);
+            break;
         }
         mainPane.requestLayout();
     }

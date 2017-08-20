@@ -68,6 +68,7 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
         addNoteButton.setVisible(true);
         createMenuButton("Main", View.MAIN);
         createMenuButton("Settings", View.SETTINGS);
+        createMenuButton("Events", View.EVENTS);
 
         toolBar.getItems().addAll(menuButtons.values());
         toolBar.getItems().addAll(addNoteButton);
