@@ -8,6 +8,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.Tag;
+import com.kn.elephant.note.model.Event;
 import com.kn.elephant.note.service.InsertDataService;
 import com.kn.elephant.note.utils.Utils;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +32,7 @@ public class DBConnection {
     private static DBConnection instance;
     private ConnectionSource connectionSource = null;
     private Map<Class, Dao> daoMap;
-    private List<Class> listModelClass = Arrays.asList(Note.class, Tag.class, NoteTag.class);
+    private List<Class> listModelClass = Arrays.asList(Note.class, Tag.class, NoteTag.class, Event.class);
 
     private DBConnection() throws Exception {
         String urlDB = NoteConstants.DATA_BASE_URL + Utils.getProperty(NoteConstants.DB_KEY_PROPERTY);

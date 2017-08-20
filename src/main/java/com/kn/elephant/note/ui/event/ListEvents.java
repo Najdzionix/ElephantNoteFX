@@ -1,5 +1,11 @@
 package com.kn.elephant.note.ui.event;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.google.inject.Inject;
+import com.kn.elephant.note.dto.EventDto;
+import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.ui.BasePanel;
 
 import javafx.scene.control.Label;
@@ -12,6 +18,8 @@ import javafx.scene.layout.VBox;
  */
 public class ListEvents extends BasePanel {
 
+	@Inject
+	private EventService  eventService;
 	private VBox menuBox;
 
 	public ListEvents(){
@@ -22,7 +30,9 @@ public class ListEvents extends BasePanel {
 	private void createContent() {
 		menuBox = new VBox();
 		menuBox.getStyleClass().add("menu-panel");
-		menuBox.getChildren().add(new Label("List events ..."));
+		List<EventDto> allEvents = eventService.getAllEvents();
+		List<Label> collect = allEvents.stream().map(eventDto -> new Label(eventDto.getName())).collect(Collectors.toList());
+		menuBox.getChildren().addAll(collect);
 
 		AnchorPane borderPane = new AnchorPane();
 		borderPane.getChildren().add(menuBox);

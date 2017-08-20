@@ -13,6 +13,7 @@ import com.kn.elephant.note.model.Note;
 import com.kn.elephant.note.model.NoteTag;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.model.Tag;
+import com.kn.elephant.note.model.Event;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -25,12 +26,14 @@ public class InsertDataService {
     private static final String NOTE_TODO_CONTENT = "[{\"content\":\"First task\",\"id\":\"158f5924-454e-403b-950d-c05def435e97\",\"done\":false},{\"content\":\"Completed task\",\"id\":\"981d5fda-528c-40b5-8867-382330392684\",\"done\":true},{\"content\":\"Last task\",\"id\":\"889a43ea-3e6d-40b7-8730-3fb00674258e\",\"done\":false}]";
     private Dao<Note, Long> noteDao;
     private Dao<Tag, Long> tagDao;
+    private Dao<Event, Long> eventDao;
     private Dao<NoteTag, Long> noteTagDao;
 
     public InsertDataService(DBConnection dbConnection) {
         noteDao = dbConnection.getDao(Note.class);
         tagDao = dbConnection.getDao(Tag.class);
         noteTagDao = dbConnection.getDao(NoteTag.class);
+        eventDao = dbConnection.getDao(Event.class);
     }
 
 
@@ -50,6 +53,12 @@ public class InsertDataService {
         todoNote.setType(NoteType.TODO);
         todoNote.setContent(NOTE_TODO_CONTENT);
         saveNote(todoNote);
+        Event testEvent = createTestEvent();
+        try {
+            eventDao.createOrUpdate(testEvent);
+        } catch (SQLException e) {
+            log.error(e);
+        }
 
     }
 
@@ -114,6 +123,14 @@ public class InsertDataService {
         note.setDeleted(false);
 
         return note;
+    }
+
+    private Event createTestEvent() {
+        Event event = new Event();
+        event.setName("Example Event");
+        event.setStartDate(LocalDateTime.now().plusMinutes(1));
+        event.setDone(false);
+        return event;
     }
 
 }
