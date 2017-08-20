@@ -11,9 +11,9 @@ import javafx.scene.text.TextAlignment;
  * Created by Kamil Nadłonek on 20-04-2016
  * email:kamilnadlonek@gmail.com
  */
-abstract class TitlePanel extends BasePanel {
+public abstract class TitlePanel extends BasePanel {
 
-    TitlePanel() {
+    protected TitlePanel() {
         getStyleClass().addAll("content-panel");
         setPadding(new Insets(15)); //WTF ???
 
