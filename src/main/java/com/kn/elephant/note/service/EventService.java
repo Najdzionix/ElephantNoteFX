@@ -52,7 +52,7 @@ public class EventService extends BaseService {
 		event.setName(eventDto.getName());
 		event.setRepeat(eventDto.getRepeat());
 		event.setDone(eventDto.getDone());
-		event.setBody(eventDto.getBody()); // serialize to JSON ...
+		event.setContent(eventDto.getJsonBody());
 
 		try {
 			eventDao.createOrUpdate(event);
@@ -68,7 +68,7 @@ public class EventService extends BaseService {
 			.setName(event.getName())
 			.setId(event.getId())
 			.setStartDate(event.getStartDate())
-			.setBody(event.getBody())
+			.setContent(event.getContent())
 			.setRepeat(event.getRepeat())
 			.setDone(event.getDone());
     }
