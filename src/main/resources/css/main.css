@@ -299,7 +299,7 @@
 .menuBar{
     -fx-pref-height: 40;
 }
-.menuBar .active {
+.menuBar .active, .events .active {
     -fx-background-color: -color-light-gray;
     -fx-border-color:  -color-brown;
     -fx-border-width: 0 0 3 0;
