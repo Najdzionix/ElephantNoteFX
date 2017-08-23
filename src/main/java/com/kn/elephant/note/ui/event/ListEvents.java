@@ -8,7 +8,8 @@ import com.kn.elephant.note.dto.EventDto;
 import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.ui.BasePanel;
 
-import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -18,21 +19,25 @@ import javafx.scene.layout.VBox;
  */
 public class ListEvents extends BasePanel {
 
+	private static final String ACTIVE_CLASS = "active";
 	@Inject
 	private EventService  eventService;
+	private List<Node> allEventNodes;
 	private VBox menuBox;
+	private EventPanel eventPanel;
 
-	public ListEvents(){
+	public ListEvents(EventPanel eventPanel){
+		this.eventPanel = eventPanel;
 		createContent();
-		getStyleClass().addAll("menu-left");
+		getStyleClass().addAll("menu-left", "events");
 	}
 
 	private void createContent() {
 		menuBox = new VBox();
 		menuBox.getStyleClass().add("menu-panel");
 		List<EventDto> allEvents = eventService.getAllEvents();
-		List<Label> collect = allEvents.stream().map(eventDto -> new Label(eventDto.getName())).collect(Collectors.toList());
-		menuBox.getChildren().addAll(collect);
+		allEventNodes = allEvents.stream().map(this::createEvent).collect(Collectors.toList());
+		menuBox.getChildren().addAll(allEventNodes);
 
 		AnchorPane borderPane = new AnchorPane();
 		borderPane.getChildren().add(menuBox);
@@ -40,5 +45,17 @@ public class ListEvents extends BasePanel {
 		AnchorPane.setBottomAnchor(menuBox, 0.0);
 
 		setCenter(borderPane);
-	}
+        eventPanel.loadEvent(allEvents.get(0));
+    }
+
+    private Node createEvent(EventDto eventDto) {
+        Button button = new Button(eventDto.getName());
+        button.getStyleClass().add("menu-cell");
+        button.setOnAction(event -> {
+            eventPanel.loadEvent(eventDto);
+            allEventNodes.forEach(node -> node.getStyleClass().removeAll(ACTIVE_CLASS));
+            button.getStyleClass().add(ACTIVE_CLASS);
+        });
+        return button;
+    }
 }

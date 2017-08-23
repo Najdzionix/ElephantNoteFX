@@ -133,10 +133,10 @@ public class Main extends Application {
             mainPane.setCenter(new SettingsPanel());
             mainPane.setLeft(leftMenuPanel);
             break;
-
         case EVENTS:
-            mainPane.setCenter(new EventPanel());
-            mainPane.setLeft(new ListEvents());
+            EventPanel eventPanel = new EventPanel();
+            mainPane.setCenter(eventPanel);
+            mainPane.setLeft(new ListEvents(eventPanel));
             break;
         default:
             log.warn("Not recognize type of view:" + currentView);
