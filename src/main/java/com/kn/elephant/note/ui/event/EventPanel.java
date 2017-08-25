@@ -77,7 +77,8 @@ public class EventPanel extends BasePanel {
     }
 
     private Node createContent(EventDto eventDto) {
-        HBox box = new HBox();
+        VBox box = new VBox();
+        box.setSpacing(5);
         box.getStyleClass().addAll("custom-pane");
         List<Node> collect = eventDto.getContent().stream().map(this::create).collect(Collectors.toList());
         box.getChildren().addAll(collect);
