@@ -1,7 +1,7 @@
 package com.kn.elephant.note.dto;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,10 +38,19 @@ public class EventDto {
 			this.content = JsonParser.unmarshallJSON(new TypeReference<List<EventContentDto>>() {
 			}, content);
 		} else {
-    		this.content = Collections.emptyList();
+    		this.content = new ArrayList<>();
 		}
         return this;
     }
+
+    public void addEventContentDto(EventContentDto dto) {
+    	if(content == null) {
+    		content = new ArrayList<>();
+		}
+    	if(dto != null) {
+    		content.add(dto);
+		}
+	}
 
     public EventDto setRepeat(String interval) {
         if (interval != null) {
