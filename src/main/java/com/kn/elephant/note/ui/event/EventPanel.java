@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import com.google.inject.Inject;
 import com.kn.elephant.note.Main;
 import com.kn.elephant.note.dto.EventContentDto;
 import com.kn.elephant.note.dto.EventDto;
+import com.kn.elephant.note.model.Interval;
 import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.UIFactory;
@@ -25,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
@@ -50,6 +53,8 @@ public class EventPanel extends BasePanel {
 
 	private DatePicker datePicker;
 	private LocalTimeTextField calendarTextField;
+	private CheckBox repeat;
+	private ComboBox<String> intervalUI;
 
 	protected void loadEvent(EventDto eventDto) {
 		Button addEvent = new Button();
@@ -99,18 +104,15 @@ public class EventPanel extends BasePanel {
 
 		Label nameLabel = UIFactory.createLabel("Name: ");
 
-		Label repeatLabel = UIFactory.createLabel("Should repeat?: ");
 		TextField nameTextField = new TextField();
-		createStartDate();
-		CheckBox repeat = new CheckBox();
 		Platform.runLater(nameTextField::requestFocus);
 
 		VBox box = new VBox();
-		box.getChildren().addAll( nameLabel, nameTextField, createStartDate(), repeatLabel, repeat);
+		box.getChildren().addAll( nameLabel, nameTextField, createStartDate(), repeatEventUI());
 
 		dialog.getDialogPane().setContent(box);
 
-		ButtonType buttonTypeOk = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
+		ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
 
 		dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
 		final Button btOk = (Button) dialog.getDialogPane().lookupButton(buttonTypeOk);
@@ -126,6 +128,9 @@ public class EventPanel extends BasePanel {
 				LocalDateTime time = datePicker.getValue().atTime(calendarTextField.getLocalTime());
 				EventDto eventDto = new EventDto().setName(nameTextField.getText())
 					.setStartDate(time);
+				if(repeat.isSelected()) {
+					eventDto.setRepeat(intervalUI.getValue());
+				}
 
 				return eventDto;
 			}
@@ -138,8 +143,29 @@ public class EventPanel extends BasePanel {
 	}
 
 
+    private Node repeatEventUI() {
+        Label repeatLabel = UIFactory.createLabel("Should repeat?: ");
+        repeat = new CheckBox();
+        intervalUI = new ComboBox<>();
+        intervalUI.setVisible(repeat.isSelected());
+        intervalUI.getItems().addAll(Arrays.stream(Interval.values()).map(Enum::toString).collect(Collectors.toList()));
+        intervalUI.getSelectionModel().select(0);
+        repeat.selectedProperty().addListener((ov, old_val, new_val) -> {
+            intervalUI.setVisible(new_val);
+        });
+
+        GridPane box = new GridPane();
+        box.getChildren().addAll(repeatLabel, repeat, intervalUI);
+        GridPane.setConstraints(repeatLabel, 0, 0);
+        GridPane.setConstraints(repeat, 1, 0);
+        GridPane.setConstraints(intervalUI, 0, 1);
+        return box;
+    }
+
+
 	private Node createStartDate() {
 		datePicker = new DatePicker();
+		datePicker.setValue(LocalDate.now());
         Label dateLabel = UIFactory.createLabel("Date: ");
         final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
             @Override
@@ -157,7 +183,7 @@ public class EventPanel extends BasePanel {
             }
         };
         datePicker.setDayCellFactory(dayCellFactory);
-        Label hourLabel = UIFactory.createLabel("Time:");
+        Label hourLabel = UIFactory.createLabel("Time: ");
 		calendarTextField = new LocalTimeTextField();
 		calendarTextField.setLocalTime(LocalTime.now());
 		calendarTextField.getStyleClass().add("textFieldTime");
