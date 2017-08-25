@@ -82,9 +82,9 @@ public class SchedulerEvents {
 			EventContentDto eventContentDto = new EventContentDto().setContent(contentText.getText()).setDate(LocalDateTime.now());
 			eventDto.addEventContentDto(eventContentDto);
 			eventService.saveEvent(eventDto);
-			reminder.getTimer().cancel();
 		});
 
+        dialog.setOnCloseRequest(event -> reminder.getTimer().cancel());
 		dialog.show();
 	}
 

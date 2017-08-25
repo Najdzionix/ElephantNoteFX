@@ -29,12 +29,12 @@ public class EventDto {
 	private List<EventContentDto> content;
 	private Boolean done;
 
-    public String getJsonBody() {
-        return JsonParser.serializeToJsonString(content);
-    }
+	public String getJsonBody() {
+		return JsonParser.serializeToJsonString(content);
+	}
 
-    public EventDto setContent(String content) {
-    	if(StringUtils.isNoneEmpty()) {
+	public EventDto setContent(String content) {
+		if(StringUtils.isNoneEmpty(content)) {
 			this.content = JsonParser.unmarshallJSON(new TypeReference<List<EventContentDto>>() {
 			}, content);
 		} else {
