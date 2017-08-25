@@ -533,6 +533,15 @@
     -fx-fill: -color-orange;
  }
 
+.textFieldTime {
+    -fx-max-width:25;
+}
+
+.image-view {
+   -fx-fill: red;
+   -fx-text-fill: red;
+}
+
      /*-fx-focus-color: transparent;*/
      /*-fx-border-width:0;*/
     /*-fx-padding:5;*/
