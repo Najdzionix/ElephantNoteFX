@@ -25,7 +25,7 @@ public class Event {
 	private String name;
 
 	@DatabaseField
-	private Long repeat;
+	private String repeat;
 
 	@DatabaseField
 	private String content;

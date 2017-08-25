@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.kn.elephant.note.model.Interval;
 import com.kn.elephant.note.utils.JsonParser;
 
 import lombok.Data;
@@ -24,7 +25,7 @@ public class EventDto {
 	private Long id;
 	private LocalDateTime startDate;
 	private String name;
-	private Long repeat;
+	private Interval repeat;
 	private List<EventContentDto> content;
 	private Boolean done;
 
@@ -39,6 +40,13 @@ public class EventDto {
 		} else {
     		this.content = Collections.emptyList();
 		}
+        return this;
+    }
+
+    public EventDto setRepeat(String interval) {
+        if (interval != null) {
+            this.repeat = Interval.valueOf(interval);
+        }
         return this;
     }
 }
