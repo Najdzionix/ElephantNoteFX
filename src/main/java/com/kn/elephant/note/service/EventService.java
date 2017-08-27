@@ -50,8 +50,9 @@ public class EventService extends BaseService {
 		}
 
 		event.setName(eventDto.getName());
-		event.setRepeat(eventDto.getRepeat().toString());
+		event.setRepeat(eventDto.getRepeat() != null ? eventDto.getRepeat().toString() : null);
 		event.setDone(eventDto.getDone());
+		event.setStartDate(eventDto.getStartDate());
 		event.setContent(eventDto.getJsonBody());
 
 		try {
