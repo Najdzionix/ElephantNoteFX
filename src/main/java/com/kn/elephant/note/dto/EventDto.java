@@ -34,7 +34,7 @@ public class EventDto {
 	}
 
 	public EventDto setContent(String content) {
-		if(StringUtils.isNoneEmpty(content)) {
+		if(StringUtils.isNoneEmpty(content) && !content.equalsIgnoreCase("null")) {
 			this.content = JsonParser.unmarshallJSON(new TypeReference<List<EventContentDto>>() {
 			}, content);
 		} else {

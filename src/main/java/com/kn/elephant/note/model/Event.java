@@ -18,7 +18,7 @@ public class Event {
 	@DatabaseField(generatedId = true)
 	private long id;
 
-	@DatabaseField(persisterClass = DateTimePersister.class)
+	@DatabaseField(persisterClass = DateTimePersister.class, canBeNull = false)
 	private LocalDateTime startDate;
 
 	@DatabaseField
