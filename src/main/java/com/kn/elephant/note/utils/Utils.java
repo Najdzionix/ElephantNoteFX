@@ -1,14 +1,17 @@
 package com.kn.elephant.note.utils;
 
-import com.kn.elephant.note.NoteConstants;
-import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.kn.elephant.note.NoteConstants;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Created by Kamil Nadłonek on 17-04-2016
@@ -16,6 +19,8 @@ import java.util.Properties;
  */
 @Log4j2
 public class Utils {
+
+    public static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
 
     public static File createFile(String pathToFile) {
         try {

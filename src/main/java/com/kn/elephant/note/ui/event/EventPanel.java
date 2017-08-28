@@ -9,7 +9,9 @@ import com.kn.elephant.note.dto.EventContentDto;
 import com.kn.elephant.note.dto.EventDto;
 import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.ui.UIFactory;
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.Utils;
 
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
@@ -41,19 +43,30 @@ public class EventPanel extends BasePanel {
     private CheckBox repeat;
     private ComboBox<String> intervalUI;
 
-    protected void loadEvent(EventDto eventDto) {
-        BorderPane box = new BorderPane();
-        Label name = new Label(eventDto.getName());
+    public EventPanel(){
+        getStyleClass().addAll( "content-pane");
+    }
 
+    protected void loadEvent(EventDto eventDto) {
+        VBox boxMargin = new VBox();
+        boxMargin.getStyleClass().addAll("detailPanel");
+
+        BorderPane box = new BorderPane();
+        Label name = UIFactory.createLabel(eventDto.getName());
+        name.getStyleClass().add("title");
         box.getStyleClass().addAll("custom-pane");
         box.setCenter(name);
+        Label startDate = UIFactory.createLabel("Start date: " + eventDto.getStartDate().format(Utils.FORMATTER));
+        box.setBottom(startDate);
         box.setRight(eventAdminPanel(eventDto));
-        setTop(box);
+        boxMargin.getChildren().add(box);
+        setTop(boxMargin);
         setCenter(createContent(eventDto));
     }
 
     private Node eventAdminPanel(EventDto eventDto) {
         HBox panel = new HBox();
+        panel.setSpacing(5);
         panel.getChildren().addAll(createEventButton(), editEventButton(eventDto));
         return panel;
     }
@@ -70,7 +83,7 @@ public class EventPanel extends BasePanel {
 
     private Node createButton(EventDialog dialog, GlyphIcons icon) {
         Button button = new Button();
-        Icons.addIcon(icon, button, "2.5em");
+        Icons.addIcon(icon, button, "1.5em");
         button.setOnAction(event -> {
             Optional<EventDto> newEventDto = dialog.showAndWait();
             newEventDto.ifPresent(eventDto -> eventService.saveEvent(eventDto));
@@ -80,18 +93,24 @@ public class EventPanel extends BasePanel {
     }
 
     private Node createContent(EventDto eventDto) {
+        BorderPane mainBox = new BorderPane();
+        Label tile = new Label("Occurrences");
+        tile.getStyleClass().add("title");
+        mainBox.setTop(tile);
         VBox box = new VBox();
         box.setSpacing(5);
-        box.getStyleClass().addAll("custom-pane");
+        mainBox.getStyleClass().addAll("custom-pane", "testBorder");
         List<Node> collect = eventDto.getContent().stream().map(this::create).collect(Collectors.toList());
         box.getChildren().addAll(collect);
         box.setAlignment(Pos.TOP_CENTER);
-        return box;
+        mainBox.setCenter(box);
+        return mainBox;
     }
 
     private Node create(EventContentDto dto) {
         HBox box = new HBox();
-        Label date = new Label(dto.getDate().toString());
+        box.setSpacing(5);
+        Label date = new Label(dto.getDate().format(Utils.FORMATTER));
         Label text = new Label(dto.getContent());
         box.getChildren().addAll(date, text);
 

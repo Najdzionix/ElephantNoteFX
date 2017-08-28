@@ -72,8 +72,8 @@ public class Main extends Application {
         Scene scene = new Scene(mainPane);
         scene.getStylesheets().addAll(loadCssFiles());
         new Shortcuts(scene);
-//        SchedulerEvents schedulerEvents = new SchedulerEvents();
-//        schedulerEvents.start();
+        SchedulerEvents schedulerEvents = new SchedulerEvents();
+        schedulerEvents.start();
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
