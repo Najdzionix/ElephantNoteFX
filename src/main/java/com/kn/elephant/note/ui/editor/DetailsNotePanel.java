@@ -1,6 +1,5 @@
 package com.kn.elephant.note.ui.editor;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +22,7 @@ import com.kn.elephant.note.ui.control.EditableLabel;
 import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
+import com.kn.elephant.note.utils.Utils;
 
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.collections.FXCollections;
@@ -43,7 +43,6 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class DetailsNotePanel extends BasePanel {
-    private static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm");
     private static final Logger LOGGER = LogManager.getLogger(DetailsNotePanel.class);
     private NoteDto noteDto;
     private GridPane datesPane;
@@ -128,7 +127,7 @@ public class DetailsNotePanel extends BasePanel {
         GridPane.setHalignment(label, HPos.RIGHT);
         GridPane.setConstraints(label, colIndex, 0);
 
-        Label timeLabel = new Label(noteDto.getCreateAt().format(FORMATTER));
+        Label timeLabel = new Label(noteDto.getCreateAt().format(Utils.FORMATTER));
         timeLabel.getStyleClass().addAll("noteDateTime", "control-labelText-two");
         GridPane.setHalignment(timeLabel, HPos.LEFT);
         GridPane.setConstraints(timeLabel, colIndex + 1, 0);
