@@ -52,9 +52,12 @@ public class EventDialog {
 	private ValidatorHelper validatorHelper;
 	private Button createEventButton;
 
+	private EventDto currentEventDto;
+
 	public EventDialog(EventDto eventDto) {
     	this();
-        editDialog(eventDto);
+    	currentEventDto = eventDto;
+        editDialog();
     }
 
     public EventDialog() {
@@ -66,17 +69,19 @@ public class EventDialog {
 		return dialog.showAndWait();
 	}
 
-    private void editDialog(EventDto eventDto) {
+    private void editDialog() {
 		dialog.setTitle("Edit event wizard");
 		dialog.setHeaderText("Please change values.");
-        nameTextField.setText(eventDto.getName());
-        datePicker.setValue(eventDto.getStartDate().toLocalDate());
-        timeTextField.setLocalTime(eventDto.getStartDate().toLocalTime());
-        if (eventDto.getRepeat() != null) {
+        nameTextField.setText(currentEventDto.getName());
+        datePicker.setValue(currentEventDto.getStartDate().toLocalDate());
+        timeTextField.setLocalTime(currentEventDto.getStartDate().toLocalTime());
+        if (currentEventDto.getRepeat() != null) {
             repeat.setSelected(true);
             intervalUI.setVisible(true);
-            intervalUI.getSelectionModel().select(eventDto.getRepeat().toString());
+            intervalUI.getSelectionModel().select(currentEventDto.getRepeat().toString());
         }
+
+		createEventButton.setText("Save");
     }
 
     private void createDialog() {
@@ -109,11 +114,15 @@ public class EventDialog {
 			if (buttonType == buttonTypeOk) {
 				LocalDateTime time = datePicker.getValue().atTime(timeTextField.getLocalTime());
 				log.info("Event time:" + time);
-				EventDto eventDto = new EventDto().setName(nameTextField.getText()).setStartDate(time);
-				if (repeat.isSelected()) {
-					eventDto.setRepeat(intervalUI.getValue());
+				if(currentEventDto == null ) {
+					currentEventDto = new EventDto().setName(nameTextField.getText()).setStartDate(time);
+				} else {
+					currentEventDto.setName(nameTextField.getText()).setStartDate(time);
 				}
-				return eventDto;
+				if (repeat.isSelected()) {
+					currentEventDto.setRepeat(intervalUI.getValue());
+				}
+				return currentEventDto;
 			}
 			return null;
 		};

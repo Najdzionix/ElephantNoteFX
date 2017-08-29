@@ -10,6 +10,7 @@ import com.kn.elephant.note.dto.EventDto;
 import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.ui.BasePanel;
 import com.kn.elephant.note.ui.UIFactory;
+import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.Utils;
 
@@ -86,7 +87,10 @@ public class EventPanel extends BasePanel {
         Icons.addIcon(icon, button, "1.5em");
         button.setOnAction(event -> {
             Optional<EventDto> newEventDto = dialog.showAndWait();
-            newEventDto.ifPresent(eventDto -> eventService.saveEvent(eventDto));
+            newEventDto.ifPresent(eventDto -> {
+                Optional<EventDto> savedEvent = eventService.saveEvent(eventDto);
+                savedEvent.ifPresent(dto -> ActionFactory.callAction("refreshEventList", dto));
+            });
         });
 
         return button;
@@ -99,7 +103,7 @@ public class EventPanel extends BasePanel {
         mainBox.setTop(tile);
         VBox box = new VBox();
         box.setSpacing(5);
-        mainBox.getStyleClass().addAll("custom-pane", "testBorder");
+        mainBox.getStyleClass().addAll("custom-pane");
         List<Node> collect = eventDto.getContent().stream().map(this::create).collect(Collectors.toList());
         box.getChildren().addAll(collect);
         box.setAlignment(Pos.TOP_CENTER);
