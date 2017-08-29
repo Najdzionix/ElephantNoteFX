@@ -46,7 +46,7 @@ public class ListEvents extends BasePanel {
 		menuBox = new VBox();
 		menuBox.getStyleClass().add("menu-panel");
 		allEvents = eventService.getAllEvents();
-		allEventNodes = allEvents.stream().map(this::createEvent).collect(Collectors.toList());
+		allEventNodes = allEvents.stream().filter(e -> !e.getDeleted()).map(this::createEvent).collect(Collectors.toList());
 		menuBox.getChildren().addAll(allEventNodes);
 
 		AnchorPane borderPane = new AnchorPane();
@@ -84,10 +84,14 @@ public class ListEvents extends BasePanel {
     }
 
     @ActionProxy(text = "")
-	private void refreshEventList(ActionEvent event) {
-		log.info("Refresh events list");
-		EventDto eventDto = (EventDto) event.getSource();
-		createContent();
-		setActiveEvent(eventDto);
+    private void refreshEventList(ActionEvent event) {
+        log.info("Refresh events list");
+        createContent();
+		if (event.getSource() instanceof  EventDto) {
+			EventDto eventDto = (EventDto) event.getSource();
+			setActiveEvent(eventDto);
+		} else {
+			setActiveEvent(null);
+		}
 	}
 }

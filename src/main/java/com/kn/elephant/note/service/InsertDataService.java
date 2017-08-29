@@ -129,7 +129,7 @@ public class InsertDataService {
         Event event = new Event();
         event.setName("Example Event");
         event.setStartDate(LocalDateTime.now().plusMinutes(1));
-        event.setDone(false);
+        event.setDeleted(false);
         return event;
     }
 

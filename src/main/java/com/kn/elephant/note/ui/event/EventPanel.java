@@ -68,7 +68,7 @@ public class EventPanel extends BasePanel {
     private Node eventAdminPanel(EventDto eventDto) {
         HBox panel = new HBox();
         panel.setSpacing(5);
-        panel.getChildren().addAll(createEventButton(), editEventButton(eventDto));
+        panel.getChildren().addAll(createEventButton(), editEventButton(eventDto), deletedEventButton(eventDto));
         return panel;
     }
 
@@ -81,6 +81,19 @@ public class EventPanel extends BasePanel {
         EventDialog eventDialog = new EventDialog();
         return createButton(eventDialog, MaterialDesignIcon.PLUS_CIRCLE);
     }
+
+    private Node deletedEventButton(EventDto eventDto) {
+		Button deletedButton = new Button();
+		Icons.addIcon(MaterialDesignIcon.CLOSE_CIRCLE, deletedButton, "1.5em");
+		deletedButton.setOnAction( event -> {
+		    log.info("Deleted: {}", eventDto);
+			eventService.deletedEvent(eventDto.getId());
+			ActionFactory.callAction("refreshEventList");
+		});
+
+		return deletedButton;
+	}
+
 
     private Node createButton(EventDialog dialog, GlyphIcons icon) {
         Button button = new Button();

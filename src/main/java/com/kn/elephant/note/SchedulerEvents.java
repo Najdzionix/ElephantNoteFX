@@ -40,7 +40,7 @@ public class SchedulerEvents {
 
     public void start() {
 		eventService.getAllEvents().stream()
-			 .filter(eventDto -> eventDto.getRepeat() != null)
+			 .filter(eventDto -> eventDto.getRepeat() != null && !eventDto.getDeleted())
 			 .forEach(this::scheduleEvent);
 	 }
 
