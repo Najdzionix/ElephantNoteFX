@@ -51,7 +51,7 @@ public class EventService extends BaseService {
 
 		event.setName(eventDto.getName());
 		event.setRepeat(eventDto.getRepeat() != null ? eventDto.getRepeat().toString() : null);
-		event.setDone(eventDto.getDone());
+		event.setDeleted(eventDto.getDeleted());
 		event.setStartDate(eventDto.getStartDate());
 		event.setContent(eventDto.getJsonBody());
 
@@ -64,6 +64,23 @@ public class EventService extends BaseService {
 		}
 	}
 
+	public boolean deletedEvent(Long eventId) {
+		try {
+			Event note = eventDao.queryForId(eventId);
+			if (note != null) {
+				note.setDeleted(true);
+				return eventDao.update(note) == 1;
+			} else {
+				log.warn(String.format("No found note (id %s)", eventId));
+//                todo throw custom exception ...
+				return false;
+			}
+		} catch (SQLException e) {
+			log.error("Error database: ", e);
+			return false;
+		}
+	}
+
     private EventDto convertToDto(Event event) {
         return new EventDto()
 			.setName(event.getName())
@@ -71,7 +88,7 @@ public class EventService extends BaseService {
 			.setStartDate(event.getStartDate())
 			.setContent(event.getContent())
 			.setRepeat(event.getRepeat())
-			.setDone(event.getDone());
+			.setDeleted(event.isDeleted());
     }
 	
 }

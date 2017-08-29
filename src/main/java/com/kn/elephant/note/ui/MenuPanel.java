@@ -57,9 +57,9 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
 
         addNoteButton = ActionUtils.createButton(ActionMap.action("addNoteDialog"));
         addNoteButton.setVisible(true);
-        createMenuButton("Notes", View.MAIN);
-        createMenuButton("Settings", View.SETTINGS);
-        createMenuButton("Events", View.EVENTS);
+        addMenuButton("Notes", View.MAIN);
+        addMenuButton("Settings", View.SETTINGS);
+        addMenuButton("Events", View.EVENTS);
 
         toolBar.getItems().addAll(menuButtons.values());
         toolBar.getItems().addAll(addNoteButton);
@@ -70,14 +70,13 @@ public class MenuPanel extends BasePanel implements ChangeValue<View> {
         return toolBar;
     }
 
-    private Button createMenuButton(String text, View view) {
+    private void addMenuButton(String text, View view) {
         Button button = new Button(text);
         button.setOnAction(event -> {
             getStyleClass().add(NoteConstants.CSS_ACTIVE);
             ActionFactory.callAction("changeMainView", view);
         });
         menuButtons.put(view, button);
-        return button;
     }
 
     @ActionProxy(text = "Add note")

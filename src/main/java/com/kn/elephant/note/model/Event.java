@@ -30,8 +30,8 @@ public class Event {
 	@DatabaseField
 	private String content;
 
-	@DatabaseField
-	private Boolean done;
+	@DatabaseField(canBeNull = false, defaultValue = "false")
+	private boolean deleted;
 
 
 }

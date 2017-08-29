@@ -114,15 +114,17 @@ public class EventDialog {
 			if (buttonType == buttonTypeOk) {
 				LocalDateTime time = datePicker.getValue().atTime(timeTextField.getLocalTime());
 				log.info("Event time:" + time);
+				EventDto eventDto;
 				if(currentEventDto == null ) {
-					currentEventDto = new EventDto().setName(nameTextField.getText()).setStartDate(time);
+					eventDto = new EventDto();
 				} else {
-					currentEventDto.setName(nameTextField.getText()).setStartDate(time);
+					eventDto = currentEventDto;
 				}
+				eventDto.setName(nameTextField.getText()).setStartDate(time).setDeleted(false);
 				if (repeat.isSelected()) {
-					currentEventDto.setRepeat(intervalUI.getValue());
+					eventDto.setRepeat(intervalUI.getValue());
 				}
-				return currentEventDto;
+				return eventDto;
 			}
 			return null;
 		};
