@@ -21,8 +21,12 @@ public class ValidatorHelper {
     private Map<String, Boolean> fields = new HashMap<>();
 
     public void registerEmptyValidator(Node node, String message) {
+        registerEmptyValidator(node, message, true);
+    }
+
+    public void registerEmptyValidator(Node node, String message, boolean defaultValidation) {
         log.debug("Register validator for node:"+node.getId());
-        if(node.getId() == null && fields.containsKey(node.getId())) {
+        if(node.getId() == null || fields.containsKey(node.getId())) {
             throw new IllegalArgumentException("Node have to define unique ID!");
         }
         if (node instanceof TextField) {
@@ -39,7 +43,7 @@ public class ValidatorHelper {
             });
         }
 
-        fields.put(node.getId(), true);
+        fields.put(node.getId(), defaultValidation);
     }
 
     /**

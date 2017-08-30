@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import com.gluonhq.ignite.guice.GuiceContext;
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.EventContentDto;
 import com.kn.elephant.note.dto.EventDto;
+import com.kn.elephant.note.model.Interval;
 import com.kn.elephant.note.service.ElephantModule;
 import com.kn.elephant.note.service.EventService;
 import com.kn.elephant.note.service.Reminder;
@@ -25,7 +28,7 @@ import lombok.extern.log4j.Log4j2;
  * Created by Kamil Nadłonek on 25-08-2017
  * email:kamilnadlonek@gmail.com
  */
-
+//TODO kill all thread after close app....
 @Log4j2
 public class SchedulerEvents {
 
@@ -40,27 +43,68 @@ public class SchedulerEvents {
 
     public void start() {
 		eventService.getAllEvents().stream()
-			 .filter(eventDto -> eventDto.getRepeat() != null && !eventDto.getDeleted())
+			 .filter(this::isCanRun)
 			 .forEach(this::scheduleEvent);
 	 }
 
+    private boolean isCanRun(EventDto eventDto) {
+        if (eventDto.isDeleted()) {
+            return false;
+        }
+        if (eventDto.getStartDate().isBefore(LocalDateTime.now()) && eventDto.getRepeat() == null) {
+            return false;
+        }
+        return true;
+    }
+
     private void scheduleEvent(EventDto eventDto) {
     	log.info("Schedule event: {}",  eventDto);
-//    	TODO for develop reasons set start time manually
-        LocalDateTime time = LocalDateTime.now().plusSeconds(10);
-        Reminder reminder1 = new Reminder(time);
+		Reminder reminder;
+		LocalDateTime startTime;
+		if(eventDto.getStartDate().isBefore(LocalDateTime.now())) {
+//			// TODO: 30/08/17 add interval to date
+//			if(eventDto.getRepeat() == Interval.HOUR) {
+//				startTime = LocalDateTime.now();
+//				LocalDateTime.of(LocalDate.now(), LocalDateTime.now().getHour(), eventDto.getStartDate().getMinute())
+//			}
+			reminder = new Reminder(eventDto.getStartDate().plusHours(1));
+		} else {
+    		reminder = new Reminder(eventDto.getStartDate());
+		}
+
+        if(eventDto.getRepeat() != null) {
+			reminder.setPeriod(getPeriodFromInterval(eventDto.getRepeat()));
+		}
 
         TimerTask timerTask = new TimerTask() {
             public void run() {
                 Platform.runLater(() -> {
-					createReminderDialog(eventDto, reminder1);
+					createReminderDialog(eventDto, reminder);
 				});
             }
         };
 
-        reminder1.setTask(timerTask);
-        reminder1.schedule();
+        reminder.setTask(timerTask);
+        reminder.schedule();
     }
+
+    private long getPeriodFromInterval(Interval interval) {
+    	long timeInMilliseconds;
+    	switch (interval) {
+			case HOUR:
+				timeInMilliseconds = DateUtils.MILLIS_PER_HOUR;
+				break;
+			case DAY:
+				timeInMilliseconds = DateUtils.MILLIS_PER_DAY;
+				break;
+			case WEEK:
+				timeInMilliseconds = DateUtils.MILLIS_PER_DAY * 7;
+				break;
+			default:
+				throw new IllegalArgumentException("Not recognize interval:" + interval);
+		}
+		return timeInMilliseconds;
+	}
 
     private void createReminderDialog(EventDto eventDto, Reminder reminder) {
 		Dialog<EventContentDto> dialog = new Dialog<>();

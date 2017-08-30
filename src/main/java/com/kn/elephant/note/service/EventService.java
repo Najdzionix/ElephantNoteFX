@@ -51,7 +51,7 @@ public class EventService extends BaseService {
 
 		event.setName(eventDto.getName());
 		event.setRepeat(eventDto.getRepeat() != null ? eventDto.getRepeat().toString() : null);
-		event.setDeleted(eventDto.getDeleted());
+		event.setDeleted(eventDto.isDeleted());
 		event.setStartDate(eventDto.getStartDate());
 		event.setContent(eventDto.getJsonBody());
 

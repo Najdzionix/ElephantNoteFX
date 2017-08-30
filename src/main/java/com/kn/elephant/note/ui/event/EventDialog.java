@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.kn.elephant.note.Main;
@@ -14,7 +15,6 @@ import com.kn.elephant.note.model.Interval;
 import com.kn.elephant.note.ui.UIFactory;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -93,8 +93,8 @@ public class EventDialog {
 
         Label nameLabel = UIFactory.createLabel("Name: ");
         nameTextField = new TextField();
-        Platform.runLater(nameTextField::requestFocus);
-
+//        Platform.runLater(nameTextField::requestFocus);
+		nameTextField.requestFocus();
         VBox box = new VBox();
         box.getChildren().addAll(nameLabel, nameTextField, createStartDate(), repeatEventUI());
 
@@ -131,7 +131,8 @@ public class EventDialog {
 	}
 
 	private void setUpValidation() {
-		validatorHelper.registerEmptyValidator(nameTextField, "Event name can not empty.");
+    	nameTextField.setId(UUID.randomUUID().toString());
+		validatorHelper.registerEmptyValidator(nameTextField, "Event name can not empty.", false);
 		createEventButton.addEventFilter(ActionEvent.ACTION, event -> {
 			if (!validatorHelper.isValid()) {
 				event.consume();

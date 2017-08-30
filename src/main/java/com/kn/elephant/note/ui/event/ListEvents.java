@@ -45,8 +45,8 @@ public class ListEvents extends BasePanel {
 	private void createContent() {
 		menuBox = new VBox();
 		menuBox.getStyleClass().add("menu-panel");
-		allEvents = eventService.getAllEvents();
-		allEventNodes = allEvents.stream().filter(e -> !e.getDeleted()).map(this::createEvent).collect(Collectors.toList());
+		allEvents = eventService.getAllEvents().stream().filter( e -> !e.isDeleted()).collect(Collectors.toList());
+		allEventNodes = allEvents.stream().map(this::createEvent).collect(Collectors.toList());
 		menuBox.getChildren().addAll(allEventNodes);
 
 		AnchorPane borderPane = new AnchorPane();

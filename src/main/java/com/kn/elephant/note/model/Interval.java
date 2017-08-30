@@ -5,5 +5,5 @@ package com.kn.elephant.note.model;
  * email:kamilnadlonek@gmail.com
  */
 public enum Interval {
-	HOUR, DAY, WEEK, MONTH, YEAR
+	HOUR, DAY, WEEK, MONTH
 }

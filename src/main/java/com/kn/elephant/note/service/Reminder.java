@@ -23,7 +23,7 @@ public class Reminder {
 	private TimerTask task;
 	private Date date;
 	@Setter
-	private long period = 100000; //todo
+	private long period = 0;
 
     public Reminder(LocalDateTime time) {
         timer = new Timer();
@@ -33,7 +33,11 @@ public class Reminder {
     }
 
 
-	public void schedule() {
-		timer.scheduleAtFixedRate(task, date, period);
-	}
+    public void schedule() {
+        if (period == 0) {
+            timer.schedule(task, date);
+        } else {
+            timer.scheduleAtFixedRate(task, date, period);
+        }
+    }
 }

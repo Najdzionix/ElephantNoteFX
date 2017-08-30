@@ -27,7 +27,7 @@ public class EventDto {
 	private String name;
 	private Interval repeat;
 	private List<EventContentDto> content;
-	private Boolean deleted;
+	private boolean deleted;
 
 	public String getJsonBody() {
 		return JsonParser.serializeToJsonString(content);
