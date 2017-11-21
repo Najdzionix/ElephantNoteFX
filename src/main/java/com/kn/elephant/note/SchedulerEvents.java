@@ -1,5 +1,6 @@
 package com.kn.elephant.note;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -103,6 +104,14 @@ public class SchedulerEvents {
 				startTime = LocalDateTime.of(day, time);
 			} else {
 			   startTime = dateTime;
+			}
+		} else if ( interval == Interval.WEEK) {
+			if(LocalDateTime.now().isAfter(dateTime)) {
+				long days = Duration.between(dateTime, LocalDateTime.now()).toDays();
+				long weeks = (long)Math.max(Math.ceil(days/7.0), 1);
+				startTime = dateTime.plusWeeks(weeks);
+			}  else {
+				startTime = dateTime;
 			}
 		}
 

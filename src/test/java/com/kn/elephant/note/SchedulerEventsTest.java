@@ -59,6 +59,9 @@ public class SchedulerEventsTest {
 
 		LocalDateTime startTimeDay = SchedulerEvents.getStartTime(eventTime, Interval.DAY);
 		validateTime(eventTime, startTimeDay);
+
+		LocalDateTime startTimeWeek = SchedulerEvents.getStartTime(eventTime, Interval.WEEK);
+		validateTime(eventTime, startTimeWeek);
     }
 
     @Test
@@ -74,6 +77,32 @@ public class SchedulerEventsTest {
 
 		LocalDateTime startTimeDays = SchedulerEvents.getStartTime(eventTime.minusDays(14), interval);
 		validateTime(expectedTime, startTimeDays);
+	}
+
+
+	@Test
+	public void shouldReturnNextWeekWhenDateFromPastForWeekInterval() {
+		// Given
+		LocalDateTime eventTime = LocalDateTime.now().minusMinutes(5);
+		Interval interval = Interval.WEEK;
+		LocalDateTime expectedTime = eventTime.plusWeeks(1);
+
+		// When
+		LocalDateTime startTime = SchedulerEvents.getStartTime(eventTime, interval);
+		// Then
+		validateTime(expectedTime, startTime);
+	}
+
+	@Test
+	public void shouldReturnNextWeekWhenDateFromPastMoreThanSevenDaysForWeekInterval() {
+		LocalDateTime eventTime = LocalDateTime.now().minusDays(8);
+		Interval interval = Interval.WEEK;
+		LocalDateTime expectedTime = eventTime.plusWeeks(2);
+
+		// When
+		LocalDateTime startTime = SchedulerEvents.getStartTime(eventTime, interval);
+		// Then
+		validateTime(expectedTime, startTime);
 	}
 
     @Test
