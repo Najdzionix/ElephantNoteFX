@@ -1,6 +1,8 @@
 package com.kn.elephant.note;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.TimerTask;
 
@@ -60,14 +62,10 @@ public class SchedulerEvents {
     private void scheduleEvent(EventDto eventDto) {
     	log.info("Schedule event: {}",  eventDto);
 		Reminder reminder;
-		LocalDateTime startTime;
 		if(eventDto.getStartDate().isBefore(LocalDateTime.now())) {
-//			// TODO: 30/08/17 add interval to date
-//			if(eventDto.getRepeat() == Interval.HOUR) {
-//				startTime = LocalDateTime.now();
-//				LocalDateTime.of(LocalDate.now(), LocalDateTime.now().getHour(), eventDto.getStartDate().getMinute())
-//			}
-			reminder = new Reminder(eventDto.getStartDate().plusHours(1));
+			LocalDateTime startTime = getStartTime(eventDto.getStartDate(), eventDto.getRepeat());
+			log.info("New start date: {}", startTime);
+			reminder = new Reminder(startTime);
 		} else {
     		reminder = new Reminder(eventDto.getStartDate());
 		}
@@ -87,6 +85,29 @@ public class SchedulerEvents {
         reminder.setTask(timerTask);
         reminder.schedule();
     }
+
+    protected static LocalDateTime getStartTime(LocalDateTime dateTime, Interval interval) {
+    	LocalDateTime startTime = LocalDateTime.now();
+    	if(interval == Interval.HOUR) {
+			LocalTime time;
+    		if(LocalTime.now().isAfter(LocalTime.of(dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond()))) {
+				time = LocalTime.of(LocalTime.now().plusHours(1L).getHour(), dateTime.getMinute(), dateTime.getSecond());
+			} else {
+				time = LocalTime.of(LocalTime.now().getHour(), dateTime.getMinute(), dateTime.getSecond());
+			}
+			startTime = LocalDateTime.of(LocalDate.now(), time);
+		} else if (interval == Interval.DAY) {
+			if(LocalDateTime.now().isAfter(dateTime)) {
+				LocalDate day = LocalDate.now().plusDays(1L);
+				LocalTime time = LocalTime.of(dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond());
+				startTime = LocalDateTime.of(day, time);
+			} else {
+			   startTime = dateTime;
+			}
+		}
+
+	   return startTime;
+	}
 
     private long getPeriodFromInterval(Interval interval) {
     	long timeInMilliseconds;
