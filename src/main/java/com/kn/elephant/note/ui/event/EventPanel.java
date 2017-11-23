@@ -57,12 +57,20 @@ public class EventPanel extends BasePanel {
         name.getStyleClass().add("title");
         box.getStyleClass().addAll("custom-pane");
         box.setCenter(name);
-        Label startDate = UIFactory.createLabel("Start date: " + eventDto.getStartDate().format(Utils.FORMATTER));
-        box.setBottom(startDate);
+        Node eventInfo = createPanelWithEventInfo(eventDto);
+        box.setLeft(eventInfo);
         box.setRight(eventAdminPanel(eventDto));
         boxMargin.getChildren().add(box);
         setTop(boxMargin);
         setCenter(createContent(eventDto));
+    }
+
+    private Node createPanelWithEventInfo(EventDto eventDto) {
+        Label startDate = UIFactory.createLabel("Start date: " + eventDto.getStartDate().format(Utils.DATE_TIME_FORMATTER));
+        Label intervalLabel = UIFactory.createLabel("Interval: " + (eventDto.getRepeat() == null ? "none" : eventDto.getRepeat().toString()));
+        VBox panel = new VBox();
+        panel.getChildren().addAll(startDate, intervalLabel);
+        return panel;
     }
 
     private Node eventAdminPanel(EventDto eventDto) {
@@ -127,7 +135,7 @@ public class EventPanel extends BasePanel {
     private Node create(EventContentDto dto) {
         HBox box = new HBox();
         box.setSpacing(5);
-        Label date = new Label(dto.getDate().format(Utils.FORMATTER));
+        Label date = new Label(dto.getDate().format(Utils.DATE_TIME_FORMATTER));
         Label text = new Label(dto.getContent());
         box.getChildren().addAll(date, text);
 

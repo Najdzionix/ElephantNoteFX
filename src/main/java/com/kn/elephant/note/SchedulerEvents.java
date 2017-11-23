@@ -34,7 +34,6 @@ import lombok.extern.log4j.Log4j2;
  * Created by Kamil Nadłonek on 25-08-2017
  * email:kamilnadlonek@gmail.com
  */
-//TODO kill all thread after close app....
 @Log4j2
 public class SchedulerEvents {
 
@@ -73,6 +72,8 @@ public class SchedulerEvents {
 		if(eventDto.getStartDate().isBefore(LocalDateTime.now())) {
 			LocalDateTime startTime = getStartTime(eventDto.getStartDate(), eventDto.getRepeat());
 			log.info("New start date: {}", startTime);
+			eventDto.setStartDate(startTime);
+			eventService.saveEvent(eventDto);
 			reminder = new Reminder(startTime);
 		} else {
     		reminder = new Reminder(eventDto.getStartDate());
