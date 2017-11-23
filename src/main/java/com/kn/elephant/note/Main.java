@@ -79,6 +79,14 @@ public class Main extends Application {
         primaryStage.show();
         hostServices = getHostServices();
 
+        primaryStage.setOnCloseRequest(we -> {
+            schedulerEvents.getTasks().forEach(timerTask -> {
+                log.debug("Close timer task: {}", timerTask.cancel());
+            });
+            primaryStage.close();
+            System.exit(1);
+        });
+
     }
 
     public static List<String> loadCssFiles() {

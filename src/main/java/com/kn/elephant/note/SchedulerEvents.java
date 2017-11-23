@@ -4,7 +4,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -25,6 +27,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -38,9 +41,13 @@ public class SchedulerEvents {
     @Inject
     private EventService eventService;
 
+    @Getter
+    private List<TimerTask> tasks;
+
     SchedulerEvents() {
         GuiceContext context = new GuiceContext(this, () -> Collections.singletonList(new ElephantModule()));
         context.init();
+        tasks = new ArrayList<>();
 
     }
 
@@ -77,12 +84,14 @@ public class SchedulerEvents {
 
         TimerTask timerTask = new TimerTask() {
             public void run() {
+            	
                 Platform.runLater(() -> {
 					createReminderDialog(eventDto, reminder);
 				});
             }
         };
 
+		tasks.add(timerTask);
         reminder.setTask(timerTask);
         reminder.schedule();
     }
