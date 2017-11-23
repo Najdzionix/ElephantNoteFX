@@ -127,7 +127,7 @@ public class DetailsNotePanel extends BasePanel {
         GridPane.setHalignment(label, HPos.RIGHT);
         GridPane.setConstraints(label, colIndex, 0);
 
-        Label timeLabel = new Label(noteDto.getCreateAt().format(Utils.FORMATTER));
+        Label timeLabel = new Label(noteDto.getCreateAt().format(Utils.DATE_TIME_FORMATTER));
         timeLabel.getStyleClass().addAll("noteDateTime", "control-labelText-two");
         GridPane.setHalignment(timeLabel, HPos.LEFT);
         GridPane.setConstraints(timeLabel, colIndex + 1, 0);
