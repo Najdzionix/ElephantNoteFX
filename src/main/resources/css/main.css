@@ -50,10 +50,9 @@
 }
 
 .list-view:focused .list-cell:filled:focused:selected {
-	-fx-background-color: -dark-gray;
+	-fx-background-color: transparent;
     -fx-font-weight: 700;
-    -fx-text-fill: -color-text-black;
-    -fx-font-style: italic;
+    -fx-border-width:3;
 }
 
 .scroll-pane {
@@ -236,10 +235,6 @@
       -fx-focus-color: transparent;
  }
 
-.check-box-cell:hover {
-	-fx-background-color: -swatch-light-grey;
-	-fx-font-weight: 700 ;
-}
  .tool-bar-editor {
     -fx-background-color: -swatch-toolbar;
     -fx-border-width: 0 0 2 0;
@@ -247,8 +242,9 @@
     -fx-text-fill: -fx-text-base-color;
  }
 
-.check-box-cell:odd { -fx-background-color: #DCDCDC; }
-.check-box-cell:even { -fx-background-color: #F6F6F6; }
+.check-box-cell:odd { -fx-background-color: #EDEDED; }
+.check-box-cell:even { -fx-background-color: #FFF; }
+
 .check-box-done > * > * > .text { 
         -fx-strikethrough: true;
         -fx-fill: -color-light-gray;
