@@ -1,8 +1,6 @@
 package com.kn.elephant.note.ui.event;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.dto.EventContentDto;
@@ -16,13 +14,17 @@ import com.kn.elephant.note.utils.Utils;
 
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import javafx.geometry.Pos;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -116,29 +118,19 @@ public class EventPanel extends BasePanel {
 
         return button;
     }
-
+    
     private Node createContent(EventDto eventDto) {
-        BorderPane mainBox = new BorderPane();
-        Label tile = new Label("Occurrences");
-        tile.getStyleClass().add("title");
-        mainBox.setTop(tile);
-        VBox box = new VBox();
-        box.setSpacing(5);
-        mainBox.getStyleClass().addAll("custom-pane");
-        List<Node> collect = eventDto.getContent().stream().map(this::create).collect(Collectors.toList());
-        box.getChildren().addAll(collect);
-        box.setAlignment(Pos.TOP_CENTER);
-        mainBox.setCenter(box);
-        return mainBox;
-    }
+        TableView<EventContentDto> tableView = new TableView<>();
 
-    private Node create(EventContentDto dto) {
-        HBox box = new HBox();
-        box.setSpacing(5);
-        Label date = new Label(dto.getDate().format(Utils.DATE_TIME_FORMATTER));
-        Label text = new Label(dto.getContent());
-        box.getChildren().addAll(date, text);
+        TableColumn<EventContentDto, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getDate().format(Utils.DATE_TIME_FORMATTER)));
+        TableColumn<EventContentDto, String> descCol = new TableColumn<>("Description");
+        descCol.setMinWidth(600);
+        descCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getContent()));
 
-        return box;
+        tableView.getColumns().addAll(dateCol, descCol);
+        ObservableList<EventContentDto> dtos = FXCollections.observableArrayList(eventDto.getContent());
+        tableView.setItems(dtos);
+        return tableView;
     }
 }
