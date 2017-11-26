@@ -545,6 +545,16 @@
     -fx-pref-width:240;
 }
 
+.table-view  {
+    -fx-background-color: -swatch-toolbar;
+}
+
+.table-row-cell:selected, .table-row-cel:selected > * >.text {
+   	-fx-background-color: -dark-gray;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+    -fx-fill: white;
+}
 
      /*-fx-focus-color: transparent;*/
      /*-fx-border-width:0;*/
