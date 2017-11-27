@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="INFO">
+    <properties>
+        <property name="logFileName">elephantNoteFX</property>
+        <property name="pattern">[%d{ISO8601}] [%t] %-5p %c{6} - %msg%n</property>
+    </properties>
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{ISO8601}] [%t] %-5p %c{6} - %msg%n"/>
+            <PatternLayout pattern="${pattern}"/>
         </Console>
-        <File name="File" fileName="elephantNoteFX.log">
-            <PatternLayout pattern="[%d{ISO8601}] [%t] %-5p %c{6} - %msg%n"/>
-        </File>
+        <RollingFile name="RollingFile" fileName="logs/${logFileName}.log"
+                     filePattern="logs/$${date:yyyy-MM}/${logFileName}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>${pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy /><!-- Rotated everyday -->
+                <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+            </Policies>
+        </RollingFile>
     </appenders>
     <loggers>
         <logger name="com.kn.elephant.note" level="INFO" additivity="false">
             <appender-ref ref="Console"/>
-            <appender-ref ref="File"/>
+            <appender-ref ref="RollingFile"/>
         </logger>
         <root level="info">
             <appender-ref ref="Console"/>
