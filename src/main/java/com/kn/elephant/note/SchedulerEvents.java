@@ -101,7 +101,7 @@ public class SchedulerEvents {
     	LocalDateTime startTime = LocalDateTime.now();
     	if(interval == Interval.HOUR) {
 			LocalTime time;
-    		if(LocalTime.now().isAfter(LocalTime.of(dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond()))) {
+    		if(LocalTime.now().isAfter(LocalTime.of(LocalTime.now().getHour(), dateTime.getMinute(), dateTime.getSecond()))) {
 				time = LocalTime.of(LocalTime.now().plusHours(1L).getHour(), dateTime.getMinute(), dateTime.getSecond());
 			} else {
 				time = LocalTime.of(LocalTime.now().getHour(), dateTime.getMinute(), dateTime.getSecond());
