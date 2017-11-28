@@ -70,6 +70,14 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
         NoteDto newNote = (NoteDto) event.getSource();
+        if(cache.getCurrentNoteDto() != null && !cache.getVersion().isSave()) {
+            log.info("Preventing loss changes in note, save it previous one {}", cache.getCurrentNoteDto().getId());
+            Optional<NoteDto> previousNote = noteService.saveNote(cache.getCurrentNoteDto());
+            if(previousNote.isPresent()) {
+                cache.savedCurrentNote();
+            }
+        }
+
         cache.setActiveNote(newNote);
 
         if (newNote.getType() == NoteType.TODO) {
@@ -108,11 +116,10 @@ public class NotePanel extends BasePanel {
     private void saveNote() {
         try {
             cache.contentNoteChanged(currentEditor.getContent());
-            // cache.noteChanged(cache.getCurrentNoteDto());
             log.debug("Save note:" + cache.getCurrentNoteDto());
             Optional<NoteDto> updatedNote = noteService.saveNote(cache.getCurrentNoteDto());
             if (updatedNote.isPresent()) {
-                // cache.loadNote(updatedNote.get());
+                cache.savedCurrentNote();
                 loadNote(new ActionEvent(updatedNote.get(), null));
                 ActionFactory.callAction("showNotificationPanel", new NoticeData("Note saved."));
                 ActionFactory.callAction("refreshNote", cache.getCurrentNoteDto());

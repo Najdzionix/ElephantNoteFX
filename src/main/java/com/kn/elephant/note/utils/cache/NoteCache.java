@@ -10,7 +10,8 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Created by Kamil Nadłonek on 22-01-2017 email:kamilnadlonek@gmail.com
+ * Created by Kamil Nadłonek on 22-01-2017
+ * email:kamilnadlonek@gmail.com
  */
 @Log4j2
 public class NoteCache {
@@ -48,52 +49,23 @@ public class NoteCache {
         }
     }
 
-    public void noteChanged(NoteDto noteDto) {
-        if (noteDto.getId().equals(currentNoteDto.getId())) {
-            if(findChanges(noteDto)) {
-                version.increaseVersion();
-                currentNoteDto = noteDto;
-                cache.put(version, currentNoteDto);
-            } else {
-                log.debug("Not found changes, so note does not kept to cache.");
-            }
-        } else {
-            log.error("Something gone wrong!!!!");
-        }
-    }
-
     public synchronized void contentNoteChanged(String contentNote) {
         if (contentNote != null && !contentNote.equals(currentNoteDto.getContent())) {
             version.increaseVersion();
+            version.setSave(false);
             currentNoteDto.setContent(contentNote);
             cache.put(version, currentNoteDto);
         }
+    }
+    public void savedCurrentNote() {
+        version.setSave(true);
+        cache.put(version, currentNoteDto);
     }
 
     private Optional<Version> findNewestVersionOnCache(long noteId) {
         return cache.getKeys().stream().filter(v -> v.getNoteId() == noteId).max(Comparator.comparing(Version::getVersion));
     }
-
-    private boolean findChanges(NoteDto newNote){
-        if(newNote == null) {
-            return  false;
-        }
-
-        if(!currentNoteDto.getTitle().equals(newNote.getTitle())){
-            return true;
-        }
-        if(!currentNoteDto.getShortDescription().equals(newNote.getShortDescription())){
-            return true;
-        }
-        if(!currentNoteDto.getType().equals(newNote.getType())){
-            return true;
-        }
-        if(!currentNoteDto.getContent().equals(newNote.getContent())){
-            return true;
-        }
-        return false;
-    }
-
+    
     void clearCache() {
         cache.clearCache();
     }

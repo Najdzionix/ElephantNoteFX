@@ -2,6 +2,7 @@ package com.kn.elephant.note.utils.cache;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -17,9 +18,13 @@ public class Version {
 	@Getter
 	private Integer version;
 
+	@Getter @Setter
+	private boolean isSave;
+
 	public Version(final long noteId) {
 		this.noteId = noteId;
 		version = 0;
+		isSave = true;
 	}
 
 	public void increaseVersion(){
