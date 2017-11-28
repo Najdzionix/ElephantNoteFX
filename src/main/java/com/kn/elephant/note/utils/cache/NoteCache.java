@@ -30,8 +30,8 @@ public class NoteCache {
 
     private NoteCache() {
     }
-
-    public void loadNote(NoteDto newNote) {
+    
+    public void setActiveNote(NoteDto newNote) {
         if (currentNoteDto != null) {
             // save old Note ....
             version.increaseVersion();
@@ -39,8 +39,13 @@ public class NoteCache {
         }
 
         Optional<Version> versionOnCache = findNewestVersionOnCache(newNote.getId());
-        version = versionOnCache.orElseGet(() -> new Version(newNote.getId()));
-        currentNoteDto = newNote;
+        if(versionOnCache.isPresent()) {
+            version = versionOnCache.get();
+            currentNoteDto = cache.get(version);
+        } else {
+            version = new Version(newNote.getId());
+            currentNoteDto = newNote;
+        }
     }
 
     public void noteChanged(NoteDto noteDto) {
@@ -57,7 +62,7 @@ public class NoteCache {
         }
     }
 
-    public void contentNoteChanged(String contentNote) {
+    public synchronized void contentNoteChanged(String contentNote) {
         if (contentNote != null && !contentNote.equals(currentNoteDto.getContent())) {
             version.increaseVersion();
             currentNoteDto.setContent(contentNote);
@@ -89,6 +94,8 @@ public class NoteCache {
         return false;
     }
 
-
+    void clearCache() {
+        cache.clearCache();
+    }
 
 }

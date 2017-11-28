@@ -70,7 +70,7 @@ public class NotePanel extends BasePanel {
     @ActionProxy(text = "loadnote")
     private void loadNote(ActionEvent event) {
         NoteDto newNote = (NoteDto) event.getSource();
-        cache.loadNote(newNote);
+        cache.setActiveNote(newNote);
 
         if (newNote.getType() == NoteType.TODO) {
             currentEditor = new TodoEditor();
@@ -79,7 +79,7 @@ public class NotePanel extends BasePanel {
         }
         currentEditor.setNoteCache(cache);
         cachingNoteContentChanges();
-        currentEditor.loadNote(newNote);
+        currentEditor.loadNote(cache.getCurrentNoteDto());
         notificationPane.setContent((Node) currentEditor);
         log.debug("Load note: " + newNote);
         detailsNotePanel.loadNote(cache.getCurrentNoteDto());

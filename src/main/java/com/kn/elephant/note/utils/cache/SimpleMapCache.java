@@ -95,12 +95,17 @@ public class SimpleMapCache<K, T> {
             CacheObject c;
 
             while (itr.hasNext()) {
-                K next = itr.next();
                 c = itr.getValue();
                 if (c != null && (now > (timeToLive + c.getLastAccessed()))) {
                     itr.remove();
                 }
             }
+        }
+    }
+
+    void clearCache() {
+        synchronized (cacheMap) {
+            cacheMap.clear();
         }
     }
 }
