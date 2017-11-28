@@ -3,6 +3,8 @@ package com.kn.elephant.note.utils.cache;
 import java.util.Comparator;
 import java.util.Optional;
 
+import org.apache.commons.collections4.map.LRUMap;
+
 import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 
@@ -16,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class NoteCache {
 
-    private static final SimpleMapCache<Version, NoteDto> cache = new SimpleMapCache<>(6000L, NoteConstants.MAX_SIZE_CACHE);
+	private LRUMap<Version, NoteDto> cache;
 
     @Getter
     private Version version;
@@ -30,6 +32,7 @@ public class NoteCache {
     }
 
     private NoteCache() {
+    	cache = new LRUMap<>(NoteConstants.MAX_SIZE_CACHE);
     }
     
     public void setActiveNote(NoteDto newNote) {
@@ -63,11 +66,11 @@ public class NoteCache {
     }
 
     private Optional<Version> findNewestVersionOnCache(long noteId) {
-        return cache.getKeys().stream().filter(v -> v.getNoteId() == noteId).max(Comparator.comparing(Version::getVersion));
+    	return cache.keySet().stream().filter(v -> v.getNoteId() == noteId).max(Comparator.comparing(Version::getNoteId));
     }
     
     void clearCache() {
-        cache.clearCache();
+        cache.clear();
     }
 
 }
