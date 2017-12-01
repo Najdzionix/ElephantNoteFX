@@ -1,6 +1,7 @@
 package com.kn.elephant.note.utils.cache;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.map.LRUMap;
@@ -34,43 +35,55 @@ public class NoteCache {
     private NoteCache() {
     	cache = new LRUMap<>(NoteConstants.MAX_SIZE_CACHE);
     }
-    
-    public void setActiveNote(NoteDto newNote) {
+    // TODO: 01/12/17 improve cache because lose information about changes in note (for example content
+    // - memory references)
+    public void changeNote(NoteDto newNote) {
         if (currentNoteDto != null) {
-            // save old Note ....
-            version.increaseVersion();
-            cache.put(version, currentNoteDto);
+            // save previous one
+            addMapCache();
         }
-
-        Optional<Version> versionOnCache = findNewestVersionOnCache(newNote.getId());
-        if(versionOnCache.isPresent()) {
-            version = versionOnCache.get();
-            currentNoteDto = cache.get(version);
+        Optional<Map.Entry<Version, NoteDto>> noteCache = findNewestVersionOnCache(newNote.getId());
+        if (noteCache.isPresent()) {
+            currentNoteDto = noteCache.get().getValue();
+            version = noteCache.get().getKey();
+            version = version.increaseVersion();
         } else {
-            version = new Version(newNote.getId());
             currentNoteDto = newNote;
+            version = new Version(newNote.getId());
         }
     }
 
     public synchronized void contentNoteChanged(String contentNote) {
         if (contentNote != null && !contentNote.equals(currentNoteDto.getContent())) {
-            version.increaseVersion();
             version.setSave(false);
             currentNoteDto.setContent(contentNote);
-            cache.put(version, currentNoteDto);
+            addMapCache();
         }
     }
     public void savedCurrentNote() {
         version.setSave(true);
-        cache.put(version, currentNoteDto);
+        addMapCache();
     }
 
-    private Optional<Version> findNewestVersionOnCache(long noteId) {
-    	return cache.keySet().stream().filter(v -> v.getNoteId() == noteId).max(Comparator.comparing(Version::getNoteId));
+    private void addMapCache() {
+        if (cache.containsKey(version) || cache.containsValue(currentNoteDto)) {
+            return;
+        }
+
+        cache.put(version, currentNoteDto);
+        version = version.increaseVersion();
+    }
+
+    private Optional<Map.Entry<Version, NoteDto>> findNewestVersionOnCache(long noteId) {
+        return cache.entrySet().stream()
+            .filter(entry -> entry.getKey().getNoteId() == noteId)
+            .max(Comparator.comparing(entry -> entry.getKey().getVersion()));
     }
     
     void clearCache() {
         cache.clear();
+        version = null;
+        currentNoteDto = null;
     }
 
 }

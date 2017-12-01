@@ -78,7 +78,7 @@ public class NotePanel extends BasePanel {
             }
         }
 
-        cache.setActiveNote(newNote);
+        cache.changeNote(newNote);
 
         if (newNote.getType() == NoteType.TODO) {
             currentEditor = new TodoEditor();

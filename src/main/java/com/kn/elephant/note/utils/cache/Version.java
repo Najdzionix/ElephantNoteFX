@@ -16,19 +16,23 @@ public class Version {
 	@Getter
 	private long noteId;
 	@Getter
-	private Integer version;
+	private int version;
 
 	@Getter @Setter
 	private boolean isSave;
 
 	public Version(final long noteId) {
 		this.noteId = noteId;
-		version = 0;
+		version = 1;
 		isSave = true;
 	}
 
-	public void increaseVersion(){
-		this.version++;
-	}
+    public Version(long noteId, int version) {
+        this.noteId = noteId;
+        this.version = version;
+    }
 
+    public Version increaseVersion() {
+        return new Version(noteId, version + 1);
+    }
 }

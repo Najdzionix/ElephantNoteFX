@@ -1,6 +1,7 @@
 package com.kn.elephant.note.utils.cache;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,11 +29,11 @@ public class NoteCacheTest {
         // Given
         String expectedContent = "testContent";
         // When
-        noteCache.setActiveNote(noteDto);
+        noteCache.changeNote(noteDto);
         noteCache.contentNoteChanged(expectedContent);
         String content = noteCache.getCurrentNoteDto().getContent();
         // Then
-        Assert.assertEquals(expectedContent, content);
+        assertEquals(expectedContent, content);
     }
 
     @Test
@@ -40,12 +41,31 @@ public class NoteCacheTest {
         // Given
         String expectedContent = "TestContent";
         // When
-        noteCache.setActiveNote(noteDto);
+        noteCache.changeNote(noteDto);
         noteCache.contentNoteChanged(expectedContent);
-        noteCache.setActiveNote(noteDto);
+        noteCache.changeNote(noteDto);
         String content = noteCache.getCurrentNoteDto().getContent();
         // Then
-        Assert.assertEquals(expectedContent, content);
+        assertEquals(expectedContent, content);
+    }
+
+    @Test
+    public void shouldNotDuplicateVersions() {
+    	// Given
+        NoteDto secondNote = new NoteDto().setId(2L).setContent("Content 2");
+        String expectedContent = "Content One changed...";
+
+        // When
+        noteCache.changeNote(noteDto);
+        noteCache.contentNoteChanged(expectedContent);
+        noteCache.changeNote(secondNote);
+        noteCache.changeNote(noteDto);
+
+    	// Then
+        NoteDto currentNoteDto = noteCache.getCurrentNoteDto();
+        assertEquals(expectedContent, currentNoteDto.getContent());
+        assertEquals(2, noteCache.getVersion().getVersion());
+
     }
 
 }
