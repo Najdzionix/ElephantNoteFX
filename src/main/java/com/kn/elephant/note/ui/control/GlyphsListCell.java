@@ -4,7 +4,7 @@ import com.kn.elephant.note.utils.Icons;
 
 import de.jensd.fx.glyphs.GlyphIcons;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 
 /**
@@ -15,8 +15,9 @@ public class GlyphsListCell extends ListCell<GlyphIcons> {
 
 	private static final String ICON_SIZE = "2.0em";
 	private static final String GLYPH_GRID_CELL_CSS = "glyph-grid-cell";
+    private Label iconLabel;
 
-	public GlyphsListCell() {
+    public GlyphsListCell() {
         getStyleClass().add(GLYPH_GRID_CELL_CSS);
         setAlignment(Pos.CENTER);
     }
@@ -30,8 +31,12 @@ public class GlyphsListCell extends ListCell<GlyphIcons> {
             setGraphic(null);
         } else {
             setText(null);
-            Node shape = Icons.builderIcon(item, ICON_SIZE);
-            setGraphic(shape);
+            iconLabel = Icons.builderIcon(item, ICON_SIZE);
+            setGraphic(iconLabel);
         }
+    }
+
+    public void setColor(String hexColor) {
+        iconLabel.setStyle(" -fx-fill: " + hexColor + " !important;");
     }
 }

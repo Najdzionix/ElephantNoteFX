@@ -1,5 +1,7 @@
 package com.kn.elephant.note.ui;
 
+import static com.kn.elephant.note.utils.Utils.toRGBCode;
+
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
@@ -107,7 +109,7 @@ public class DialogNote extends BasePanel {
         });
         dialog.setResultConverter(buttonType -> {
             if (buttonType == buttonTypeOk) {
-                String hexColor = Integer.toHexString(colorPicker.getValue().hashCode()).substring(0, VALUE).toUpperCase();
+                String hexColor = toRGBCode(colorPicker.getValue());
                 String iconName = iconBox.getValue().name();
                 NoteDto noteDto = new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
                         .setType(typeBox.getValue()).setIcon(iconName).setColorIcon(hexColor);
@@ -163,6 +165,12 @@ public class DialogNote extends BasePanel {
         iconBox.setCellFactory(param -> new GlyphsListCell());
         iconBox.setButtonCell( new GlyphsListCell());
         iconBox.getStyleClass().add("iconComboBox");
+        colorPicker.setOnAction(event -> {
+            GlyphsListCell buttonCell = (GlyphsListCell) iconBox.getButtonCell();
+            String color = toRGBCode(colorPicker.getValue());
+            buttonCell.setColor(color);
+            }
+        );
         HBox.setHgrow(iconBox, Priority.ALWAYS);
         HBox.setHgrow(colorPicker, Priority.ALWAYS);
         box.getChildren().addAll(iconBox, colorPicker);

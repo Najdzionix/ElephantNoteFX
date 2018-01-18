@@ -85,7 +85,7 @@ public class Icons {
     }
     public static Label builderIcon(GlyphIcons icon, String iconSize, String color) {
         Label iconLabel = builderIcon(icon, iconSize);
-        iconLabel.setStyle(" -fx-fill: #" + color + " !important;");
+        iconLabel.setStyle(" -fx-fill: " + color + " !important;");
         return iconLabel;
     }
 

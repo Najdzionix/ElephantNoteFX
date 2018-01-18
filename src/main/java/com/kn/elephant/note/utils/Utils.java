@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kn.elephant.note.NoteConstants;
 
+import javafx.scene.paint.Color;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -53,5 +54,12 @@ public class Utils {
         }
 
         return properties.getProperty(propertyName);
+    }
+
+    public static String toRGBCode(Color color ) {
+        return String.format( "#%02X%02X%02X",
+            (int)( color.getRed() * 255 ),
+            (int)( color.getGreen() * 255 ),
+            (int)( color.getBlue() * 255 ) );
     }
 }
