@@ -2,8 +2,10 @@ package com.kn.elephant.note.ui;
 
 import static com.kn.elephant.note.utils.Utils.toRGBCode;
 
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
@@ -66,13 +68,17 @@ public class DialogNote extends BasePanel {
 		createContent();
 		uniqueNoteTitleValidator();
 		noteConverter(null);
+		initParentComboBox(noteService.getAllNotes());
     }
 
-    public DialogNote(NoteDto noteDto) {
+	public DialogNote(NoteDto noteDto) {
 		ActionMap.register(this);
 		createContent();
 		uniqueNoteTitleValidator(noteDto.getId());
 		noteConverter(noteDto);
+        List<NoteDto> notesDto = noteService.getAllNotes().stream().filter(note -> !note.getId().equals(noteDto.getId())).collect(Collectors.toList());
+        initParentComboBox(notesDto);
+
         dialog.setTitle("Editing note");
         dialog.setHeaderText("Now you can change note.");
 
@@ -84,6 +90,7 @@ public class DialogNote extends BasePanel {
         iconBox.getSelectionModel().select(MaterialIcon.valueOf(noteDto.getIcon()));
         colorPicker.setValue(Color.valueOf(noteDto.getColorIcon()));
         setIconColor(noteDto.getColorIcon()); // iconLabel is null can not change color ...
+
     }
 
     private void selectParentNote(NoteDto noteDto) {
@@ -99,6 +106,7 @@ public class DialogNote extends BasePanel {
             }
             parentsBox.getSelectionModel().select(index);
         }
+
     }
 
     private void createContent() {
@@ -177,8 +185,7 @@ public class DialogNote extends BasePanel {
     private Node createSelectionPaneParent() {
         HBox box = new HBox();
         box.setSpacing(VALUE);
-        ObservableList<NoteDto> notesDto = FXCollections.observableArrayList(noteService.getAllNotes());
-        parentsBox = new ComboBox<>(notesDto);
+        parentsBox = new ComboBox<>();
         parentsBox.setButtonCell(new NoteListCell());
         parentsBox.setCellFactory(p -> new NoteListCell());
         parentsBox.setMinWidth(280);
@@ -189,6 +196,11 @@ public class DialogNote extends BasePanel {
         box.getChildren().addAll(parentsBox, clearButton);
 
         return box;
+    }
+
+    private void initParentComboBox(List<NoteDto> notes) {
+        ObservableList<NoteDto> notesDto = FXCollections.observableArrayList(notes);
+        parentsBox.setItems(notesDto);
     }
 
     private Node createListNoteTypes() {
