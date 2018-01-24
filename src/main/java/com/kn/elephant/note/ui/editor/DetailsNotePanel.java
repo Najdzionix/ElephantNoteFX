@@ -1,6 +1,7 @@
 package com.kn.elephant.note.ui.editor;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
 
 import com.google.inject.Inject;
+import com.kn.elephant.note.NoteConstants;
 import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.dto.NoticeData;
 import com.kn.elephant.note.dto.TagDto;
@@ -18,6 +20,7 @@ import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.service.TagService;
 import com.kn.elephant.note.ui.BasePanel;
+import com.kn.elephant.note.ui.DialogNote;
 import com.kn.elephant.note.ui.control.EditableLabel;
 import com.kn.elephant.note.ui.control.TagNode;
 import com.kn.elephant.note.utils.ActionFactory;
@@ -30,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -105,6 +109,13 @@ public class DetailsNotePanel extends BasePanel {
             Label iconLabel = Icons.builderIcon(MaterialIcon.valueOf(noteDto.getIcon()), "2.5em", noteDto.getColorIcon());
             iconLabel.getStyleClass().add("iconNote");
             borderPane.setLeft(iconLabel);
+            Button button = new Button("Edit");
+            button.setOnAction(event -> {
+                getStyleClass().add(NoteConstants.CSS_ACTIVE);
+                ActionFactory.callAction("editNoteDialog", noteDto);
+            });
+            borderPane.setRight(button);
+
         }
         return borderPane;
     }
@@ -162,4 +173,17 @@ public class DetailsNotePanel extends BasePanel {
             ActionFactory.callAction("showNotificationPanel", NoticeData.createErrorNotice("Operation remove tag failed"));
         }
     }
+
+    @ActionProxy(text = "")
+    private void editNoteDialog(ActionEvent event) {
+        NoteDto noteDto = (NoteDto) event.getSource();
+        DialogNote dialogNote = new DialogNote(noteDto);
+        Optional<NoteDto> noteDto2 = dialogNote.getDialog().showAndWait();
+        if (noteDto2.isPresent()) {
+//            Optional<NoteDto> dto = noteService.saveNote(noteDto2.get());
+//            ActionFactory.callAction("addNoteToList", dto.get());
+        }
+    }
+
+
 }

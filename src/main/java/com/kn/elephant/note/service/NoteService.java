@@ -1,9 +1,9 @@
 package com.kn.elephant.note.service;
 
-import com.kn.elephant.note.dto.NoteDto;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.kn.elephant.note.dto.NoteDto;
 
 /**
  * Created by Kamil Nadłonek on 09.11.15.
@@ -48,4 +48,11 @@ public interface NoteService {
      * @return List of notes belongs to given tagId
      */
     List<NoteDto> getNotesByTagId(Long tagId);
+
+    /**
+     * If given childNote has parent than it is return
+     * @param childNoteId
+     * @return Note which is parent for given child note id
+     */
+    Optional<NoteDto> getParentNote(Long childNoteId);
 }

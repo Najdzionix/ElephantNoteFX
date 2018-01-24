@@ -2,6 +2,9 @@ package com.kn.elephant.note.ui;
 
 import static com.kn.elephant.note.utils.Utils.toRGBCode;
 
+import java.util.ListIterator;
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
 import org.controlsfx.control.action.ActionProxy;
@@ -19,6 +22,7 @@ import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
 import de.jensd.fx.glyphs.GlyphIcons;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,6 +66,36 @@ public class DialogNote extends BasePanel {
     DialogNote() {
         ActionMap.register(this);
         createContent();
+    }
+
+    public DialogNote(NoteDto noteDto) {
+        this();
+        dialog.setTitle("Editing note");
+        dialog.setHeaderText("Now you can change note.");
+
+        titleText.setText(noteDto.getTitle());
+        shortDescText.setText(noteDto.getShortDescription());
+        typeBox.getSelectionModel().select(noteDto.getType());
+        typeBox.setDisable(true);
+        selectParentNote(noteDto);
+        iconBox.getSelectionModel().select(MaterialIcon.valueOf(noteDto.getIcon()));
+        colorPicker.setValue(Color.valueOf(noteDto.getColorIcon()));
+        setIconColor(noteDto.getColorIcon()); // iconLabel is null can not change color ...
+    }
+
+    private void selectParentNote(NoteDto noteDto) {
+        Optional<NoteDto> parentNote = noteService.getParentNote(noteDto.getId());
+        if (parentNote.isPresent()) {
+            ListIterator<NoteDto> noteDtoListIterator = parentsBox.getItems().listIterator();
+            int index = 0;
+            while (noteDtoListIterator.hasNext()) {
+                if (noteDtoListIterator.next().getId().equals(parentNote.get().getId())) {
+                    break;
+                }
+                index++;
+            }
+            parentsBox.getSelectionModel().select(index);
+        }
     }
 
     public TextField getTitleText() {
@@ -166,9 +200,8 @@ public class DialogNote extends BasePanel {
         iconBox.setButtonCell( new GlyphsListCell());
         iconBox.getStyleClass().add("iconComboBox");
         colorPicker.setOnAction(event -> {
-            GlyphsListCell buttonCell = (GlyphsListCell) iconBox.getButtonCell();
             String color = toRGBCode(colorPicker.getValue());
-            buttonCell.setColor(color);
+            setIconColor(color);
             }
         );
         HBox.setHgrow(iconBox, Priority.ALWAYS);
@@ -176,6 +209,11 @@ public class DialogNote extends BasePanel {
         box.getChildren().addAll(iconBox, colorPicker);
         return box;
         
+    }
+
+    private void setIconColor(String color) {
+        GlyphsListCell buttonCell = (GlyphsListCell) iconBox.getButtonCell();
+        buttonCell.setColor(color);
     }
 
     @ActionProxy(text = "Clear")

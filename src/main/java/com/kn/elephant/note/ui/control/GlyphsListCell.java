@@ -37,6 +37,8 @@ public class GlyphsListCell extends ListCell<GlyphIcons> {
     }
 
     public void setColor(String hexColor) {
-        iconLabel.setStyle(" -fx-fill: " + hexColor + " !important;");
+        if( iconLabel != null) {
+            iconLabel.setStyle(" -fx-fill: " + hexColor + " !important;");
+        }
     }
 }

@@ -57,6 +57,7 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (note.getParent() != null) {
                 Optional<NoteDto> parent = getParentFromList(notesDto, note.getParent().getId());
                 if (parent.isPresent()) {
+                    dto.setParentNote(parent.get());
                     parent.get().getSubNotes().add(dto);
                 }
 
@@ -252,7 +253,21 @@ public class NoteServiceImp extends BaseService implements NoteService {
         }
     }
 
-    private PreparedQuery<Note> makeQueryForNoteTags() throws SQLException {
+    @Override
+    public Optional<NoteDto> getParentNote(Long childNoteId) {
+        try {
+            Note note = noteDao.queryForId(childNoteId);
+            if (note != null && note.getParent() != null) {
+                Note parent = noteDao.queryForId(note.getParent().getId());
+                return Optional.of(convertToNoteDto(parent));
+            }
+        } catch (SQLException ex) {
+            log.error("Data base error:", ex);
+        }
+        return Optional.empty();
+    }
+
+	private PreparedQuery<Note> makeQueryForNoteTags() throws SQLException {
         QueryBuilder<NoteTag, Long> notesTagQB = noteTagDao.queryBuilder();
         notesTagQB.selectColumns(NoteTag.NOTE_ID_FIELD_NAME);
         SelectArg noteSelectArg = new SelectArg();
