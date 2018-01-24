@@ -178,10 +178,11 @@ public class DetailsNotePanel extends BasePanel {
     private void editNoteDialog(ActionEvent event) {
         NoteDto noteDto = (NoteDto) event.getSource();
         DialogNote dialogNote = new DialogNote(noteDto);
-        Optional<NoteDto> noteDto2 = dialogNote.getDialog().showAndWait();
-        if (noteDto2.isPresent()) {
-//            Optional<NoteDto> dto = noteService.saveNote(noteDto2.get());
-//            ActionFactory.callAction("addNoteToList", dto.get());
+        Optional<NoteDto> updatedNote = dialogNote.getDialog().showAndWait();
+        if (updatedNote.isPresent()) {
+            Optional<NoteDto> dto = noteService.saveNote(updatedNote.get());
+            ActionFactory.callAction("refreshList");
+            ActionFactory.callAction("setSelectNote", dto.get());
         }
     }
 

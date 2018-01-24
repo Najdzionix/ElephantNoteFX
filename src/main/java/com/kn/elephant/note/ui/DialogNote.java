@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.action.ActionMap;
-import org.controlsfx.control.action.ActionProxy;
-import org.controlsfx.control.action.ActionUtils;
 
 import com.google.inject.Inject;
 import com.kn.elephant.note.Main;
@@ -17,7 +15,6 @@ import com.kn.elephant.note.dto.NoteDto;
 import com.kn.elephant.note.model.NoteType;
 import com.kn.elephant.note.service.NoteService;
 import com.kn.elephant.note.ui.control.GlyphsListCell;
-import com.kn.elephant.note.utils.ActionFactory;
 import com.kn.elephant.note.utils.Icons;
 import com.kn.elephant.note.utils.validator.ValidatorHelper;
 
@@ -62,18 +59,20 @@ public class DialogNote extends BasePanel {
     private ValidatorHelper validatorHelper;
     private ColorPicker colorPicker;
     private ComboBox<GlyphIcons> iconBox;
+	private ButtonType saveButton;
 
-    DialogNote() {
+	DialogNote() {
 		ActionMap.register(this);
 		createContent();
 		uniqueNoteTitleValidator();
+		noteConverter(null);
     }
 
     public DialogNote(NoteDto noteDto) {
 		ActionMap.register(this);
 		createContent();
-
 		uniqueNoteTitleValidator(noteDto.getId());
+		noteConverter(noteDto);
         dialog.setTitle("Editing note");
         dialog.setHeaderText("Now you can change note.");
 
@@ -127,43 +126,53 @@ public class DialogNote extends BasePanel {
         box.getChildren().addAll(titleLabel, titleText, shortDescriptionL, shortDescText, noteTypeLabel, createListNoteTypes(), parentLabel,
                 createSelectionPaneParent(), iconLabel, createIconPicker());
         dialog.getDialogPane().getStyleClass().add("card");
-
         dialog.getDialogPane().setContent(box);
 
-        ButtonType buttonTypeOk = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
+		saveButton = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
 
-        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
-        final Button btOk = (Button) dialog.getDialogPane().lookupButton(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(saveButton);
+        final Button btOk = (Button) dialog.getDialogPane().lookupButton(saveButton);
         btOk.getStyleClass().add("button-action");
         btOk.addEventFilter(ActionEvent.ACTION, event -> {
             if (!validatorHelper.isValid()) {
                 event.consume();
             }
         });
+
+		dialog.getDialogPane().getStylesheets().addAll(Main.loadCssFiles());
+    }
+
+	private void noteConverter(NoteDto editNote) {
         dialog.setResultConverter(buttonType -> {
-            if (buttonType == buttonTypeOk) {
+            if (buttonType == saveButton) {
+                NoteDto noteDto;
+                if (editNote == null) {
+                    noteDto = new NoteDto();
+                    if (typeBox.getValue() == NoteType.HTML) {
+                        noteDto.setContent(NoteConstants.INIT_NOTE_CONTENT);
+                    }
+                } else {
+                    noteDto = editNote;
+                }
+
                 String hexColor = toRGBCode(colorPicker.getValue());
                 String iconName = iconBox.getValue().name();
-                NoteDto noteDto = new NoteDto().setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
+                noteDto.setTitle(titleText.getText()).setShortDescription(shortDescText.getText()).setParentNote(parentsBox.getValue())
                         .setType(typeBox.getValue()).setIcon(iconName).setColorIcon(hexColor);
-                if (noteDto.getType() == NoteType.HTML) {
-                    noteDto.setContent(NoteConstants.INIT_NOTE_CONTENT);
-                }
                 return noteDto;
             }
             return null;
         });
-
-        dialog.getDialogPane().getStylesheets().addAll(Main.loadCssFiles());
     }
 
     private void uniqueNoteTitleValidator() {
         validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText()));
     }
-    
-	private void uniqueNoteTitleValidator(Long noteId) {
-		validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText(), noteId));
-	}
+
+    private void uniqueNoteTitleValidator(Long noteId) {
+        validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.",
+                node -> noteService.isTitleNoteUnique(((TextField) node).getText(), noteId));
+    }
 
     private Node createSelectionPaneParent() {
         HBox box = new HBox();
@@ -174,7 +183,8 @@ public class DialogNote extends BasePanel {
         parentsBox.setCellFactory(p -> new NoteListCell());
         parentsBox.setMinWidth(280);
         parentsBox.setMaxWidth(400);
-        Button clearButton = ActionUtils.createButton(ActionFactory.getAction("clearSelection"));
+		Button clearButton = new Button("Clear");
+		clearButton.setOnAction(event -> clearSelection());
         clearButton.getStyleClass().add("button-flat");
         box.getChildren().addAll(parentsBox, clearButton);
 
@@ -219,7 +229,6 @@ public class DialogNote extends BasePanel {
         buttonCell.setColor(color);
     }
 
-    @ActionProxy(text = "Clear")
     private void clearSelection() {
         parentsBox.getSelectionModel().clearSelection();
     }

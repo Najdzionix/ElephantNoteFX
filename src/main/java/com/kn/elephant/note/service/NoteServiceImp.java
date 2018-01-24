@@ -95,11 +95,14 @@ public class NoteServiceImp extends BaseService implements NoteService {
             if (noteDto.getId() == null) {
                 note = new Note();
                 note.setCreateAt(LocalDateTime.now());
-                if (noteDto.getParentNote() != null) {
-                    note.setParent(noteDao.queryForId(noteDto.getParentNote().getId()));
-                }
             } else {
                 note = noteDao.queryForId(noteDto.getId());
+            }
+
+            if (noteDto.getParentNote() != null) {
+                note.setParent(noteDao.queryForId(noteDto.getParentNote().getId()));
+            } else {
+                note.setParent(null);
             }
             note.setType(noteDto.getType());
             note.setTitle(noteDto.getTitle());

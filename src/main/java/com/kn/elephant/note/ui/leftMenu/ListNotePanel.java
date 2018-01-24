@@ -120,7 +120,8 @@ public class ListNotePanel extends BasePanel {
 		log.info("Refresh list ALL");
 		contentPane.setContent(getContent());
 	}
-		@ActionProxy(text = "")
+
+	@ActionProxy(text = "")
 	private void refreshNote(ActionEvent event) {
 		log.debug("Refresh item to tree");
 		NoteDto noteDto = (NoteDto) event.getSource();
