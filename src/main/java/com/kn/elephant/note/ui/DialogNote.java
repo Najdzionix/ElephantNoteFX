@@ -64,12 +64,16 @@ public class DialogNote extends BasePanel {
     private ComboBox<GlyphIcons> iconBox;
 
     DialogNote() {
-        ActionMap.register(this);
-        createContent();
+		ActionMap.register(this);
+		createContent();
+		uniqueNoteTitleValidator();
     }
 
     public DialogNote(NoteDto noteDto) {
-        this();
+		ActionMap.register(this);
+		createContent();
+
+		uniqueNoteTitleValidator(noteDto.getId());
         dialog.setTitle("Editing note");
         dialog.setHeaderText("Now you can change note.");
 
@@ -98,10 +102,6 @@ public class DialogNote extends BasePanel {
         }
     }
 
-    public TextField getTitleText() {
-        return titleText;
-    }
-
     private void createContent() {
         dialog = new Dialog<>();
         validatorHelper = new ValidatorHelper();
@@ -119,7 +119,6 @@ public class DialogNote extends BasePanel {
         Platform.runLater(() -> titleText.requestFocus());
 
         validatorHelper.registerEmptyValidator(titleText, "Title can not empty.");
-        uniqueTagTitleValidator();
         shortDescText = new TextField();
         shortDescText.setId("dialogNoteDescText");
         validatorHelper.registerEmptyValidator(shortDescText, "Short description can not be empty.");
@@ -158,9 +157,13 @@ public class DialogNote extends BasePanel {
         dialog.getDialogPane().getStylesheets().addAll(Main.loadCssFiles());
     }
 
-    private void uniqueTagTitleValidator() {
+    private void uniqueNoteTitleValidator() {
         validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText()));
     }
+    
+	private void uniqueNoteTitleValidator(Long noteId) {
+		validatorHelper.registerCustomValidator(titleText, "Provide unique name of note.", node -> noteService.isTitleNoteUnique(((TextField) node).getText(), noteId));
+	}
 
     private Node createSelectionPaneParent() {
         HBox box = new HBox();

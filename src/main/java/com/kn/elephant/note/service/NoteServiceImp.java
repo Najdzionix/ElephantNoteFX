@@ -194,6 +194,18 @@ public class NoteServiceImp extends BaseService implements NoteService {
         }
     }
 
+    @Override
+    public boolean isTitleNoteUnique(String title, Long expectNoteId) {
+        try {
+            List<Note> notes = noteDao.queryBuilder().where().eq("title", title)
+				.and().ne("id", expectNoteId).query();
+            return notes.isEmpty();
+        } catch (SQLException e) {
+            log.error("Sql exception:" + e.getMessage(), e);
+            return true;
+        }
+    }
+
     private void removeTagRelations(Long noteId) throws SQLException {
         DeleteBuilder<NoteTag, Long> deleteBuilder = noteTagDao.deleteBuilder();
         deleteBuilder.where().eq(NoteTag.NOTE_ID_FIELD_NAME, noteId);

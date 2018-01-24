@@ -35,7 +35,9 @@ public interface NoteService {
      */
     boolean isTitleNoteUnique(String title);
 
-    /**
+	boolean isTitleNoteUnique(String title, Long expectNoteId);
+
+	/**
      * Looking for notes which contains sequence given by user
      * @param pattern
      * @return List of notes which matched to pattern
